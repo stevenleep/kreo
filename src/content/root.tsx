@@ -1,0 +1,40 @@
+import { createRef, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+// import Panel from './panel';
+// import btn_img from '../../public/images/app.jpg';
+
+export interface ShowMessageConfig {
+  type: 'error' | 'success';
+  text: string;
+  link?: {
+    text: string;
+    href: string;
+  };
+}
+
+const App = () => {
+  return (
+    <div className='extension-root-container'>
+      
+    </div>
+  );
+};
+
+export function createContentScriptApp(rootDiv: HTMLElement) {
+  // const div = document.createElement('div');
+  const contentScriptRef = createRef<any>();
+  const root = ReactDOM.createRoot(rootDiv);
+  root.render(
+    <App />
+  );
+  // @ts-ignore
+  // window._draw_app.rootContainer.appendChild(div);
+  return {
+    ref: contentScriptRef,
+    remove: () => {
+      root.unmount();
+      // @ts-ignore
+      window._draw_app.rootContainer.removeChild(rootDiv);
+    },
+  };
+}
