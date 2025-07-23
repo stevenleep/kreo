@@ -3,9 +3,16 @@
   "name": "网页绘画工具",
   "version": "1.0.0",
   "description": "在任何网页上进行绘画和标注，支持多种画笔、手绘风格和背景保存功能",
-
-  "permissions": ["activeTab", "scripting"],
-
+  "permissions": [
+      // 用来存储扩展程序的数据
+      "storage",
+      // 用来操作浏览器页面
+      "activeTab",
+      // 使用 `chrome.scripting` API 在不同上下文中执行脚本。
+      "scripting",
+      // 桌面消息通知
+      "notifications"
+  ],
   "action": {
     "default_title": "网页绘画工具",
     "default_icon": {
