@@ -1,21 +1,22 @@
-import { createRef, useState } from 'react';
+import { createRef } from 'react';
 import ReactDOM from 'react-dom/client';
+import ToolBar from './toolBar';
 // import Panel from './panel';
 // import btn_img from '../../public/images/app.jpg';
 
-export interface ShowMessageConfig {
-  type: 'error' | 'success';
-  text: string;
-  link?: {
-    text: string;
-    href: string;
-  };
-}
+// export interface ShowMessageConfig {
+//   type: 'error' | 'success';
+//   text: string;
+//   link?: {
+//     text: string;
+//     href: string;
+//   };
+// }
 
 const App = () => {
   return (
     <div className='extension-root-container'>
-      
+      <ToolBar />
     </div>
   );
 };
