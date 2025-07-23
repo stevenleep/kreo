@@ -1,7 +1,5 @@
-import { getQueryString } from '@/utils/tools';
 import { ContextCanvas } from './Context';
 import EditorWorkspace from './EditorWorkspace';
-import { PageType } from './config/type';
 
 /**
  * 画布历史管理
@@ -43,7 +41,7 @@ class History {
                     this.historyList.shift();
                 }
                 const push = () => {
-                    const activeObject = this.canvas.getActiveObject();
+                    const activeObject = this.canvas.getActiveObject() as any;
                     this.historyList.push({
                         canvasData,
                         boothData: { ...prev.boothData },
@@ -109,8 +107,6 @@ class History {
         this.loadFromJSON(this.historyIndex + 1);
     };
     initHistory = () => {
-        const type = getQueryString('type');
-        if (type === PageType.view) return;
         setTimeout(() => {
             this.historyIndex = -1;
             this.historyList = [];

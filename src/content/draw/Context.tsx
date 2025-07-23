@@ -1,11 +1,9 @@
-import React, { createContext, FC } from 'react';
-import { useSetState } from './../utils';
+import React, { createContext, ReactNode } from 'react';
+import { SetState, useSetState } from './../utils';
 import EditorWorkspace from './EditorWorkspace';
 import History from './History';
 
 export type ContextCanvas = fabric.Canvas & { historyPlugin?: History };
-
-export type SetState<S extends Record<string, any>> = <K extends keyof S>(state: Pick<S, K> | null | ((prevState: Readonly<S>) => Pick<S, K> | S | null)) => void;
 
 interface CanvasContext {
     canvas: ContextCanvas | null;
@@ -46,32 +44,32 @@ export const Context = createContext<CanvasContext>({
     setState: () => {},
 });
 
-export const CanvasProvider: FC = ({ children }) => {
+type Props = {
+  children?: ReactNode;
+};
+
+export const CanvasProvider = ({ children }: Props) => {
     const [state, setState] = useSetState<Omit<CanvasContext, 'setState'>>({
         canvas: null, // fabric实例
         workspace: null, // 工作区实例
-        selectDrawingOpen: false, // 选择图纸modal open
-        openTools: true, // 左侧工具区是否打开
-        uploadDrawingOpen: false, // 上传图纸modal open
-        openAttr: false, // 右侧属性区是否打开
-        selectBooth: null, // 当前画布已选中的摊位
-        openCreateSpecialBooth: false, // 创建异形摊位 modal open
+        // openTools: true, // 左侧工具区是否打开
+        // openAttr: false, // 右侧属性区是否打开
+        // selectBooth: null, // 当前画布已选中的摊位
+        // openCreateSpecialBooth: false, // 创建异形摊位 modal open
         drawMode: '', // 当前画笔模式
-        boothData: {}, // 摊位信息
-        projectData: {}, // 规划信息
-        canvasLoading: false, // 全局loading
-        canvasLoadingText: '加载中', // 全局loading text
-        boothForm: null, // 摊位form
-        projectForm: null, // 规划form
+        // boothData: {}, // 摊位信息
+        // projectData: {}, // 规划信息
+        // canvasLoading: false, // 全局loading
+        // canvasLoadingText: '加载中', // 全局loading text
+        // boothForm: null, // 摊位form
+        // projectForm: null, // 规划form
         refreshTooList: null, // 刷新摊位列表
-        beforeBoothData: { acCodePrefix: '' }, // 摊位前缀
-        buildingTitle: '', // 画布顶部标题
-        boothCategoryList: [], // 品类信息
-        mainCodeRelevance: {}, // 记录主摊位编号
-        originalObjectIds: {}, // 记录原始摊位id
+        // beforeBoothData: { acCodePrefix: '' }, // 摊位前缀
+        // mainCodeRelevance: {}, // 记录主摊位编号
+        // originalObjectIds: {}, // 记录原始摊位id
         historyUndoNum: 0,
         historyRedoNum: 0,
-        floorInfo: null,
+        // floorInfo: null,
     });
 
     const value: CanvasContext = {

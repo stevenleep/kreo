@@ -3,17 +3,11 @@ import { fabric } from 'fabric';
 // import { throttle } from 'lodash';
 // import DrawLine from './DrawLine';
 // import DrawShape from './DrawShape';
-// import initRuler from './ruler';
-// import CanvasRuler from './ruler/ruler';
 // import ControlsPlugin from './initControls';
 // import { CalcWidth, PageType } from './config/type';
 // import { EventsTypes, events } from '@/utils/events';
 import { ContextCanvas } from './Context';
 
-declare type EditorWorkspaceOption = {
-    workspaceId?: string;
-    mode?: string;
-};
 declare type ExtCanvas = ContextCanvas & {
     isDragging: boolean;
     lastPosX: number;
@@ -25,7 +19,6 @@ class EditorWorkspace {
     canvas: ContextCanvas;
     workspaceEl: HTMLElement;
     workspace: fabric.Rect | null;
-    option: EditorWorkspaceOption;
     dragMode: boolean;
     fill: string;
     width: number | undefined;
@@ -33,27 +26,24 @@ class EditorWorkspace {
     scale: number | undefined;
     // drawLine: DrawLine;
     // drawShape: DrawShape;
-    // ruler: CanvasRuler;
     mainImg: fabric.Image | null = null;
     mode: string | undefined;
     prevSelectObject: fabric.Object | null = null;
     loadJson = false;
 
-    constructor(canvas: ContextCanvas, option: EditorWorkspaceOption) {
+    constructor(canvas: ContextCanvas) {
         this.canvas = canvas;
-        if (option.workspaceId) {
-            this.workspaceEl = document.querySelector(option.workspaceId) as HTMLElement;
-        } else {
-            this.workspaceEl = this.canvas.getElement();
-        }
+        this.workspaceEl = this.canvas.getElement();
+        // if (option.workspaceId) {
+        //     this.workspaceEl = document.querySelector(option.workspaceId) as HTMLElement;
+        // } else {
+            
+        // }
         this.workspace = null;
-        this.mode = option.mode;
-        this.option = option;
         this.dragMode = false;
         this.fill = DefaultWorkSpaceColor;
         // this.drawLine = new DrawLine(canvas, this);
         // this.drawShape = new DrawShape(canvas, this);
-        // this.ruler = initRuler(canvas);
         // new ControlsPlugin(canvas);
         this.initBackground();
         this.initResizeObserve();
@@ -66,14 +56,6 @@ class EditorWorkspace {
         this.height = this.workspaceEl.offsetHeight;
         this.canvas.setWidth(this.workspaceEl.offsetWidth);
         this.canvas.setHeight(this.workspaceEl.offsetHeight);
-    }
-
-    // 替换画布数据
-    echoTemplate(json: any) {
-        if (json.version) {
-            return this.handleNewData(json);
-        }
-        return this.handleOldData(json);
     }
 
     // 处理新数据
@@ -97,7 +79,6 @@ class EditorWorkspace {
                     if (this.workspace) {
                         this.setSize(this.workspace.width as number, this.workspace.height as number);
                     }
-                    this.toViewCanvas();
                     this.loadJson = true;
                     resolve(true);
                 });
@@ -108,29 +89,14 @@ class EditorWorkspace {
         });
     }
 
-    // 处理旧数据
-    handleOldData(json: any) {
-        if (!json || !json.src || !json.list.length) return Promise.resolve();
-        return new Promise((resolve, reject) => {
-            const { src, list } = json;
-            this.initRect(src)
-                .then(() => {
-                    this.inPointsToBooths(list);
-                    this.toViewCanvas();
-                    resolve(true);
-                })
-                .catch(reject);
-        });
-    }
-
     inPointsToBooths = (list: any) => {
-        list.forEach((item: any) => {
-            const group = this.jsonToGroup(item);
-            this.canvas.add(group);
-        });
+        // list.forEach((item: any) => {
+        //     const group = this.jsonToGroup(item);
+        //     this.canvas.add(group);
+        // });
         this.canvas.renderAll();
     };
-    
+
     jsonToGroup = (item: any) => {
         const arrPoints = item.boothMapData.split(',');
         const points: any = arrPoints
@@ -146,14 +112,14 @@ class EditorWorkspace {
         const polygon = new fabric.Polygon(points, {
             fill: item.boothMapColour,
         });
-        const group = this.drawShape.createBoothGroup(polygon, {
-            boothClass: item.brandId ? item.brandName : '',
-            boothCode: item.boothCode,
-            boothArea: item.rentArea ? `${item.rentArea}㎡` : '',
-        });
-        group.id = item.id;
-        group.isEditPoint = true;
-        return group;
+        // const group = this.drawShape.createBoothGroup(polygon, {
+        //     boothClass: item.brandId ? item.brandName : '',
+        //     boothCode: item.boothCode,
+        //     boothArea: item.rentArea ? `${item.rentArea}㎡` : '',
+        // });
+        // group.id = item.id;
+        // group.isEditPoint = true;
+        // return group;
     };
 
     // rect and image
@@ -164,19 +130,19 @@ class EditorWorkspace {
                 (img: fabric.Image) => {
                     if (!img || !img.width || !img.height) {
                         reject(null);
-                        return message.warning('摊位图纸加载失败，请刷新页面重试');
+                        return ; //message.warning('摊位图纸加载失败，请刷新页面重试');
                     }
                     this.canvas.discardActiveObject();
                     this.clearAllObject();
-                    img.set({
-                        type: 'image',
-                        left: 0,
-                        top: 0,
-                        id: 'mainImg',
-                        selectable: false,
-                        hasControls: false,
-                        hoverCursor: 'default',
-                    });
+                    // img.set({
+                    //     type: 'image',
+                    //     left: 0,
+                    //     top: 0,
+                    //     id: 'mainImg',
+                    //     selectable: false,
+                    //     hasControls: false,
+                    //     hoverCursor: 'default',
+                    // });
                     this.width = img.width;
                     this.height = img.height;
                     const workspace = new fabric.Rect({
@@ -210,7 +176,7 @@ class EditorWorkspace {
         const objCenter = obj.getCenterPoint();
         const viewportTransform = canvas.viewportTransform;
         if (canvas.width === undefined || canvas.height === undefined || !viewportTransform) return;
-        viewportTransform[4] = canvas.width / 2 - CalcWidth - objCenter.x * viewportTransform[0];
+        viewportTransform[4] = canvas.width / 2 - objCenter.x * viewportTransform[0];
         viewportTransform[5] = canvas.height / 2 - objCenter.y * viewportTransform[3];
         canvas.setViewportTransform(viewportTransform);
         canvas.renderAll();
@@ -235,7 +201,7 @@ class EditorWorkspace {
         this.width = (this.isNumber(width) ? width : +width) as number;
         this.height = (this.isNumber(height) ? height : +height) as number;
         // 重新设置workspace
-        this.workspace = this.canvas.getObjects().find((item) => item.id === 'workspace') as fabric.Rect;
+        this.workspace = this.canvas.getObjects().find((item: any) => item.id === 'workspace') as fabric.Rect;
         this.workspace.set('width', this.width);
         this.workspace.set('height', this.height);
         // this.auto();
@@ -269,10 +235,10 @@ class EditorWorkspace {
         const height = this.height || 0;
         if (!width || !height) return 0;
         // 按照宽度
-        if (viewPortWidth / viewPortHeight < width / height) {
-            return Number(subtract(divide(bignumber(viewPortWidth), bignumber(width)), 0.02));
-        } // 按照宽度缩放
-        return Number(subtract(divide(bignumber(viewPortHeight), bignumber(height)), 0.02));
+        // if (viewPortWidth / viewPortHeight < width / height) {
+        //     return Number(subtract(divide(bignumber(viewPortWidth), bignumber(width)), 0.02));
+        // } // 按照宽度缩放
+        return 1;//Number(subtract(divide(bignumber(viewPortHeight), bignumber(height)), 0.02));
     }
 
     // // 自动缩放
@@ -324,7 +290,6 @@ class EditorWorkspace {
         if (this.prevSelectObject) {
             this.canvas.setActiveObject(this.prevSelectObject);
         }
-        this.ruler.showGuideline();
         this.dragMode = false;
         this.canvas.defaultCursor = 'default';
         this.canvas.renderAll();
@@ -349,7 +314,6 @@ class EditorWorkspace {
 
         this.canvas.on('mouse:move', function (this: ExtCanvas, opt) {
             if (this.isDragging) {
-                that.ruler.hideGuideline();
                 that.canvas.discardActiveObject();
                 that.canvas.defaultCursor = 'grabbing';
                 const { e } = opt;
@@ -367,13 +331,13 @@ class EditorWorkspace {
             if (!this.viewportTransform) return;
             this.setViewportTransform(this.viewportTransform);
             this.isDragging = false;
-            if (that.mode !== PageType.view && !that.drawLine.isDrawing) {
-                that.getObjects().forEach((obj) => {
-                    obj.selectable = true;
-                    obj.lockMovementX = false;
-                    obj.lockMovementY = false;
-                });
-            }
+            // if (!that.drawLine.isDrawing) {
+            //     that.getObjects().forEach((obj) => {
+            //         obj.selectable = true;
+            //         obj.lockMovementX = false;
+            //         obj.lockMovementY = false;
+            //     });
+            // }
             that.canvas.defaultCursor = 'default';
             this.requestRenderAll();
         });
@@ -391,19 +355,17 @@ class EditorWorkspace {
             this.zoomToPoint(new fabric.Point(center.left, center.top), zoom);
             opt.e.preventDefault();
             opt.e.stopPropagation();
-            events.emit(EventsTypes.ZoomScale);
+            // events.emit(EventsTypes.ZoomScale);
         });
     }
 
     setDring() {
         this.canvas.defaultCursor = 'grab';
-        if (this.mode !== PageType.view) {
-            this.getObjects().forEach((obj) => {
-                obj.selectable = false;
-                obj.lockMovementX = true;
-                obj.lockMovementY = true;
-            });
-        }
+        this.getObjects().forEach((obj) => {
+            obj.selectable = false;
+            obj.lockMovementX = true;
+            obj.lockMovementY = true;
+        });
         this.canvas.requestRenderAll();
     }
 
@@ -423,7 +385,6 @@ class EditorWorkspace {
     // 获取图片
     getBase64Image() {
         const workspace = this.workspace;
-        this.ruler.hideGuideline();
         if (!workspace) return;
         const { left, top, width, height } = workspace;
         const option = {
@@ -438,29 +399,11 @@ class EditorWorkspace {
         this.canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         const dataUrl = this.canvas.toDataURL(option);
         this.setZoomAuto(scale);
-        this.ruler.showGuideline();
         return dataUrl;
     }
 
     getObjects() {
-        return this.canvas.getObjects().filter((item) => !['workspace', 'mainImg', 'maskRect'].includes(item.id || ''));
-    }
-
-    // 进入查看模式，只能选中不能移动和修改
-    toViewCanvas() {
-        if (this.mode !== PageType.view) return;
-        this.canvas.discardActiveObject();
-        const objects = this.getObjects();
-        objects.forEach((item) => {
-            item.set({
-                lockMovementX: true,
-                lockMovementY: true,
-                hasControls: false,
-                hoverCursor: 'pointer',
-                selectable: true,
-            });
-        });
-        this.canvas.renderAll();
+        return this.canvas.getObjects().filter((item: any) => !['workspace', 'mainImg', 'maskRect'].includes(item.id || ''));
     }
 }
 

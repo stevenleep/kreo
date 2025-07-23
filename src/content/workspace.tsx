@@ -111,42 +111,42 @@ const Workspace = () => {
      * 删除元素
      * @returns
      */
-    const deleteObject = () => {
-        if (lastOpenCreateSpecialBooth.current) return;
-        if (!canvas || type === PageType.view) return; // 查看模式下不能删除
-        const object = canvas.getActiveObject();
-        if (!object) return;
-        // 处理其它元素
-        if (!object.id) {
-            canvas.remove(object);
-            canvas.discardActiveObject();
-            canvas.renderAll();
-            return;
-        }
-        console.log('object:---', object);
-        console.log('lastProjectData:---', lastProjectData);
-        if (object.cType === 'booth' && lastOriginalObjectIds.current[object.id] && lastProjectData.current.operateType === 3) {
-            return message.warning('不可删除摊位哦～');
-        }
-        // 这个摊位有被关联的子摊位，不让删除
-        const values = Object.keys(lastMainCodeRelevance.current).map((key) => lastMainCodeRelevance.current[key]);
-        if (values.includes(object.id as string)) {
-            return message.warning('当前摊位下有正在关联的子摊位，请解绑后删除');
-        }
-        setState((prev) => {
-            const { boothData } = prev;
-            if (object.id && object.id in boothData) {
-                canvas.remove(object);
-                delete boothData[object.id];
-            }
-            if (object.id && object.id in prev.mainCodeRelevance) {
-                delete prev.mainCodeRelevance[object.id];
-            }
-            return prev;
-        });
-        canvas.discardActiveObject();
-        canvas.renderAll();
-    };
+    // const deleteObject = () => {
+    //     if (lastOpenCreateSpecialBooth.current) return;
+    //     if (!canvas || type === PageType.view) return; // 查看模式下不能删除
+    //     const object = canvas.getActiveObject();
+    //     if (!object) return;
+    //     // 处理其它元素
+    //     if (!object.id) {
+    //         canvas.remove(object);
+    //         canvas.discardActiveObject();
+    //         canvas.renderAll();
+    //         return;
+    //     }
+    //     console.log('object:---', object);
+    //     console.log('lastProjectData:---', lastProjectData);
+    //     if (object.cType === 'booth' && lastOriginalObjectIds.current[object.id] && lastProjectData.current.operateType === 3) {
+    //         return message.warning('不可删除摊位哦～');
+    //     }
+    //     // 这个摊位有被关联的子摊位，不让删除
+    //     const values = Object.keys(lastMainCodeRelevance.current).map((key) => lastMainCodeRelevance.current[key]);
+    //     if (values.includes(object.id as string)) {
+    //         return message.warning('当前摊位下有正在关联的子摊位，请解绑后删除');
+    //     }
+    //     setState((prev) => {
+    //         const { boothData } = prev;
+    //         if (object.id && object.id in boothData) {
+    //             canvas.remove(object);
+    //             delete boothData[object.id];
+    //         }
+    //         if (object.id && object.id in prev.mainCodeRelevance) {
+    //             delete prev.mainCodeRelevance[object.id];
+    //         }
+    //         return prev;
+    //     });
+    //     canvas.discardActiveObject();
+    //     canvas.renderAll();
+    // };
 
     /**
      * 监听新增
@@ -155,26 +155,26 @@ const Workspace = () => {
      */
     const watchAdded = (e: IEvent<MouseEvent>) => {
         if (!canvas || !workspace) return;
-        if (lastLoading.current) return;
-        if (!e.target || !e.target.id) return;
+        // if (lastLoading.current) return;
+        if (!e.target || !(e.target as any).id) return;
         if (e.target.excludeFromExport) return;
-        if (e.target.cType !== 'booth' || e.target.type !== 'group') return;
+        // if (e.target.cType !== 'booth' || e.target.type !== 'group') return;
         if (canvas.historyPlugin?.loading) return; // 正在撤回画布不处理
-        const id = e.target.id as string;
-        setState((prev) => {
-            prev.boothData[id] = {
-                boothPrefix: prev.beforeBoothData.acCodePrefix,
-                effectiveDateBegin: prev.projectData.effectiveDateBegin,
-                effectiveDateEnd: prev.projectData.effectiveDateEnd,
-                boothMapColour: (e.target as fabric.Group).gruopFill,
-                isDouble: '0',
-                assetsNatureKey: '0',
-                boothMark: 0,
-                sharing: floorInfo?.sharing,
-                boothLevelKey: undefined,
-            };
-            return prev;
-        });
+        const id = (e.target as any).id as string;
+        // setState((prev) => {
+        //     prev.boothData[id] = {
+        //         boothPrefix: prev.beforeBoothData.acCodePrefix,
+        //         effectiveDateBegin: prev.projectData.effectiveDateBegin,
+        //         effectiveDateEnd: prev.projectData.effectiveDateEnd,
+        //         boothMapColour: (e.target as fabric.Group).gruopFill,
+        //         isDouble: '0',
+        //         assetsNatureKey: '0',
+        //         boothMark: 0,
+        //         sharing: floorInfo?.sharing,
+        //         boothLevelKey: undefined,
+        //     };
+        //     return prev;
+        // });
     };
 
     /**
@@ -216,10 +216,7 @@ const Workspace = () => {
             height: container.current?.offsetHeight,
             selection: false,
         });
-        const workspace = new EditorWorkspace(canvas, {
-            workspaceId: '#workspace',
-            // mode: type,
-        });
+        const workspace = new EditorWorkspace(canvas);
         // new History(canvas, workspace, setState);
         setState({ canvas, workspace });
         // const data = {
