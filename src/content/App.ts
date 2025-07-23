@@ -70,7 +70,8 @@ class App {
   private initRoot() {
     const div = document.createElement('div');
     div.id = 'draw-extension-root-container';
-    div.classList.add('draw-extension-root-container-class');
+    div.style.position = 'relative';
+    div.style.zIndex = '9999';
     const css = chrome.runtime.getURL('content.css');
     fetch(css)
       .then(response => response.text())

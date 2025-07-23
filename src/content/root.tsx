@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import ToolBar from './toolBar';
+import Workspace from './workspace';
 // import Panel from './panel';
 // import btn_img from '../../public/images/app.jpg';
 
@@ -17,6 +18,7 @@ const App = () => {
   return (
     <div className='extension-root-container'>
       <ToolBar />
+      <Workspace />
     </div>
   );
 };
