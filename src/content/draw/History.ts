@@ -19,6 +19,7 @@ class History {
         this.canvas.historyPlugin = this;
         this.workspace = workspace;
         this.setState = setState;
+        this.initHistory();
     }
     watchHistory = () => {
         if (this.bindEvent) {
@@ -111,7 +112,7 @@ class History {
             this.historyIndex = -1;
             this.historyList = [];
             this.pushHistory();
-            this.watchHistory();
+            this.watchHistory(); 
         });
     };
 }

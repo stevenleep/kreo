@@ -10,7 +10,7 @@ import { IEvent } from 'fabric/fabric-impl';
 // import { PageType } from '@/pages/basicsInfo/booth/projectVisual/core/config/type';
 // import hotkeys from 'hotkeys-js';
 // import { KeyNames } from '@/pages/basicsInfo/booth/projectVisual/core/config/hotEventKeys';
-// import History from '@/pages/basicsInfo/booth/projectVisual/core/History';
+import History from './draw/History';
 // import { onFinishPointsChange, groupToEditPolygon } from '@/pages/basicsInfo/booth/projectVisual/utils';
 // import './index.less';
 
@@ -230,19 +230,12 @@ const Workspace = () => {
             selection: false,
         });
         const workspace = new EditorWorkspace(canvas);
-        // new History(canvas, workspace, setState);
+        new History(canvas, workspace, setState);
         setState({ canvas, workspace });
     };
 
     return (
         <canvas className="fabric-canvas" ref={canvasRef} />
-        // <div className="draw">
-        //     <div ref={container} className="project-visual-draw" id="workspace">
-        //         <div className="canvas-box">
-        //             <canvas className="fabric-canvas" id="fabric-canvas" />
-        //         </div>
-        //     </div>
-        // </div>
     );
 };
 
