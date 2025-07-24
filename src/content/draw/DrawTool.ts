@@ -15,7 +15,28 @@ class DrawTool {
 
     active(drawMode: string) {
         this.drawMode = drawMode;
+        // this.addEventListener();
     }
+
+    // addEventListener() {
+    //     window.addEventListener('mousedown', () => {
+
+    //     });
+
+    //     window.addEventListener('mousemove', () => {
+
+    //     });
+    // }
+
+    // removeEventListener() {
+    //     window.addEventListener('mousedown', () => {
+
+    //     });
+
+    //     window.addEventListener('mousemove', () => {
+
+    //     });
+    // }
 
     draw(ev: any) {
         if (this.drawMode) {
@@ -285,6 +306,7 @@ class DrawTool {
 
     deactive() {
         this.drawMode = '';
+        this.removeEventListener();
     }
 };
 

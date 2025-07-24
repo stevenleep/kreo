@@ -42,7 +42,9 @@ class EditorWorkspace {
         this.workspace = null;
         this.dragMode = false;
         this.fill = DefaultWorkSpaceColor;
-        this.drawTool = new DrawTool(canvas, this);
+        this.drawTool = new DrawTool(() => {
+            
+        });
         // this.drawShape = new DrawShape(canvas, this);
         // new ControlsPlugin(canvas);
         this.initBackground();

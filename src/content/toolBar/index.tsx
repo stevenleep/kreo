@@ -13,7 +13,7 @@ const ToolBar = () => {
         }
 
         setState({ drawMode: '' });
-        // workspace.drawTool.stop();
+        workspace.drawTool.deactive();
     };
 
     const drawPenceil = useCallback((type: string) => {
@@ -24,9 +24,7 @@ const ToolBar = () => {
         if (drawMode === type) {
             stop();
         } else {
-            // workspace.drawTool.start(type, () => {
-            //     setState({ drawMode: '' });
-            // });
+            workspace.drawTool.active(type);
             setState({ drawMode: type });
         }
     }, [ workspace, drawMode ]);
@@ -63,17 +61,17 @@ const ToolBar = () => {
         <div className={styles.tool_bar}>
             {/* <!-- 主要工具组 --> */}
             <div className={styles.toolbar_group}>
-                <button className={`${styles.tool_btn} ${styles.active}`} title="选择工具 (V)">
+                <button className={`${styles.tool_btn}`} title="选择工具 (V)">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M4 2L12 10L8 14L6.4 10L4 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                     </svg>
                 </button>
-                <button className={`${styles.tool_btn} ${DrawType.straightLine === active ? styles.active : ''}`} data-mode="pen" title="画笔工具 (P)">
+                <button className={`${styles.tool_btn} ${DrawType.line === active ? styles.active : ''}`} data-mode="pen" title="画笔工具 (P)">
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                         <g strokeWidth="1.5"><path clipRule="evenodd" d="m7.643 15.69 7.774-7.773a2.357 2.357 0 1 0-3.334-3.334L4.31 12.357a3.333 3.333 0 0 0-.977 2.357v1.953h1.953c.884 0 1.732-.352 2.357-.977Z"></path><path d="m11.25 5.417 3.333 3.333"></path></g>
                     </svg>
                 </button>
-                <button className={styles.tool_btn} data-mode="text" title="文字工具 (T)">
+                <button className={`${styles.tool_btn} ${DrawType.line === active ? styles.active : ''}`} data-mode="text" title="文字工具 (T)">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 4H13V6H9V14H7V6H3V4Z" stroke="currentColor" strokeWidth="1.5"/>
                 </svg>
@@ -91,32 +89,32 @@ const ToolBar = () => {
                     </svg>
                 </button>
                 <div className={styles.shape_dropdown}>
-                    <button className={styles.tool_btn} title="矩形 (R)">
+                    <button className={`${styles.tool_btn} ${DrawType.rect === active ? styles.active : ''}`} title="矩形 (R)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <rect x="3" y="3" width="10" height="10" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
                     </button>
-                    <button className={styles.tool_btn} title="圆 (O)" onClick={() => handlerDraw(DrawType.straightLine)}>
+                    <button className={`${styles.tool_btn} ${DrawType.circle === active ? styles.active : ''}`} title="圆 (O)" onClick={() => handlerDraw(DrawType.circle)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
                     </button>
-                    <button className={styles.tool_btn} title="椭圆 (O)" onClick={() => handlerDraw(DrawType.straightLine)}>
+                    <button className={`${styles.tool_btn} ${DrawType.ellipse === active ? styles.active : ''}`} title="椭圆 (O)" onClick={() => handlerDraw(DrawType.ellipse)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <ellipse cx="8" cy="8" rx="6.5" ry="4.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
                     </button>
-                    <button className={styles.tool_btn} title="直线 (L)" onClick={() => handlerDraw(DrawType.straightLine)}>
+                    <button className={`${styles.tool_btn} ${DrawType.ployLine === active ? styles.active : ''}`} title="直线 (L)" onClick={() => handlerDraw(DrawType.ployLine)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <line x1="3" y1="13" x2="13" y2="3" stroke="currentColor" strokeWidth="1.5"/>
                         </svg>
                     </button>
-                    <button className={styles.tool_btn} title="箭头 (A)">
+                    <button className={`${styles.tool_btn} ${DrawType.line === active ? styles.active : ''}`} title="箭头 (A)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <path d="M3 13L13 3M13 3L13 8M13 3L8 3" stroke="currentColor" strokeWidth="1.5"/>
                         </svg>
                     </button>
-                    <button className={styles.tool_btn} title="三角形">
+                    <button className={`${styles.tool_btn} ${DrawType.triangle === active ? styles.active : ''}`} title="三角形" onClick={() => handlerDraw(DrawType.triangle)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <polygon points="8,3 13,13 3,13" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
