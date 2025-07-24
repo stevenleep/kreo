@@ -231,7 +231,6 @@ const Workspace = () => {
         });
         const workspace = new EditorWorkspace(canvas);
         // new History(canvas, workspace, setState);
-        debugger
         setState({ canvas, workspace });
     };
 

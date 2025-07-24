@@ -1,8 +1,6 @@
 import { fabric } from 'fabric';
-// import { DrawType } from '../components/tool/config';
 import EditorWorkspace from './EditorWorkspace';
 import { DrawType } from '../toolBar/config';
-// import initGuidelines from './initGuidelines';
 // import { getRandomColor } from '@/utils/tools';
 
 type LineCoords = [fabric.Point, fabric.Point];
@@ -31,7 +29,7 @@ function actionHandler(eventData: any, transform: any, x: number, y: number) {
 }
 
 function anchorWrapper(anchorIndex: any, fn: any) {
-    return function(eventData, transform, x, y) {
+    return function(eventData: any, transform: any, x: number, y: number) {
       var fabricObject = transform.target,
           absolutePoint = fabric.util.transformPoint({
               x: (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x),
@@ -47,19 +45,18 @@ function anchorWrapper(anchorIndex: any, fn: any) {
     }
   }
 
-  	// this function will be used both for drawing and for interaction.
-	function polygonPositionHandler(dim, finalMatrix, fabricObject) {
-        var x = (fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x),
-              y = (fabricObject.points[this.pointIndex].y - fabricObject.pathOffset.y);
-          return fabric.util.transformPoint(
-              { x: x, y: y },
-        fabric.util.multiplyTransformMatrices(
-          fabricObject.canvas.viewportTransform,
-          fabricObject.calcTransformMatrix()
-        )
-          );
-      }
-  
+// this function will be used both for drawing and for interaction.
+function polygonPositionHandler(dim: any, finalMatrix: any, fabricObject: any) {
+    var x = (fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x),
+            y = (fabricObject.points[this.pointIndex].y - fabricObject.pathOffset.y);
+        return fabric.util.transformPoint(
+            { x: x, y: y },
+            fabric.util.multiplyTransformMatrices(
+                fabricObject.canvas.viewportTransform,
+                fabricObject.calcTransformMatrix()
+            )
+        );
+}
 
 /**
  * StraightLine 直线
@@ -134,7 +131,6 @@ class DrawTool {
      * 创建一个线
      */
     createPolyLine = (points: fabric.Point[]) => {
-        console.log(11111)
         const line = new fabric.Polyline(points, {
             fill: undefined,
             stroke: '#000',
@@ -153,8 +149,8 @@ class DrawTool {
                 positionHandler: polygonPositionHandler,
                 actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
                 actionName: 'modifyPolygon',
-                // pointIndex: index
-            });
+                pointIndex: index
+            } as any);
             return acc;
         }, {});
 
@@ -242,7 +238,6 @@ class DrawTool {
             // this.points.forEach((item: fabric.Point, index: number) => {
             //     t += `${index === 0 ? 'M' : 'L'} ${item.x} ${item.y}`;
             // });
-            // debugger
             const line = this.createPolyLine(this.points);
             this.canvas.add(line);
             // this.sendToBack(shape);
