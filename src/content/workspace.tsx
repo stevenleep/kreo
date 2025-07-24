@@ -234,8 +234,34 @@ const Workspace = () => {
         setState({ canvas, workspace });
     };
 
+    const handlerDraw = (ev: React.MouseEvent) => {
+        workspace?.drawTool && workspace?.drawTool.draw(ev);
+    
+        // const x = ev.target.pointerPos.x;
+        // const y = ev.target.pointerPos.y;
+        // const box =  {
+        //     width: 6,
+        //     height: 6,
+        //     x: x - 3,
+        //     y: y- 3
+        // };
+        // const shapes = renderLayer.current.getChildren();
+        // const shape = shapes.find(shape => Konva.Util.haveIntersection(box, shape.getClientRect()));
+        // if (shape) {
+        // const id = shape.id();
+        // selectShapIds[0] = id;
+        // setState({ selectShapIds });
+
+    };
+    
+    const handlerMouseMove = (ev: React.MouseEvent) => {
+        workspace?.drawTool && workspace?.drawTool.drawMove(ev);
+    };
+
     return (
-        <canvas className="fabric-canvas" ref={canvasRef} />
+        <div onMouseDown={handlerDraw} onMouseMove={handlerMouseMove}>
+            <canvas ref={canvasRef} />
+        </div>
     );
 };
 

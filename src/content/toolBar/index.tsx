@@ -89,7 +89,7 @@ const ToolBar = () => {
                     </svg>
                 </button>
                 <div className={styles.shape_dropdown}>
-                    <button className={`${styles.tool_btn} ${DrawType.rect === active ? styles.active : ''}`} title="矩形 (R)">
+                    <button className={`${styles.tool_btn} ${DrawType.rect === active ? styles.active : ''}`} title="矩形 (R)" onClick={() => handlerDraw(DrawType.rect)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <rect x="3" y="3" width="10" height="10" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
@@ -109,11 +109,11 @@ const ToolBar = () => {
                             <line x1="3" y1="13" x2="13" y2="3" stroke="currentColor" strokeWidth="1.5"/>
                         </svg>
                     </button>
-                    <button className={`${styles.tool_btn} ${DrawType.line === active ? styles.active : ''}`} title="箭头 (A)">
+                    {/* <button className={`${styles.tool_btn} ${DrawType.line === active ? styles.active : ''}`} title="箭头 (A)">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <path d="M3 13L13 3M13 3L13 8M13 3L8 3" stroke="currentColor" strokeWidth="1.5"/>
                         </svg>
-                    </button>
+                    </button> */}
                     <button className={`${styles.tool_btn} ${DrawType.triangle === active ? styles.active : ''}`} title="三角形" onClick={() => handlerDraw(DrawType.triangle)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <polygon points="8,3 13,13 3,13" stroke="currentColor" strokeWidth="1.5" fill="none"/>

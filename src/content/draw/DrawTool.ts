@@ -15,42 +15,15 @@ class DrawTool {
 
     active(drawMode: string) {
         this.drawMode = drawMode;
-        // this.addEventListener();
     }
 
-    // addEventListener() {
-    //     window.addEventListener('mousedown', () => {
-
-    //     });
-
-    //     window.addEventListener('mousemove', () => {
-
-    //     });
-    // }
-
-    // removeEventListener() {
-    //     window.addEventListener('mousedown', () => {
-
-    //     });
-
-    //     window.addEventListener('mousemove', () => {
-
-    //     });
-    // }
-
-    draw(ev: any) {
+    draw(ev: React.MouseEvent) {
         if (this.drawMode) {
-            const absPointer = new Point(ev.target.pointerPos.x, ev.target.pointerPos.y); // 获取鼠标位置
-
+            const absPointer = new Point(ev.clientX, ev.clientY); // 获取鼠标位置
             const confirmPoint = new Point(absPointer.x, absPointer.y);
-            const anchorPoint = this.getAroundCircle(absPointer); // 获取鼠标附近的点
             let x = 0;
             let y = 0;
-            if (anchorPoint) {
-                // 如果鼠标附近有可以吸附的点去获取点位置
-                x = anchorPoint.x;
-                y = anchorPoint.y;
-            }
+
             if (!this.points.length) {
                 // 第一次点击
                 // const tempPoint = new Point(absPointer.x, absPointer.y);
@@ -67,10 +40,10 @@ class DrawTool {
                 // const newPoint = new Point(x, y);
                 // const line = [this.lastPoint, newPoint];
                 // this.lines.push(line);
-                // this.tempLine = [
-                //     new Point(x, y),
-                //     new Point(x, y)
-                // ];
+                this.tempLine = [
+                    new Point(x, y),
+                    new Point(x, y)
+                ];
             } else {
                 // 其余点击
                 // ev.evt.shiftKey && confirmPoint.setXY(this.tempLine.x2!, this.tempLine.y2!);
@@ -91,14 +64,14 @@ class DrawTool {
             }
 
         //     // 画上一个线，起始位置：自动吸附的点 > 鼠标点击的点
-            if (this.lastPoint && !anchorPoint) {
+            if (this.lastPoint) {
                 // const line = this.createLine([this.lastPoint, confirmPoint]);
                 // this.lines.push(line);
                 // this.drawLayer.add(line);
             }
             // 如果有自动吸附的点从吸附的点开始画，没有就从点击的位置开始画
-            this.lastPoint = anchorPoint ? new Point(x, y) : confirmPoint;
-            this.points.push(this.lastPoint);
+            // this.lastPoint = anchorPoint ? new Point(x, y) : confirmPoint;
+            this.points.push(confirmPoint);
 
             if (this.drawShaps.length) {
                 this.drawShaps[0].pointUnits = this.points.map(point => [point.x, point.y]).flat();
@@ -134,23 +107,10 @@ class DrawTool {
         }
     }
 
-    getAroundCircle(curPoint: Point) {
-        for (let i = 0; i < this.points.length - 1; i++) {
-            const point = this.points[i];
-            // const radius = Number(item.radius);
-            // 计算鼠标位置到圆形中心的距离
-            const distance = Math.sqrt(Math.pow(curPoint.x - point.x, 2) + Math.pow(curPoint.y - point.y, 2));
-            // 判断鼠标是否在圆形边界的一定范围内
-            if (distance <= 10) {
-                return point;
-            }
-        }
-        return null;
-    }
-
-    drawMove(ev: any) {
+    drawMove(ev: React.MouseEvent) {
+        // debugger
         if (this.drawMode && this.drawShaps.length) {
-            const absPointer = new Point(ev.target.pointerPos.x, ev.target.pointerPos.y); // 获取鼠标位置
+            const absPointer = new Point(ev.clientX, ev.clientY); // 获取鼠标位置
 
             if (this.drawMode === DrawType.rect) {
                 if (this.lastPoint) {
@@ -168,30 +128,10 @@ class DrawTool {
                 }
             } else {
                 let tempPoint = absPointer;
-                const anchorPoint = this.getAroundCircle(absPointer);
-                if (anchorPoint) {
-                    // 有相近的点，吸附一下
-                    tempPoint = anchorPoint;
-                } else if (ev.evt.shiftKey && this.lastPoint) {
+                if (ev.shiftKey && this.lastPoint) {
                     // 按下了shift，设置只能画直线
                     // const point = this.shiftAngle(this.lastPoint, absPoint);
                     // tempPoint = point;
-                } else {
-                    // 有引导线也进行吸附
-                    if (this.lastPoint) {
-                        const dx = absPointer.x - this.lastPoint.x;
-                        const dy = absPointer.y - this.lastPoint.y;
-
-                        if (dx !== 0) {
-                            const horizontalAngle = Math.abs(Math.atan(dy / dx)) * 180 / Math.PI;  // 弧度值
-                            // 小于1度
-                            if (horizontalAngle < 1) {
-                                tempPoint = new Point(absPointer.x, this.lastPoint.y);
-                            } else if (horizontalAngle > 89) {
-                                tempPoint = new Point(this.lastPoint.x, absPointer.y);
-                            }
-                        }
-                    }
                 }
 
                 this.drawShaps[0].pointUnits = [...this.points, tempPoint].map(point => [point.x, point.y]).flat();
@@ -237,7 +177,7 @@ class DrawTool {
             this.points.length = 0;
             this.drawShaps.length = 0;
             this.lastPoint = null;
-            this.deactive();
+            // this.deactive();
         }
     }
 
@@ -306,7 +246,6 @@ class DrawTool {
 
     deactive() {
         this.drawMode = '';
-        this.removeEventListener();
     }
 };
 
