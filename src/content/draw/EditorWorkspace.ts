@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 // import { divide, subtract, bignumber } from 'mathjs';
 // import { throttle } from 'lodash';
-import DrawTool from './DrawTool';
+import DrawTool from './DrawTool.ts.bak';
 // import DrawShape from './DrawShape';
 // import ControlsPlugin from './initControls';
 // import { CalcWidth, PageType } from './config/type';

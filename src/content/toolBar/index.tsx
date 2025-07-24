@@ -68,7 +68,7 @@ const ToolBar = () => {
                         <path d="M4 2L12 10L8 14L6.4 10L4 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                     </svg>
                 </button>
-                <button onClick={() => handlerDraw(DrawType.straightLine)} className={`${styles.tool_btn} ${DrawType.straightLine === active ? styles.active : ''}`} data-mode="pen" title="画笔工具 (P)">
+                <button className={`${styles.tool_btn} ${DrawType.straightLine === active ? styles.active : ''}`} data-mode="pen" title="画笔工具 (P)">
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                         <g strokeWidth="1.5"><path clipRule="evenodd" d="m7.643 15.69 7.774-7.773a2.357 2.357 0 1 0-3.334-3.334L4.31 12.357a3.333 3.333 0 0 0-.977 2.357v1.953h1.953c.884 0 1.732-.352 2.357-.977Z"></path><path d="m11.25 5.417 3.333 3.333"></path></g>
                     </svg>
@@ -96,12 +96,17 @@ const ToolBar = () => {
                             <rect x="3" y="3" width="10" height="10" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
                     </button>
-                    <button className={styles.tool_btn} title="椭圆 (O)">
+                    <button className={styles.tool_btn} title="圆 (O)" onClick={() => handlerDraw(DrawType.straightLine)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <ellipse cx="8" cy="8" rx="5.5" ry="5.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                            <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
                     </button>
-                    <button className={styles.tool_btn} title="直线 (L)">
+                    <button className={styles.tool_btn} title="椭圆 (O)" onClick={() => handlerDraw(DrawType.straightLine)}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <ellipse cx="8" cy="8" rx="6.5" ry="4.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                        </svg>
+                    </button>
+                    <button className={styles.tool_btn} title="直线 (L)" onClick={() => handlerDraw(DrawType.straightLine)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <line x1="3" y1="13" x2="13" y2="3" stroke="currentColor" strokeWidth="1.5"/>
                         </svg>
