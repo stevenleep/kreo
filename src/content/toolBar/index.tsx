@@ -13,7 +13,7 @@ const ToolBar = () => {
         }
 
         setState({ drawMode: '' });
-        workspace.drawTool.stop();
+        // workspace.drawTool.stop();
     };
 
     const drawPenceil = useCallback((type: string) => {
@@ -24,9 +24,9 @@ const ToolBar = () => {
         if (drawMode === type) {
             stop();
         } else {
-            workspace.drawTool.start(type, () => {
-                setState({ drawMode: '' });
-            });
+            // workspace.drawTool.start(type, () => {
+            //     setState({ drawMode: '' });
+            // });
             setState({ drawMode: type });
         }
     }, [ workspace, drawMode ]);

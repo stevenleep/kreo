@@ -12,11 +12,8 @@ export type panelItem = {
 };
 
 export const DrawType = {
-    lineSegment: 'lineSegment',
-    straightLine: 'straightLine',
-    straightMergeLine: 'StraightMergeLine',
-    arcLine: 'ArcLine',
-    rectLine: 'RectLine',
+    ployLine: 'PloyLine',
+    line: 'Line',
     rect: 'Rect',
     circle: 'Circle',
     ellipse: 'Ellipse',
@@ -27,5 +24,5 @@ export const DrawType = {
     specialBooth: 'CustomSpecialBooth',
 };
 
-export const noDraggableList = [DrawType.straightLine];
+// export const noDraggableList = [DrawType.straightLine];
 // export const noDraggableList = [DrawType.straightLine, DrawType.straightMergeLine, DrawType.arcLine, DrawType.rectLine, DrawType.starBooth];

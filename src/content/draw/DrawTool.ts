@@ -1,6 +1,5 @@
 import { nanoid } from "nanoid";
-import { DrawType } from "../components/tool/config";
-import GuildTool from "./GuildTool";
+import { DrawType } from "./../toolBar/config";
 import Point from "./Point";
 
 class DrawTool {
@@ -10,15 +9,12 @@ class DrawTool {
     points: Point[] = [];
     lastPoint: Point | null = null;
     drawEndCallBack: Function;
-    guildTool: GuildTool;
-    constructor(guildTool: GuildTool, drawEndCallBack: Function) {
-        this.guildTool = guildTool;
+    constructor(drawEndCallBack: Function) {
         this.drawEndCallBack = drawEndCallBack;
     }
 
     active(drawMode: string) {
         this.drawMode = drawMode;
-        this.guildTool.active();
     }
 
     draw(ev: any) {
@@ -82,7 +78,6 @@ class DrawTool {
             // 如果有自动吸附的点从吸附的点开始画，没有就从点击的位置开始画
             this.lastPoint = anchorPoint ? new Point(x, y) : confirmPoint;
             this.points.push(this.lastPoint);
-            this.guildTool.setPrePoint(this.lastPoint);
 
             if (this.drawShaps.length) {
                 this.drawShaps[0].pointUnits = this.points.map(point => [point.x, point.y]).flat();
@@ -98,15 +93,6 @@ class DrawTool {
                         }
                     );
                 } else if (this.drawMode === DrawType.circle) {
-                    this.drawShaps.push(
-                        {
-                            type: this.drawMode,
-                            x: absPointer.x,
-                            y: absPointer.y,
-                            radius: 0
-                        }
-                    );
-                } else if (this.drawMode === DrawType.arc) {
                     this.drawShaps.push(
                         {
                             type: this.drawMode,
@@ -160,7 +146,6 @@ class DrawTool {
                     this.drawShaps[0].radius = radius;
                 }
             } else {
-                this.guildTool.guild(ev);
                 let tempPoint = absPointer;
                 const anchorPoint = this.getAroundCircle(absPointer);
                 if (anchorPoint) {
@@ -195,7 +180,6 @@ class DrawTool {
 
     drawEnd() {
         if (this.drawMode) {
-            this.guildTool.deactive();
             // const isMerge = this.drawMode === DrawType.straightMergeLine; // 是否要闭合
             // if (isMerge && this.points.length >= 3) {
             //     // // 画店铺
