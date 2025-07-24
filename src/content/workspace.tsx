@@ -5,7 +5,6 @@ import { Context } from './draw/Context';
 // import useEvents from '@/pages/basicsInfo/booth/projectVisual/hooks/useEvents';
 import { IEvent } from 'fabric/fabric-impl';
 // import { getQueryString } from '@/utils/tools';
-// import useInitDetail from '../../hooks/useInitDetail';
 // import { EventsTypes, events } from '@/utils/events';
 // import { useLatest } from 'ahooks';
 // import { PageType } from '@/pages/basicsInfo/booth/projectVisual/core/config/type';
@@ -23,11 +22,7 @@ type OffListener = (ev: fabric.IEvent) => void;
  */
 const Workspace = () => {
     const { canvas, workspace, setState } = useContext(Context);
-    const container = useRef<HTMLDivElement | null>(null);
-    // const type = getQueryString('type');
-    // const { run: initDetail } = useInitDetail();
-    // const lastLoading = useLatest(canvasLoading);
-    // const lastProjectData = useLatest(projectData);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
     // const lastMainCodeRelevance = useLatest(mainCodeRelevance);
     // const lastOpenCreateSpecialBooth = useLatest(openCreateSpecialBooth);
     // const lastOriginalObjectIds = useLatest(originalObjectIds);
@@ -208,32 +203,47 @@ const Workspace = () => {
      * 初始化canvas
      */
     const initCanvas = async () => {
-        const canvas = new fabric.Canvas('fabric-canvas', {
+        const domHeight = Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.offsetHeight,
+            document.body.clientHeight,
+            document.documentElement.clientHeight
+        );
+
+        const domWidth = Math.max(
+            document.body.scrollWidth,
+            document.documentElement.scrollWidth,
+            document.body.offsetWidth,
+            document.documentElement.offsetWidth,
+            document.body.clientWidth,
+            document.documentElement.clientWidth
+        );
+
+        const canvas = new fabric.Canvas(canvasRef.current, {
             fireRightClick: false,
             stopContextMenu: true,
             controlsAboveOverlay: true,
-            width: container.current?.offsetWidth,
-            height: container.current?.offsetHeight,
+            width: domWidth,
+            height: domHeight,
             selection: false,
         });
         const workspace = new EditorWorkspace(canvas);
         // new History(canvas, workspace, setState);
+        debugger
         setState({ canvas, workspace });
-        // const data = {
-        //     planId: getQueryString('planId'),
-        //     sourceType: getQueryString('sourceType'),
-        // };
-        // initDetail(workspace, data);
     };
 
     return (
-        <div className="draw">
-            <div ref={container} className="project-visual-draw" id="workspace">
-                <div className="canvas-box">
-                    <canvas className="fabric-canvas" id="fabric-canvas" />
-                </div>
-            </div>
-        </div>
+        <canvas className="fabric-canvas" ref={canvasRef} />
+        // <div className="draw">
+        //     <div ref={container} className="project-visual-draw" id="workspace">
+        //         <div className="canvas-box">
+        //             <canvas className="fabric-canvas" id="fabric-canvas" />
+        //         </div>
+        //     </div>
+        // </div>
     );
 };
 

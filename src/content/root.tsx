@@ -2,6 +2,7 @@ import { createRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import ToolBar from './toolBar';
 import Workspace from './workspace';
+import { CanvasProvider } from './draw/Context';
 // import Panel from './panel';
 // import btn_img from '../../public/images/app.jpg';
 
@@ -17,8 +18,10 @@ import Workspace from './workspace';
 const App = () => {
   return (
     <div className='extension-root-container'>
-      <ToolBar />
-      <Workspace />
+      <CanvasProvider>
+          <ToolBar />
+          <Workspace />
+      </CanvasProvider>
     </div>
   );
 };

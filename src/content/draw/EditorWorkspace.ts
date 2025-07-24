@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 // import { divide, subtract, bignumber } from 'mathjs';
 // import { throttle } from 'lodash';
-// import DrawLine from './DrawLine';
+import DrawTool from './DrawTool';
 // import DrawShape from './DrawShape';
 // import ControlsPlugin from './initControls';
 // import { CalcWidth, PageType } from './config/type';
@@ -24,7 +24,7 @@ class EditorWorkspace {
     width: number | undefined;
     height: number | undefined;
     scale: number | undefined;
-    // drawLine: DrawLine;
+    drawTool!: DrawTool;
     // drawShape: DrawShape;
     mainImg: fabric.Image | null = null;
     mode: string | undefined;
@@ -42,7 +42,7 @@ class EditorWorkspace {
         this.workspace = null;
         this.dragMode = false;
         this.fill = DefaultWorkSpaceColor;
-        // this.drawLine = new DrawLine(canvas, this);
+        this.drawTool = new DrawTool(canvas, this);
         // this.drawShape = new DrawShape(canvas, this);
         // new ControlsPlugin(canvas);
         this.initBackground();
