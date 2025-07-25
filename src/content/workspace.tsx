@@ -11,6 +11,7 @@ import { IEvent } from 'fabric/fabric-impl';
 // import hotkeys from 'hotkeys-js';
 // import { KeyNames } from '@/pages/basicsInfo/booth/projectVisual/core/config/hotEventKeys';
 import History from './draw/History';
+import { DrawType } from './toolBar/config';
 // import { onFinishPointsChange, groupToEditPolygon } from '@/pages/basicsInfo/booth/projectVisual/utils';
 // import './index.less';
 
@@ -235,7 +236,9 @@ const Workspace = () => {
     };
 
     const handlerDraw = (ev: React.MouseEvent) => {
-        workspace?.drawTool && workspace?.drawTool.draw(ev);
+        if (workspace?.drawTool.drawMode !== DrawType.pencil) {
+            workspace?.drawTool && workspace?.drawTool.draw(ev);
+        }
     
         // const x = ev.target.pointerPos.x;
         // const y = ev.target.pointerPos.y;
@@ -258,8 +261,12 @@ const Workspace = () => {
         workspace?.drawTool && workspace?.drawTool.drawMove(ev);
     };
 
+    const handlerMouseUp = (ev: React.MouseEvent) => {
+        workspace?.drawTool && workspace?.drawTool.drawEnd(ev);
+    };
+
     return (
-        <div onMouseDown={handlerDraw} onMouseMove={handlerMouseMove}>
+        <div onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp}>
             <canvas ref={canvasRef} />
         </div>
     );
