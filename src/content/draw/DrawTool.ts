@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import { DrawType } from "./../toolBar/config";
 import Point from "./Point";
 import { ContextCanvas } from './Context';
@@ -26,50 +26,60 @@ class DrawTool {
     }
 
     drawStartTriangle(pointer: Point) {
-        this.drawShaps[0] = new fabric.Ellipse({
+        this.drawShaps[0] = new fabric.Triangle({
             left: pointer.x,
             top: pointer.y,
             originX: "left",
-            originY: "center",
+            originY: "top",
             strokeWidth: 1,
             stroke: '#000',
-            fill: '#000',
+            fill: 'transparent',
+            width: 0,
+            height: 0,
             selectable: false,
             evented: false,
-            // radius: 1,
         });
         this.canvas.add(this.drawShaps[0]);
     }
 
-    drawMoveTriangle(pointer: Point) {
-        this.drawShaps[0].set({
-            radius: linearDistance( this.points[0], pointer ) / 2,
-            angle: (Math.atan2(pointer.y - this.points[0].y, pointer.x - this.points[0].x) * 180) / Math.PI,
-        });
-        this.drawShaps[0].setCoords();
-    }
+    // drawMoveTriangle(pointer: Point) {
+    //     if (this.points[0].x > pointer.x) {
+    //        this.drawShaps[0].set({ left: Math.abs(pointer.x) });
+    //     }
+    //     if (this.points[0].y > pointer.y) {
+    //         this.drawShaps[0].set({ top: Math.abs(pointer.y) });
+    //     }
+    //     this.drawShaps[0].set({ width: Math.abs(this.points[0].x - pointer.x) });
+    //     this.drawShaps[0].set({ height: Math.abs(this.points[0].y - pointer.y) });
+    //     this.drawShaps[0].setCoords();
+    // }
 
     drawStartEllipse(pointer: Point) {
         this.drawShaps[0] = new fabric.Ellipse({
             left: pointer.x,
             top: pointer.y,
+            rx: 0,
+            ry: 0,
             originX: "left",
-            originY: "center",
+            originY: "top",
             strokeWidth: 1,
             stroke: '#000',
-            fill: '#000',
+            fill: 'transparent',
             selectable: false,
             evented: false,
-            // radius: 1,
         });
         this.canvas.add(this.drawShaps[0]);
     }
 
     drawMoveEllipse(pointer: Point) {
-        this.drawShaps[0].set({
-            radius: linearDistance( this.points[0], pointer ) / 2,
-            angle: (Math.atan2(pointer.y - this.points[0].y, pointer.x - this.points[0].x) * 180) / Math.PI,
-        });
+        if (this.points[0].x > pointer.x) {
+           this.drawShaps[0].set({ left: Math.abs(pointer.x) });
+        }
+        if (this.points[0].y > pointer.y) {
+            this.drawShaps[0].set({ top: Math.abs(pointer.y) });
+        }
+        this.drawShaps[0].set({ rx: Math.abs(this.points[0].x - pointer.x) / 2 });
+        this.drawShaps[0].set({ ry: Math.abs(this.points[0].y - pointer.y) / 2 });
         this.drawShaps[0].setCoords();
     }
 
@@ -81,7 +91,7 @@ class DrawTool {
             originY: "center",
             strokeWidth: 1,
             stroke: '#000',
-            fill: '#000',
+            fill: 'transparent',
             selectable: false,
             evented: false,
             radius: 1,
@@ -92,7 +102,6 @@ class DrawTool {
     drawMoveCircle(pointer: Point) {
         this.drawShaps[0].set({
             radius: linearDistance( this.points[0], pointer ),
-            // angle: (Math.atan2(pointer.y - this.points[0].y, pointer.x - this.points[0].x) * 180) / Math.PI,
         });
         this.drawShaps[0].setCoords();
     }
@@ -107,7 +116,7 @@ class DrawTool {
             height: 0,
             stroke: '#000',
             strokeWidth: 1,
-            fill: '#000',
+            fill: 'transparent',
             transparentCorners: false,
             selectable: false,
             evented: false,
@@ -259,7 +268,7 @@ class DrawTool {
                     this.drawMoveEllipse(pointer);
                     break;
                 case DrawType.triangle:
-                    this.drawMoveTriangle(pointer);
+                    this.drawMoveRect(pointer);
                     break;
                 case DrawType.pencil:
                     // this.drawStartRect(pointer);
