@@ -18,9 +18,11 @@ const ToolBar = () => {
 
     const drawPenceil = () => {
         // workspace?.canvas.
-        // workspace?.canvas.isDrawingMode = true;
-        // canvas.freeDrawingBrush.width = props.lineWidth;
-        // canvas.freeDrawingBrush.color = props.lineColor;
+        if (canvas) {
+            canvas.isDrawingMode = true;
+            // canvas.freeDrawingBrush.width = props.lineWidth;
+            // canvas.freeDrawingBrush.color = props.lineColor;
+        }
     };
 
     const draw = useCallback((type: DrawType) => {
