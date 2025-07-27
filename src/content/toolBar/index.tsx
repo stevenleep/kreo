@@ -17,11 +17,13 @@ const ToolBar = () => {
     };
 
     const drawPenceil = () => {
-        // workspace?.canvas.
+        if (workspace?.drawTool.drawMode) {
+            workspace?.drawTool.deactive();
+        }
         if (canvas) {
             canvas.isDrawingMode = true;
-            // canvas.freeDrawingBrush.width = props.lineWidth;
-            // canvas.freeDrawingBrush.color = props.lineColor;
+            canvas.freeDrawingBrush.width = 2;
+            canvas.freeDrawingBrush.color = '#000';
         }
     };
 
@@ -79,7 +81,7 @@ const ToolBar = () => {
                         <path d="M4 2L12 10L8 14L6.4 10L4 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                     </svg>
                 </button>
-                <button className={`${styles.tool_btn} ${DrawType.pencil === active ? styles.active : ''}`} data-mode="pen" title="画笔工具 (P)">
+                <button className={`${styles.tool_btn} ${DrawType.pencil === active ? styles.active : ''}`} data-mode="pen" title="画笔工具 (P)" onClick={() => handlerDraw(DrawType.pencil)}>
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                         <g strokeWidth="1.5"><path clipRule="evenodd" d="m7.643 15.69 7.774-7.773a2.357 2.357 0 1 0-3.334-3.334L4.31 12.357a3.333 3.333 0 0 0-.977 2.357v1.953h1.953c.884 0 1.732-.352 2.357-.977Z"></path><path d="m11.25 5.417 3.333 3.333"></path></g>
                     </svg>

@@ -94,7 +94,7 @@ const Workspace = () => {
     const clickCanvas = (e: IEvent<MouseEvent>) => {
         if (!canvas || !workspace) return;
         // 点击空白画布展示规划信息
-        if (workspace.dragMode) return;
+        // if (workspace.dragMode) return;
         // if (workspace.drawLine.isDrawing) return;
         const target = e.target;
         const objects = canvas.getObjects();
@@ -262,7 +262,9 @@ const Workspace = () => {
     };
 
     const handlerMouseUp = (ev: React.MouseEvent) => {
-        workspace?.drawTool && workspace?.drawTool.drawEnd(ev);
+        if (workspace?.drawTool.drawMode !== DrawType.ployLine) {
+            workspace?.drawTool && workspace?.drawTool.drawEnd(ev);
+        }
     };
 
     return (

@@ -23,6 +23,8 @@ class DrawTool {
 
     active(drawMode: DrawType) {
         this.drawMode = drawMode;
+        this.points = [];
+        this.drawShaps = [];
     }
 
     drawStartTriangle(pointer: Point) {
@@ -127,6 +129,30 @@ class DrawTool {
         this.canvas.add(this.drawShaps[0]);
     }
 
+    drawStartLine() {
+        this.drawShaps[0] = new fabric.Polyline(this.points, {
+            strokeWidth: 1,
+            fill: 'transparent',
+            stroke: '#000',
+            originX: "center",
+            originY: "center",
+            selectable: false,
+            evented: false,
+        });
+
+        this.canvas.add(this.drawShaps[0]);
+    }
+
+    drawMoveLine(pointer?: Point) {
+        if (pointer) {
+            this.drawShaps[0].set({ points: [...this.points, pointer] });
+        } else {
+            this.drawShaps[0].set({ points: this.points });
+        }
+        
+        this.drawShaps[0].setCoords();
+    }
+
     drawMoveRect(pointer: Point) {
         if (this.points[0].x > pointer.x) {
            this.drawShaps[0].set({ left: Math.abs(pointer.x) });
@@ -156,11 +182,12 @@ class DrawTool {
                 case DrawType.triangle:
                     this.drawStartTriangle(pointer);
                     break;
-                case DrawType.pencil:
-                    // this.drawStartRect(pointer);
-                    break;
                 case DrawType.ployLine:
-                    // this.drawStartRect(pointer);
+                    if (!this.drawShaps.length) {
+                        this.drawStartLine();
+                    } else {
+                        this.drawMoveLine();
+                    }
                     break;
                 default:
                     console.error('type not complate');
@@ -256,7 +283,7 @@ class DrawTool {
     drawMove(ev: React.MouseEvent) {
         if (this.drawMode && this.drawShaps.length) {
             let pointer = this.canvas.getPointer(ev as unknown as Event);
-            this.points.push(pointer);
+            // this.points.push(pointer);
             switch (this.drawMode) {
                 case DrawType.circle:
                     this.drawMoveCircle(pointer);
@@ -270,11 +297,8 @@ class DrawTool {
                 case DrawType.triangle:
                     this.drawMoveRect(pointer);
                     break;
-                case DrawType.pencil:
-                    // this.drawStartRect(pointer);
-                    break;
                 case DrawType.ployLine:
-                    // this.drawStartRect(pointer);
+                    this.drawMoveLine(pointer);
                     break;
                 default:
                     console.error('type not complate');

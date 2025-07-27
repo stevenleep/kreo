@@ -19,7 +19,7 @@ class EditorWorkspace {
     canvas: ContextCanvas;
     workspaceEl: HTMLElement;
     workspace: fabric.Rect | null;
-    dragMode: boolean;
+    // dragMode: boolean;
     fill: string;
     width: number | undefined;
     height: number | undefined;
@@ -40,14 +40,14 @@ class EditorWorkspace {
             
         // }
         this.workspace = null;
-        this.dragMode = false;
+        // this.dragMode = false;
         this.fill = DefaultWorkSpaceColor;
         this.drawTool = new DrawTool(canvas);
         // this.drawShape = new DrawShape(canvas, this);
         // new ControlsPlugin(canvas);
         this.initBackground();
         this.initResizeObserve();
-        this.initDring();
+        // this.initDring();
     }
 
     // 初始化背景
@@ -273,91 +273,91 @@ class EditorWorkspace {
     // }
 
     // 开始拖拽
-    startDring() {
-        if (this.mainImg) {
-            this.mainImg.set('hoverCursor', 'grab');
-        }
-        this.prevSelectObject = this.canvas.getActiveObject();
-        this.dragMode = true;
-        this.canvas.defaultCursor = 'grab';
-        this.canvas.renderAll();
-    }
+    // startDring() {
+    //     if (this.mainImg) {
+    //         this.mainImg.set('hoverCursor', 'grab');
+    //     }
+    //     this.prevSelectObject = this.canvas.getActiveObject();
+    //     this.dragMode = true;
+    //     this.canvas.defaultCursor = 'grab';
+    //     this.canvas.renderAll();
+    // }
 
-    endDring() {
-        if (this.mainImg) {
-            this.mainImg.set('hoverCursor', 'default');
-        }
-        if (this.prevSelectObject) {
-            this.canvas.setActiveObject(this.prevSelectObject);
-        }
-        this.dragMode = false;
-        this.canvas.defaultCursor = 'default';
-        this.canvas.renderAll();
-    }
+    // endDring() {
+    //     if (this.mainImg) {
+    //         this.mainImg.set('hoverCursor', 'default');
+    //     }
+    //     if (this.prevSelectObject) {
+    //         this.canvas.setActiveObject(this.prevSelectObject);
+    //     }
+    //     this.dragMode = false;
+    //     this.canvas.defaultCursor = 'default';
+    //     this.canvas.renderAll();
+    // }
 
     // 拖拽模式
-    initDring() {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const that = this;
-        this.canvas.on('mouse:down', function (this: ExtCanvas, opt) {
-            const evt = opt.e;
-            if (evt.altKey || that.dragMode) {
-                that.canvas.defaultCursor = 'grabbing';
-                that.canvas.discardActiveObject();
-                that.setDring();
-                this.isDragging = true;
-                this.lastPosX = evt.clientX;
-                this.lastPosY = evt.clientY;
-                this.requestRenderAll();
-            }
-        });
+    // initDring() {
+    //     // eslint-disable-next-line @typescript-eslint/no-this-alias
+    //     const that = this;
+    //     this.canvas.on('mouse:down', function (this: ExtCanvas, opt) {
+    //         const evt = opt.e;
+    //         if (evt.altKey || that.dragMode) {
+    //             that.canvas.defaultCursor = 'grabbing';
+    //             that.canvas.discardActiveObject();
+    //             that.setDring();
+    //             this.isDragging = true;
+    //             this.lastPosX = evt.clientX;
+    //             this.lastPosY = evt.clientY;
+    //             this.requestRenderAll();
+    //         }
+    //     });
 
-        this.canvas.on('mouse:move', function (this: ExtCanvas, opt) {
-            if (this.isDragging) {
-                that.canvas.discardActiveObject();
-                that.canvas.defaultCursor = 'grabbing';
-                const { e } = opt;
-                if (!this.viewportTransform) return;
-                const vpt = this.viewportTransform;
-                vpt[4] += e.clientX - this.lastPosX;
-                vpt[5] += e.clientY - this.lastPosY;
-                this.lastPosX = e.clientX;
-                this.lastPosY = e.clientY;
-                this.requestRenderAll();
-            }
-        });
+    //     this.canvas.on('mouse:move', function (this: ExtCanvas, opt) {
+    //         if (this.isDragging) {
+    //             that.canvas.discardActiveObject();
+    //             that.canvas.defaultCursor = 'grabbing';
+    //             const { e } = opt;
+    //             if (!this.viewportTransform) return;
+    //             const vpt = this.viewportTransform;
+    //             vpt[4] += e.clientX - this.lastPosX;
+    //             vpt[5] += e.clientY - this.lastPosY;
+    //             this.lastPosX = e.clientX;
+    //             this.lastPosY = e.clientY;
+    //             this.requestRenderAll();
+    //         }
+    //     });
 
-        this.canvas.on('mouse:up', function (this: ExtCanvas) {
-            if (!this.viewportTransform) return;
-            this.setViewportTransform(this.viewportTransform);
-            this.isDragging = false;
-            // if (!that.drawLine.isDrawing) {
-            //     that.getObjects().forEach((obj) => {
-            //         obj.selectable = true;
-            //         obj.lockMovementX = false;
-            //         obj.lockMovementY = false;
-            //     });
-            // }
-            that.canvas.defaultCursor = 'default';
-            this.requestRenderAll();
-        });
+    //     this.canvas.on('mouse:up', function (this: ExtCanvas) {
+    //         if (!this.viewportTransform) return;
+    //         this.setViewportTransform(this.viewportTransform);
+    //         this.isDragging = false;
+    //         // if (!that.drawLine.isDrawing) {
+    //         //     that.getObjects().forEach((obj) => {
+    //         //         obj.selectable = true;
+    //         //         obj.lockMovementX = false;
+    //         //         obj.lockMovementY = false;
+    //         //     });
+    //         // }
+    //         that.canvas.defaultCursor = 'default';
+    //         this.requestRenderAll();
+    //     });
 
-        // 鼠标缩放事件
-        this.canvas.on('mouse:wheel', function (this: ContextCanvas, opt) {
-            if (!that.loadJson) return;
-            const delta = opt.e.deltaY;
-            let zoom = this.getZoom();
-            zoom *= 0.999 ** delta;
-            if (zoom > 5) zoom = 5;
-            if (zoom < 0.1) zoom = 0.1;
-            that.scale = zoom;
-            const center = this.getCenter();
-            this.zoomToPoint(new fabric.Point(center.left, center.top), zoom);
-            opt.e.preventDefault();
-            opt.e.stopPropagation();
-            // events.emit(EventsTypes.ZoomScale);
-        });
-    }
+    //     // 鼠标缩放事件
+    //     this.canvas.on('mouse:wheel', function (this: ContextCanvas, opt) {
+    //         if (!that.loadJson) return;
+    //         const delta = opt.e.deltaY;
+    //         let zoom = this.getZoom();
+    //         zoom *= 0.999 ** delta;
+    //         if (zoom > 5) zoom = 5;
+    //         if (zoom < 0.1) zoom = 0.1;
+    //         that.scale = zoom;
+    //         const center = this.getCenter();
+    //         this.zoomToPoint(new fabric.Point(center.left, center.top), zoom);
+    //         opt.e.preventDefault();
+    //         opt.e.stopPropagation();
+    //         // events.emit(EventsTypes.ZoomScale);
+    //     });
+    // }
 
     setDring() {
         this.canvas.defaultCursor = 'grab';
