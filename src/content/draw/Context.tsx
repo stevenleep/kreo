@@ -2,6 +2,7 @@ import React, { createContext, ReactNode } from 'react';
 import { SetState, useSetState } from './../utils';
 import EditorWorkspace from './EditorWorkspace';
 import History from './History';
+import { DrawType } from '../toolBar/config';
 
 export type ContextCanvas = fabric.Canvas & { historyPlugin?: History };
 
@@ -13,7 +14,7 @@ interface CanvasContext {
     // selectDrawingOpen: boolean;
     // boothData: any;
     // selectBooth: fabric.Object | null;
-    drawMode: string;
+    drawMode: DrawType | '';
     refreshTooList: null | object;
     // mainCodeRelevance: { [key: string]: string };
     // originalObjectIds: { [key: string]: boolean };
