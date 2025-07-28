@@ -1,0 +1,60 @@
+const CHOSEN_DIR_KEY = 'chosenDirHandle';
+
+// 让浏览器弹目录选择器
+async function chooseDirectory() {
+  const handle = await window.showDirectoryPicker({
+    mode: 'readwrite'
+  });
+  // 持久化权限
+  await handle.requestPermission({ mode: 'readwrite' });
+  // 保存句柄（IndexedDB 也可）
+  await chrome.storage.local.set({ [CHOSEN_DIR_KEY]: handle });
+  return handle;
+}
+
+// 从缓存读取目录句柄
+async function getChosenDirectory() {
+  const { [CHOSEN_DIR_KEY]: handle } = await chrome.storage.local.get(CHOSEN_DIR_KEY);
+  if (!handle) return null;
+  // 重新验证权限
+  const perms = await handle.queryPermission({ mode: 'readwrite' });
+  if (perms !== 'granted') {
+    await chrome.storage.local.remove(CHOSEN_DIR_KEY);
+    return null;
+  }
+  return handle;
+}
+
+// 把 Fabric JSON 写进用户目录
+async function saveJSONToDir(jsonText) {
+  let dir = await getChosenDirectory();
+  if (!dir) {
+    dir = await chooseDirectory();
+  }
+
+  // 创建或覆盖文件
+  const fileHandle = await dir.getFileHandle('canvas.json', { create: true });
+  const writable = await fileHandle.createWritable();
+  await writable.write(jsonText);
+  await writable.close();
+}
+
+// 假设你已经拿到了 Fabric 画布
+document.getElementById('exportJSON').addEventListener('click', async () => {
+  // 1. 这里换成你自己的 Fabric 实例
+  const json = canvas.toJSON(['id', 'name']);
+  const jsonStr = JSON.stringify(json, null, 2);
+
+  // 2. 保存
+  await saveJSONToDir(jsonStr);
+  console.log('已保存到用户目录');
+});
+
+// 重新选择目录
+document.getElementById('chooseDir').addEventListener('click', async () => {
+  await chooseDirectory();
+  alert('目录已更新');
+});
+
+
+const list = canvas?.toJSON();
