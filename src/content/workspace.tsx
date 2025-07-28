@@ -53,6 +53,7 @@ const Workspace = () => {
         canvas.on('object:added', watchAdded); // 新增元素事件
         canvas.on('object:moving', watchMoveing); // 拖动元素事件
         canvas.on('mouse:dblclick', dblclick); // 双击事件
+        canvas.on('selection:created', watchSelectionCreated); // 选择元素事件
         // events.on(EventsTypes.DeleteObject, deleteObject); // 删除元素事件
         // window.addEventListener('keydown', onKeyDown);
         // hotkeys(KeyNames.delete, deleteObject); // 绑定删除快捷键
@@ -61,6 +62,7 @@ const Workspace = () => {
             canvas.off('object:added', watchAdded as OffListener);
             canvas.off('object:moving', watchMoveing as OffListener);
             canvas.off('mouse:dblclick', dblclick as OffListener);
+            canvas.off('selection:created', watchSelectionCreated as OffListener); // 选择元素事件
             // events.off(EventsTypes.DeleteObject, deleteObject);
             window.removeEventListener('keydown', onKeyDown);
             // hotkeys.unbind(KeyNames.delete, deleteObject);
@@ -171,6 +173,16 @@ const Workspace = () => {
         //     };
         //     return prev;
         // });
+    };
+
+    const watchSelectionCreated = (e: IEvent<MouseEvent>) => {
+        if (!canvas || !workspace) return;
+        const target = e.selected?.[0];
+        if (!target || !workspace || !canvas) return;
+        if (!workspace.width || !workspace.height) return;
+        if (target.left === undefined || target.top === undefined) return;
+    
+        setState({ selectShape: target });
     };
 
     /**

@@ -13,7 +13,7 @@ interface CanvasContext {
     // openAttr: boolean;
     // selectDrawingOpen: boolean;
     // boothData: any;
-    // selectBooth: fabric.Object | null;
+    selectShape: fabric.Object | null;
     drawMode: DrawType | '';
     refreshTooList: null | object;
     // mainCodeRelevance: { [key: string]: string };
@@ -31,7 +31,7 @@ export const Context = createContext<CanvasContext>({
     // uploadDrawingOpen: false,
     // selectDrawingOpen: false,
     // boothData: {},
-    // selectBooth: null,
+    selectShape: null,
     // openCreateSpecialBooth: false,
     drawMode: '',
     // canvasLoading: false,
@@ -55,7 +55,7 @@ export const CanvasProvider = ({ children }: Props) => {
         workspace: null, // 工作区实例
         // openTools: true, // 左侧工具区是否打开
         // openAttr: false, // 右侧属性区是否打开
-        // selectBooth: null, // 当前画布已选中的摊位
+        selectShape: null, // 当前画布已选中的图形
         // openCreateSpecialBooth: false, // 创建异形摊位 modal open
         drawMode: '', // 当前画笔模式
         // boothData: {}, // 摊位信息

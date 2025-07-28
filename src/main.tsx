@@ -3,6 +3,7 @@ import ToolBar from './content/toolBar';
 import Workspace from './content/workspace';
 import { CanvasProvider } from './content/draw/Context';
 import Draggable from './content/draggable';
+import PropertyPanel from './content/propertyPanel';
 
 const App = () => {
   return (
@@ -12,6 +13,9 @@ const App = () => {
             <ToolBar />
           </Draggable>
           <Workspace />
+          <Draggable left={150} top={20}>
+            <PropertyPanel />
+          </Draggable>
       </CanvasProvider>
     </div>
   );

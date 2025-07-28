@@ -91,6 +91,8 @@ const ToolBar = () => {
             });
             setSelectAble(!selectAble);
         }
+        setState({ drawMode: '' });
+        workspace?.drawTool.deactive();
     };
 
     return (
