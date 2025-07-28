@@ -279,8 +279,14 @@ const Workspace = () => {
         }
     };
 
+    const handlerDbClick = (ev: React.MouseEvent) => {
+        if (workspace?.drawTool.drawMode === DrawType.ployLine) {
+            workspace?.drawTool && workspace?.drawTool.drawEnd(ev);
+        }
+    };
+
     return (
-        <div onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp}>
+        <div onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
             <canvas ref={canvasRef} />
         </div>
     );
