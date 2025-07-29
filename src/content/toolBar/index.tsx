@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import styles from './index.module.less';
 import { Context } from "../draw/Context";
 import { DrawType } from "./config";
@@ -6,6 +6,7 @@ import { DrawType } from "./config";
 const ToolBar = () => {
     const { workspace, canvas, drawMode, setState } = useContext(Context);
     const [selectAble, setSelectAble] = useState(false);
+    const uploadRef = useRef<HTMLInputElement>(null);
 
     const stop = () => {
         if (!workspace) {
@@ -69,8 +70,39 @@ const ToolBar = () => {
 
     // 导出图片
     const handlerExport = () => {
-
+        const dataURL = canvas?.toDataURL({
+            format: 'png',        // 也可改成 'jpeg'
+            quality: 0.92,        // jpeg 时才生效
+            multiplier: 1         // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
+        });
+        if (dataURL) {
+            // 2. 触发下载
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'canvas.png';
+            link.click();
+        }
     };
+
+    const handlerUpload = () => {
+        if (uploadRef.current) {
+            uploadRef.current.click();
+        }
+    };
+
+    const handlerExportJson = () => {
+        // 1. 序列化画布（默认即可）
+        if (canvas) {
+            const json = JSON.stringify(canvas.toJSON()); // 第二个参数可选：要额外保留的自定义属性
+            // 2. 生成 Blob
+            const blob = new Blob([json], { type: 'application/json' });
+            // 3. 触发下载
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'canvas.json';
+            link.click();
+        }
+    }
 
     const handlerUndo = () => {
         stop();
@@ -95,8 +127,36 @@ const ToolBar = () => {
         workspace?.drawTool.deactive();
     };
 
+    const handlerFileChange = () => {
+        const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = evt => {
+    try {
+      const json = JSON.parse(evt.target.result);
+
+      // 3. 清空当前画布
+      canvas.clear();
+
+      // 4. 载入 JSON
+      canvas.loadFromJSON(json, () => {
+        // 5. 渲染并可选居中
+        canvas.renderAll();
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // 重置缩放
+        // 如需自动居中：
+        // canvas.viewportCenterObjects(canvas.getObjects());
+      });
+    } catch (err) {
+      alert('JSON 解析失败：' + err.message);
+    }
+  };
+  reader.readAsText(file);
+    }
+
     return (
         <div className={styles.tool_bar}>
+            <input onChange={handlerFileChange} type="file" ref={uploadRef} className={styles.import_btn} accept=".json" />
             {/* <!-- 主要工具组 --> */}
             <div className={styles.toolbar_group}>
                 <button className={`${styles.tool_btn} ${selectAble ? styles.active : ''}`} title="选择工具 (V)" onClick={handlerChangeSelectable}>
@@ -197,12 +257,12 @@ const ToolBar = () => {
                         <path d="M3 11H13V13H3V11Z" stroke="currentColor" strokeWidth="1.5"/>
                     </svg>
                 </button> */}
-                <button className={styles.tool_btn} title="打开">
+                <button className={styles.tool_btn} title="打开" onClick={handlerUpload}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path strokeWidth="2" d="m9.257 6.351.183.183H15.819c.34 0 .727.182 1.051.506.323.323.505.708.505 1.05v5.819c0 .316-.183.7-.52 1.035-.337.338-.723.522-1.037.522H4.182c-.352 0-.74-.181-1.058-.5-.318-.318-.499-.705-.499-1.057V5.182c0-.351.181-.736.5-1.054.32-.321.71-.503 1.057-.503H6.53l2.726 2.726Z"></path>
                     </svg>
                 </button>
-                <button className={styles.tool_btn} title="保存到...">
+                <button className={styles.tool_btn} title="导出json" onClick={handlerExportJson}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path strokeWidth="2" d="M3.333 14.167v1.666c0 .92.747 1.667 1.667 1.667h10c.92 0 1.667-.746 1.667-1.667v-1.666M5.833 9.167 10 13.333l4.167-4.166M10 3.333v10"></path>
                     </svg>
