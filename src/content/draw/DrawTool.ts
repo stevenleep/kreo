@@ -131,8 +131,7 @@ class DrawTool {
     drawStartLine() {
         this.drawShaps[0] = new fabric.Polyline([...this.points], {
             strokeWidth: 1,
-            // fill: 'transparent',
-            fill: 'red',
+            fill: 'transparent',
             stroke: '#000',
             // originX: "left",
             // originY: "top",
@@ -141,29 +140,13 @@ class DrawTool {
             evented: false,
         });
 
-        // const line = new fabric.Polyline(this.points, {
-        //     strokeWidth: 1,
-        //     // fill: 'transparent',
-        //     fill: 'red',
-        //     stroke: '#000',
-        //     originX: "left",
-        //     originY: "top",
-        //     selectable: false,
-        //     strokeUniform: true,
-        //     evented: false,
-        // });
-
         this.canvas.add(this.drawShaps[0]);
     }
 
-    drawMoveLine(pointer?: Point) {
-        if (pointer) {
-            this.drawShaps[0].set({ points: [...this.points, pointer] });
-        } else {
-            this.drawShaps[0].set({ points: [...this.points] });
-        }
-
-        console.log('length:' + this.drawShaps[0].points.length)
+    drawMoveLine(pointer?: Point) {        
+        const newPoints = pointer ? [...this.points, pointer] : [...this.points];
+        this.drawShaps[0].set({ points: newPoints });
+        this.drawShaps[0].initialize(newPoints);
         
         this.drawShaps[0].setCoords();
         this.canvas.renderAll();

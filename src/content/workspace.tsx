@@ -275,13 +275,13 @@ const Workspace = () => {
 
     const handlerMouseUp = (ev: React.MouseEvent) => {
         if (workspace?.drawTool.drawMode !== DrawType.ployLine) {
-            workspace?.drawTool && workspace?.drawTool.drawEnd(ev);
+            workspace?.drawTool && workspace?.drawTool.drawEnd();
         }
     };
 
     const handlerDbClick = (ev: React.MouseEvent) => {
         if (workspace?.drawTool.drawMode === DrawType.ployLine) {
-            workspace?.drawTool && workspace?.drawTool.drawEnd(ev);
+            workspace?.drawTool && workspace?.drawTool.drawEnd();
         }
     };
 

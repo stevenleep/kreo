@@ -21,3 +21,13 @@ export const useSetState: UseSetState = (initialState: any) => {
   }, []);
   return [state, setMergeState];
 };
+
+export const chooseDirectory = async () => {
+  // @ts-ignore
+  const handle = await window.showDirectoryPicker({
+    mode: 'readwrite'
+  });
+  // 持久化权限
+  await handle.requestPermission({ mode: 'readwrite' });
+  return handle;
+}
