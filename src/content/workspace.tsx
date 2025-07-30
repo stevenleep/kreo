@@ -22,7 +22,7 @@ type OffListener = (ev: fabric.IEvent) => void;
  * @returns
  */
 const Workspace = () => {
-    const { canvas, workspace, setState, penProperty } = useContext(Context);
+    const { canvas, workspace, setState } = useContext(Context);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     // const lastMainCodeRelevance = useLatest(mainCodeRelevance);
     // const lastOpenCreateSpecialBooth = useLatest(openCreateSpecialBooth);
@@ -242,7 +242,7 @@ const Workspace = () => {
             height: domHeight,
             selection: false,
         });
-        const workspace = new EditorWorkspace(canvas, penProperty);
+        const workspace = new EditorWorkspace(canvas);
         new History(canvas, workspace, setState);
         setState({ canvas, workspace });
     };

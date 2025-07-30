@@ -4,7 +4,7 @@ import { Context } from "../draw/Context";
 import { DrawType } from "./config";
 
 const ToolBar = () => {
-    const { workspace, canvas, drawMode, setState } = useContext(Context);
+    const { workspace, canvas, drawMode, setState, penProperty } = useContext(Context);
     const [selectAble, setSelectAble] = useState(false);
     const uploadRef = useRef<HTMLInputElement>(null);
 
@@ -54,6 +54,7 @@ const ToolBar = () => {
 
     const handlerDraw = (type: DrawType) => {
         if (!workspace || !canvas) return;
+        workspace.drawTool.setPen(penProperty);
         if (type === DrawType.pencil) {
             drawPenceil();
         } else {
@@ -133,6 +134,9 @@ const ToolBar = () => {
 
         const reader = new FileReader();
         reader.onload = evt => {
+            if (!evt.target) {
+                return;
+            }
             try {
                 const json = JSON.parse(evt.target.result);
 

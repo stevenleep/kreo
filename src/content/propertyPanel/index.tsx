@@ -13,13 +13,25 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
     onDuplicate,
     onPropertyChange
 }) => {
-    const { selectShape } = useContext(Context);
+    const { selectShape, canvas } = useContext(Context);
     const [localObject, setLocalObject] = useState<fabric.Object | null>(null);
     const [propertyInfo, setPropertyInfo] = useState(defaultPenProperty);
+
+    const initProps = (shape: fabric.Object) => {
+        const color = shape.get('stroke') as string;
+        const fill = shape.get('fill') as string;
+        const strokeWidth = shape.get('strokeWidth') as number;
+        setPropertyInfo({
+            color,
+            strokeWidth,
+            fill
+        })
+    };
 
     useEffect(() => {
         if (selectShape) {
             setLocalObject(selectShape);
+            initProps(selectShape);
         }
     }, [selectShape]);
 
@@ -27,8 +39,14 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         return null;
     }
 
-    const handlerChangeColor = () => {
-        // localObject.set('')
+    const handlerChangeColor = (evt: any) => {
+        const color = evt.target.value;
+        setPropertyInfo({
+            ...propertyInfo,
+            color
+        });
+        localObject.set({ stroke: color });
+        canvas?.renderAll();
     };
 
     const handlerBorderWidth = () => {
@@ -48,7 +66,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 </div>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>线条粗细</div>
-                    <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="20" value="5" />
+                    <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="20" value={propertyInfo.strokeWidth} />
                     <span className={styles.props_value} id="stroke-width-value">5</span>
                 </div>
                 <div className={styles.props_group}>

@@ -1,6 +1,6 @@
 import { fabric } from 'fabric';
 import DrawTool from './DrawTool.ts';
-import { ContextCanvas, PenPropertyOption } from './Context';
+import { ContextCanvas } from './Context';
 
 // declare type ExtCanvas = ContextCanvas & {
 //     isDragging: boolean;
@@ -18,11 +18,11 @@ class EditorWorkspace {
     drawTool!: DrawTool;
     // prevSelectObject: fabric.Object | null = null;
 
-    constructor(canvas: ContextCanvas, penProperty: PenPropertyOption) {
+    constructor(canvas: ContextCanvas) {
         this.canvas = canvas;
         this.workspaceEl = this.canvas.getElement();
         // this.workspace = null;
-        this.drawTool = new DrawTool(canvas, penProperty);
+        this.drawTool = new DrawTool(canvas);
         // this.drawShape = new DrawShape(canvas, this);
         // new ControlsPlugin(canvas);
         this.initBackground();
@@ -65,6 +65,10 @@ class EditorWorkspace {
     isNumber = (value: string | number) => {
         return typeof value === 'number';
     };
+
+    getJson() {
+        throw new Error('Method not implemented.');
+    }
 
     // 清空全部对象
     clearAllObject() {

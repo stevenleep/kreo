@@ -1,6 +1,6 @@
 import { DrawType } from "./../toolBar/config";
 import Point from "./Point";
-import { ContextCanvas, PenPropertyOption } from './Context';
+import { ContextCanvas, defaultPenProperty, PenPropertyOption } from './Context';
 import { fabric } from 'fabric';
 
 const linearDistance = (point1: { x: any; y: any; }, point2: { x: any; y: any; }) => {
@@ -15,10 +15,13 @@ class DrawTool {
     tempLine: Point[] = []; // 当前正在绘制的线
     points: Point[] = [];
     canvas: ContextCanvas;
-    penProperty: PenPropertyOption;
-    constructor(canvas: ContextCanvas, penProperty: PenPropertyOption) {
+    private penProperty: PenPropertyOption = defaultPenProperty;
+    constructor(canvas: ContextCanvas) {
         this.canvas = canvas;
-        this.penProperty = penProperty;
+    }
+
+    setPen(pen: PenPropertyOption) {
+        this.penProperty = pen;
     }
 
     active(drawMode: DrawType) {
@@ -33,9 +36,9 @@ class DrawTool {
             top: pointer.y,
             originX: "left",
             originY: "top",
-            strokeWidth: 1,
-            stroke: '#000',
-            fill: 'transparent',
+            strokeWidth: this.penProperty.strokeWidth,
+            stroke: this.penProperty.color,
+            fill: this.penProperty.fill,
             width: 0,
             height: 0,
             selectable: false,
@@ -64,9 +67,9 @@ class DrawTool {
             ry: 0,
             originX: "left",
             originY: "top",
-            strokeWidth: 1,
-            stroke: '#000',
-            fill: 'transparent',
+            strokeWidth: this.penProperty.strokeWidth,
+            stroke: this.penProperty.color,
+            fill: this.penProperty.fill,
             selectable: false,
             evented: false,
         });
@@ -91,9 +94,9 @@ class DrawTool {
             top: pointer.y,
             originX: "center",
             originY: "center",
-            strokeWidth: 1,
-            stroke: '#000',
-            fill: 'transparent',
+            strokeWidth: this.penProperty.strokeWidth,
+            stroke: this.penProperty.color,
+            fill: this.penProperty.fill,
             selectable: false,
             evented: false,
             radius: 1,
@@ -116,9 +119,9 @@ class DrawTool {
             originY: "top",
             width: 0,
             height: 0,
-            stroke: '#000',
-            strokeWidth: 1,
-            fill: 'transparent',
+            stroke: this.penProperty.color,
+            strokeWidth: this.penProperty.strokeWidth,
+            fill: this.penProperty.fill,
             transparentCorners: false,
             selectable: false,
             evented: false,
@@ -131,9 +134,9 @@ class DrawTool {
 
     drawStartLine() {
         this.drawShaps[0] = new fabric.Polyline([...this.points], {
-            strokeWidth: 1,
+            strokeWidth: this.penProperty.strokeWidth,
             fill: 'transparent',
-            stroke: '#000',
+            stroke: this.penProperty.color,
             // originX: "left",
             // originY: "top",
             selectable: false,

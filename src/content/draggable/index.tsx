@@ -13,7 +13,6 @@ const Draggable = (props: DraggableProps) => {
 
     const handlerMouseDown = (e: any) => {
         if (containerRef.current) {
-            console.log(e.target.tagName.toLocaleLowerCase())
             if (['button', 'input'].includes(e.target.tagName.toLocaleLowerCase())) {
                 return;
             }
