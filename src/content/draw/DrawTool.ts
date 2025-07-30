@@ -1,7 +1,6 @@
-// import { nanoid } from "nanoid";
 import { DrawType } from "./../toolBar/config";
 import Point from "./Point";
-import { ContextCanvas } from './Context';
+import { ContextCanvas, PenPropertyOption } from './Context';
 import { fabric } from 'fabric';
 
 const linearDistance = (point1: { x: any; y: any; }, point2: { x: any; y: any; }) => {
@@ -16,8 +15,10 @@ class DrawTool {
     tempLine: Point[] = []; // 当前正在绘制的线
     points: Point[] = [];
     canvas: ContextCanvas;
-    constructor(canvas: ContextCanvas) {
+    penProperty: PenPropertyOption;
+    constructor(canvas: ContextCanvas, penProperty: PenPropertyOption) {
         this.canvas = canvas;
+        this.penProperty = penProperty;
     }
 
     active(drawMode: DrawType) {

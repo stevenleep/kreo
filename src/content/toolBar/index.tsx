@@ -127,31 +127,31 @@ const ToolBar = () => {
         workspace?.drawTool.deactive();
     };
 
-    const handlerFileChange = () => {
+    const handlerFileChange = (e: any) => {
         const file = e.target.files[0];
-  if (!file) return;
+        if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = evt => {
-    try {
-      const json = JSON.parse(evt.target.result);
+        const reader = new FileReader();
+        reader.onload = evt => {
+            try {
+                const json = JSON.parse(evt.target.result);
 
-      // 3. 清空当前画布
-      canvas.clear();
+                // 3. 清空当前画布
+                canvas?.clear();
 
-      // 4. 载入 JSON
-      canvas.loadFromJSON(json, () => {
-        // 5. 渲染并可选居中
-        canvas.renderAll();
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // 重置缩放
-        // 如需自动居中：
-        // canvas.viewportCenterObjects(canvas.getObjects());
-      });
-    } catch (err) {
-      alert('JSON 解析失败：' + err.message);
-    }
-  };
-  reader.readAsText(file);
+                // 4. 载入 JSON
+                canvas?.loadFromJSON(json, () => {
+                    // 5. 渲染并可选居中
+                    canvas.renderAll();
+                    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // 重置缩放
+                    // 如需自动居中：
+                    // canvas.viewportCenterObjects(canvas.getObjects());
+                });
+            } catch (err: any) {
+                console.log('JSON 解析失败：' + err.message);
+            }
+        };
+        reader.readAsText(file);
     }
 
     return (

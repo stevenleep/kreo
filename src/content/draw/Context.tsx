@@ -6,6 +6,18 @@ import { DrawType } from '../toolBar/config';
 
 export type ContextCanvas = fabric.Canvas & { historyPlugin?: History };
 
+export type PenPropertyOption = {
+    color: string;
+    fill: string,
+    strokeWidth: number;
+};
+
+export const defaultPenProperty: PenPropertyOption = {
+    color: '#ff0000',
+    fill: 'transparent',
+    strokeWidth: 2,
+};
+
 interface CanvasContext {
     canvas: ContextCanvas | null;
     workspace: EditorWorkspace | null;
@@ -20,6 +32,7 @@ interface CanvasContext {
     // originalObjectIds: { [key: string]: boolean };
     historyUndoNum: number;
     historyRedoNum: number;
+    penProperty: PenPropertyOption;
     setState: SetState<CanvasContext>;
 }
 
@@ -40,6 +53,7 @@ export const Context = createContext<CanvasContext>({
     // beforeBoothData: { acCodePrefix: '' },
     historyUndoNum: 0,
     historyRedoNum: 0,
+    penProperty: defaultPenProperty,
     // mainCodeRelevance: {},
     // originalObjectIds: {}
     setState: () => {},

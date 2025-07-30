@@ -1,24 +1,21 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 import styles from './index.module.less';
-import { Context } from '../draw/Context';
+import { Context, defaultPenProperty } from '../draw/Context';
 import { DrawType } from '../toolBar/config';
 
 interface PropertyPanelProps {
-    onClose?: () => void;
     onDuplicate?: () => void;
-    onDelete?: () => void;
     onPropertyChange?: (property: string, value: any) => void;
 }
 
 const PropertyPanel: React.FC<PropertyPanelProps> = ({
-    onClose,
     onDuplicate,
-    onDelete,
     onPropertyChange
 }) => {
-    const { canvas, selectShape } = useContext(Context);
+    const { selectShape } = useContext(Context);
     const [localObject, setLocalObject] = useState<fabric.Object | null>(null);
+    const [propertyInfo, setPropertyInfo] = useState(defaultPenProperty);
 
     useEffect(() => {
         if (selectShape) {
@@ -30,17 +27,33 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         return null;
     }
 
+    const handlerChangeColor = () => {
+        // localObject.set('')
+    };
+
+    const handlerBorderWidth = () => {
+
+    };
+
+    const handlerChangeBgColor = () => {
+
+    };
+
     return (
         <div className={styles.wrap}>
             <div className={styles.props_section}>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>颜色</div>
-                    <input type="color" className={styles.props_input} value="#ff0000" />
+                    <input onChange={handlerChangeColor} type="color" className={styles.props_input} value={propertyInfo.color} />
                 </div>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>线条粗细</div>
-                    <input type="range" className={styles.props_slider} min="1" max="20" value="5" />
+                    <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="20" value="5" />
                     <span className={styles.props_value} id="stroke-width-value">5</span>
+                </div>
+                <div className={styles.props_group}>
+                    <div className={styles.props_group_label}>填充</div>
+                    <input onChange={handlerChangeBgColor} type="color" className={styles.props_input} value={propertyInfo.color} />
                 </div>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>透明度</div>
