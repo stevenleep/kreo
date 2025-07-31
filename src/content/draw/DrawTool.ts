@@ -73,7 +73,6 @@ class DrawTool {
         this.canvas.setActiveObject(textbox);
         textbox.enterEditing();
         this.deactive();
-        // textbox.hiddenTextarea.focus();
     }
 
     drawStartEllipse(pointer: Point) {

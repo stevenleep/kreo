@@ -54,6 +54,7 @@ const ToolBar = () => {
     }, [ workspace, drawMode ]);
 
     const handlerDraw = (type: DrawType) => {
+        setSelectAble(false);
         if (!workspace || !canvas) return;
         workspace.drawTool.setPen(penProperty);
         if (type === DrawType.pencil) {
