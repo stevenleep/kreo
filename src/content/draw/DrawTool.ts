@@ -60,16 +60,20 @@ class DrawTool {
     // }
 
     drawText(pointer: Point) {
-        this.drawShaps[0] = new fabric.Textbox('', {
+        const textbox = new fabric.Textbox('123', {
             left: pointer.x,
             top: pointer.y,
             originX: "left",
             originY: "top",
             stroke: this.penProperty.color,
-            selectable: false,
-            evented: false,
+            selectable: true,
+            evented: true
         });
-        this.canvas.add(this.drawShaps[0]);
+        this.canvas.add(textbox);
+        this.canvas.setActiveObject(textbox);
+        textbox.enterEditing();
+        this.deactive();
+        // textbox.hiddenTextarea.focus();
     }
 
     drawStartEllipse(pointer: Point) {
