@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useRef, useState } from "react";
 import styles from './index.module.less';
 import { Context } from "../draw/Context";
 import { DrawType } from "./config";
+import { getRGBA } from "../propertyPanel/utils";
 
 const ToolBar = () => {
     const { workspace, canvas, drawMode, setState, penProperty } = useContext(Context);
@@ -30,8 +31,8 @@ const ToolBar = () => {
             setState({ drawMode: DrawType.pencil });
             if (canvas) {
                 canvas.isDrawingMode = true;
-                canvas.freeDrawingBrush.width = 2;
-                canvas.freeDrawingBrush.color = '#000';
+                canvas.freeDrawingBrush.width = penProperty.strokeWidth;
+                canvas.freeDrawingBrush.color = getRGBA(penProperty.color, penProperty.alpha);
             }
         }
     };
@@ -173,7 +174,7 @@ const ToolBar = () => {
                         <g strokeWidth="1.5"><path clipRule="evenodd" d="m7.643 15.69 7.774-7.773a2.357 2.357 0 1 0-3.334-3.334L4.31 12.357a3.333 3.333 0 0 0-.977 2.357v1.953h1.953c.884 0 1.732-.352 2.357-.977Z"></path><path d="m11.25 5.417 3.333 3.333"></path></g>
                     </svg>
                 </button>
-                <button className={`${styles.tool_btn} ${DrawType.text === drawMode ? styles.active : ''}`} data-mode="text" title="文字工具 (T)">
+                <button className={`${styles.tool_btn} ${DrawType.text === drawMode ? styles.active : ''}`} data-mode="text" title="文字工具 (T)" onClick={() => handlerDraw(DrawType.text)}>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 4H13V6H9V14H7V6H3V4Z" stroke="currentColor" strokeWidth="1.5"/>
                 </svg>

@@ -10,12 +10,14 @@ export type PenPropertyOption = {
     color: string;
     fill: string,
     strokeWidth: number;
+    alpha: number;
 };
 
 export const defaultPenProperty: PenPropertyOption = {
     color: '#ff0000',
     fill: 'transparent',
     strokeWidth: 2,
+    alpha: 1,
 };
 
 interface CanvasContext {

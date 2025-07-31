@@ -13,11 +13,10 @@ const Draggable = (props: DraggableProps) => {
 
     const handlerMouseDown = (e: any) => {
         if (containerRef.current) {
-            if (['button', 'input'].includes(e.target.tagName.toLocaleLowerCase())) {
+            if (['button', 'input', 'svg'].includes(e.target.tagName.toLocaleLowerCase())) {
                 return;
             }
             const el = containerRef.current;
-            console.log(e.target === containerRef.current)
             let disX = e.pageX - el.offsetLeft;
             let disY = e.pageY - el.offsetTop;
 

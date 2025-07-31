@@ -59,6 +59,19 @@ class DrawTool {
     //     this.drawShaps[0].setCoords();
     // }
 
+    drawText(pointer: Point) {
+        this.drawShaps[0] = new fabric.Textbox('', {
+            left: pointer.x,
+            top: pointer.y,
+            originX: "left",
+            originY: "top",
+            stroke: this.penProperty.color,
+            selectable: false,
+            evented: false,
+        });
+        this.canvas.add(this.drawShaps[0]);
+    }
+
     drawStartEllipse(pointer: Point) {
         this.drawShaps[0] = new fabric.Ellipse({
             left: pointer.x,
@@ -185,6 +198,10 @@ class DrawTool {
                 case DrawType.triangle:
                     this.drawStartTriangle(pointer);
                     break;
+                case DrawType.text:
+                    this.drawText(pointer);
+                    this.drawEnd();
+                    break;
                 case DrawType.ployLine:
                     if (!this.drawShaps.length) {
                         this.drawStartLine();
@@ -230,10 +247,6 @@ class DrawTool {
                 this.points.pop();
                 this.drawMoveLine();
             }
-
-            // this.canvas.setActiveObject(this.drawShaps[0]);
-            // this.drawShaps[0].setCoords();     // 更新坐标缓存
-            // this.canvas.requestRenderAll();
             this.points.length = 0;
             this.drawShaps.length = 0;
         }

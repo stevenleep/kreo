@@ -67,7 +67,7 @@ class EditorWorkspace {
     };
 
     getJson() {
-        throw new Error('Method not implemented.');
+        return this.canvas.toJSON();
     }
 
     // 清空全部对象

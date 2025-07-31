@@ -3,6 +3,7 @@ import { fabric } from 'fabric';
 import styles from './index.module.less';
 import { Context, defaultPenProperty } from '../draw/Context';
 import { DrawType } from '../toolBar/config';
+import { colorToRgba, getRGBA } from './utils';
 
 interface PropertyPanelProps {
     onDuplicate?: () => void;
@@ -13,19 +14,34 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
     onDuplicate,
     onPropertyChange
 }) => {
-    const { selectShape, canvas } = useContext(Context);
+    const { selectShape, canvas, penProperty, setState } = useContext(Context);
     const [localObject, setLocalObject] = useState<fabric.Object | null>(null);
-    const [propertyInfo, setPropertyInfo] = useState(defaultPenProperty);
 
     const initProps = (shape: fabric.Object) => {
-        const color = shape.get('stroke') as string;
-        const fill = shape.get('fill') as string;
-        const strokeWidth = shape.get('strokeWidth') as number;
-        setPropertyInfo({
-            color,
-            strokeWidth,
-            fill
-        })
+        let color = shape.get('stroke') as string;
+        let fill = shape.get('fill') as string;
+        let strokeWidth = shape.get('strokeWidth') as number;
+        let alpha = 100;
+        if (shape.type === DrawType.text) {
+            
+        } else if (shape.type === DrawType.pencil || shape.type === DrawType.ployLine) {
+            const obj = colorToRgba(color);
+            color = obj.hex;
+            alpha = obj.alpha;
+        } else {
+            const obj = colorToRgba(fill);
+            fill = obj.hex;
+            alpha = obj.alpha;
+        }
+
+        setState({
+            penProperty: {
+                color,
+                strokeWidth,
+                fill,
+                alpha,
+            }
+        });
     };
 
     useEffect(() => {
@@ -41,20 +57,54 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
 
     const handlerChangeColor = (evt: any) => {
         const color = evt.target.value;
-        setPropertyInfo({
-            ...propertyInfo,
-            color
+        setState({
+            penProperty: { ...penProperty, color }
         });
         localObject.set({ stroke: color });
         canvas?.renderAll();
     };
 
-    const handlerBorderWidth = () => {
-
+    const handlerChangeAlpha = (evt: any) => {
+        const alpha = Number(evt.target.value);
+        setState({
+            penProperty: {
+                ...penProperty,
+                alpha
+            }
+        });
+        if (localObject.type === DrawType.pencil || localObject.type === DrawType.ployLine) {
+            const stroke = getRGBA(penProperty.color, alpha);;
+            localObject.set({ stroke });
+        } else {
+            const fill = getRGBA(penProperty.fill, alpha);
+            localObject.set({ fill });
+        }
+        
+        canvas?.renderAll();
     };
 
-    const handlerChangeBgColor = () => {
+    const handlerBorderWidth = (evt: any) => {
+        const strokeWidth = Number(evt.target.value);
+        setState({
+            penProperty: {
+                ...penProperty,
+                strokeWidth
+            }
+        });
+        localObject.set({ strokeWidth });
+        canvas?.renderAll();
+    };
 
+    const handlerChangeBgColor = (evt: any) => {
+        const fill = evt.target.value;
+        setState({
+            penProperty: {
+                ...penProperty,
+                fill
+            }
+        });
+        localObject.set({ fill });
+        canvas?.renderAll();
     };
 
     return (
@@ -62,21 +112,21 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
             <div className={styles.props_section}>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>颜色</div>
-                    <input onChange={handlerChangeColor} type="color" className={styles.props_input} value={propertyInfo.color} />
+                    <input onChange={handlerChangeColor} type="color" className={styles.props_input} value={penProperty.color} />
                 </div>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>线条粗细</div>
-                    <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="20" value={propertyInfo.strokeWidth} />
-                    <span className={styles.props_value} id="stroke-width-value">5</span>
+                    <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="100" value={penProperty.strokeWidth} />
+                    <span className={styles.props_value}>{penProperty.strokeWidth}</span>
                 </div>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>填充</div>
-                    <input onChange={handlerChangeBgColor} type="color" className={styles.props_input} value={propertyInfo.color} />
+                    <input onChange={handlerChangeBgColor} type="color" className={styles.props_input} value={penProperty.fill} />
                 </div>
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>透明度</div>
-                    <input type="range" className={styles.props_slider} min="0.1" max="1" step="0.1" value="1" />
-                    <span className={styles.props_value} id="opacity-value">100%</span>
+                    <input onChange={handlerChangeAlpha} type="range" className={styles.props_slider} min="1" max="100" step="1" value={penProperty.alpha} />
+                    <span className={styles.props_value}>{penProperty.alpha}%</span>
                 </div>
                 {DrawType.text === localObject.type && <div className={styles.props_group}>
                     <div className={styles.props_group_label}>字体大小</div>
