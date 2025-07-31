@@ -16,6 +16,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
 }) => {
     const { selectShape, canvas, penProperty, setState } = useContext(Context);
     const [localObject, setLocalObject] = useState<fabric.Object | null>(null);
+    const [showFill, setShowFill] = useState(false);
 
     const initProps = (shape: fabric.Object) => {
         let color = shape.get('stroke') as string;
@@ -23,15 +24,17 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         let strokeWidth = shape.get('strokeWidth') as number;
         let alpha = 100;
         if (shape.type === DrawType.text) {
-            
-        } else if (shape.type === DrawType.pencil || shape.type === DrawType.ployLine) {
+            setShowFill(false);
+        } else if (shape.type === DrawType.pencil || shape.type === DrawType.polyLine) {
             const obj = colorToRgba(color);
             color = obj.hex;
             alpha = obj.alpha;
+            setShowFill(false);
         } else {
             const obj = colorToRgba(fill);
             fill = obj.hex;
             alpha = obj.alpha;
+            setShowFill(true);
         }
 
         setState({
@@ -72,7 +75,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 alpha
             }
         });
-        if (localObject.type === DrawType.pencil || localObject.type === DrawType.ployLine) {
+        if (localObject.type === DrawType.pencil || localObject.type === DrawType.polyLine) {
             const stroke = getRGBA(penProperty.color, alpha);;
             localObject.set({ stroke });
         } else {
@@ -119,10 +122,10 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                     <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="100" value={penProperty.strokeWidth} />
                     <span className={styles.props_value}>{penProperty.strokeWidth}</span>
                 </div>
-                <div className={styles.props_group}>
+                {showFill && <div className={styles.props_group}>
                     <div className={styles.props_group_label}>填充</div>
                     <input onChange={handlerChangeBgColor} type="color" className={styles.props_input} value={penProperty.fill} />
-                </div>
+                </div>}
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>透明度</div>
                     <input onChange={handlerChangeAlpha} type="range" className={styles.props_slider} min="1" max="100" step="1" value={penProperty.alpha} />

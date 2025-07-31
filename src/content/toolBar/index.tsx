@@ -160,6 +160,13 @@ const ToolBar = () => {
         reader.readAsText(file);
     }
 
+    const selectGroup = () => {
+        if (!drawMode) {
+            return false;
+        }
+        return [DrawType.rect, DrawType.circle, DrawType.ellipse, DrawType.polyLine, DrawType.triangle].includes(drawMode);
+    };
+
     return (
         <div className={styles.tool_bar}>
             <input onChange={handlerFileChange} type="file" ref={uploadRef} className={styles.import_btn} accept=".json" />
@@ -184,7 +191,7 @@ const ToolBar = () => {
             <div className={styles.divider}></div>
             {/* <!-- 形状工具组 --> */}
             <div className={`${styles.toolbar_group} ${styles.shape_group}`}>
-                <button className={styles.tool_btn} title="形状工具 (S)">
+                <button className={`${styles.tool_btn} ${selectGroup() ? styles.active : ''}`} title="形状工具 (S)">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <rect x="3" y="3" width="10" height="10" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                     </svg>
@@ -208,7 +215,7 @@ const ToolBar = () => {
                             <ellipse cx="8" cy="8" rx="6.5" ry="4.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
                         </svg>
                     </button>
-                    <button className={`${styles.tool_btn} ${DrawType.ployLine === drawMode ? styles.active : ''}`} title="直线 (L)" onClick={() => handlerDraw(DrawType.ployLine)}>
+                    <button className={`${styles.tool_btn} ${DrawType.polyLine === drawMode ? styles.active : ''}`} title="直线 (L)" onClick={() => handlerDraw(DrawType.polyLine)}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <line x1="3" y1="13" x2="13" y2="3" stroke="currentColor" strokeWidth="1.5"/>
                         </svg>

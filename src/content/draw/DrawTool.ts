@@ -205,7 +205,7 @@ class DrawTool {
                     this.drawText(pointer);
                     this.drawEnd();
                     break;
-                case DrawType.ployLine:
+                case DrawType.polyLine:
                     if (!this.drawShaps.length) {
                         this.drawStartLine();
                     } else {
@@ -234,7 +234,7 @@ class DrawTool {
                 case DrawType.triangle:
                     this.drawMoveRect(pointer);
                     break;
-                case DrawType.ployLine:
+                case DrawType.polyLine:
                     this.drawMoveLine(pointer);
                     break;
                 default:
@@ -246,7 +246,7 @@ class DrawTool {
 
     drawEnd() {
         if (this.drawMode) {
-            if (this.drawMode === DrawType.ployLine) {
+            if (this.drawMode === DrawType.polyLine) {
                 this.points.pop();
                 this.drawMoveLine();
             }

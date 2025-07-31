@@ -12,13 +12,13 @@ export type panelItem = {
 };
 
 export enum DrawType {
-    ployLine = 'PloyLine',
-    pencil= 'Pencil',
-    rect= 'Rect',
-    circle= 'Circle',
-    ellipse= 'Ellipse',
-    triangle= 'Triangle',
-    text= 'Text'
+    polyLine = 'polyline',
+    pencil= 'pencil',
+    rect= 'rect',
+    circle= 'circle',
+    ellipse= 'ellipse',
+    triangle= 'triangle',
+    text= 'textbox'
 };
 
 // export type DrawType = typeof DrawType[keyof typeof DrawType];
