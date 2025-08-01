@@ -73,9 +73,9 @@ class History {
             this.canvas.getObjects().forEach((item: any) => {
                 if (item.id === 'maskRect') return;
                 if (item.id === 'workspace') {
-                    this.workspace.workspace = item;
+                    // this.workspace.workspace = item;
                 } else if (item.id === 'mainImg') {
-                    this.workspace.mainImg = item;
+                    // this.workspace.mainImg = item;
                 } else {
                     // 恢复选中元素
                     if (activeObjectId && item.id === activeObjectId) {

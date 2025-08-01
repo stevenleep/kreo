@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import EditorWorkspace from './draw/EditorWorkspace';
 import { Context } from './draw/Context';
-// import useEvents from '@/pages/basicsInfo/booth/projectVisual/hooks/useEvents';
 import { IEvent } from 'fabric/fabric-impl';
-// import { getQueryString } from '@/utils/tools';
+import styles from './workspace.module.less';
 // import { EventsTypes, events } from '@/utils/events';
 // import { useLatest } from 'ahooks';
 // import { PageType } from '@/pages/basicsInfo/booth/projectVisual/core/config/type';
@@ -22,7 +21,7 @@ type OffListener = (ev: fabric.IEvent) => void;
  * @returns
  */
 const Workspace = () => {
-    const { canvas, workspace, setState } = useContext(Context);
+    const { canvas, workspace, setState, drawMode } = useContext(Context);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     // const lastMainCodeRelevance = useLatest(mainCodeRelevance);
     // const lastOpenCreateSpecialBooth = useLatest(openCreateSpecialBooth);
@@ -286,7 +285,7 @@ const Workspace = () => {
     };
 
     return (
-        <div onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
+        <div className={ drawMode ? styles.no_events : '' } onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
             <canvas ref={canvasRef} />
         </div>
     );

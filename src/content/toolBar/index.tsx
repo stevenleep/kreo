@@ -140,11 +140,10 @@ const ToolBar = () => {
                 return;
             }
             try {
+                // @ts-ignore
                 const json = JSON.parse(evt.target.result);
-
                 // 3. 清空当前画布
                 canvas?.clear();
-
                 // 4. 载入 JSON
                 canvas?.loadFromJSON(json, () => {
                     // 5. 渲染并可选居中
