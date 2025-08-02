@@ -23,18 +23,17 @@ class History {
     }
     watchHistory = () => {
         if (this.bindEvent) {
-            this.canvas.off('object:added', this.pushHistory);
+            // this.canvas.off('object:added', this.pushHistory);
             this.canvas.off('object:removed', this.pushHistory);
             this.canvas.off('object:modified', this.pushHistory);
         }
         this.bindEvent = true;
-        this.canvas.on('object:added', this.pushHistory);
+        // this.canvas.on('object:added', this.pushHistory);
         this.canvas.on('object:removed', this.pushHistory);
         this.canvas.on('object:modified', this.pushHistory);
     };
     pushHistory = (e?: any) => {
         if (this.loading) return;
-        if (e && e.target.excludeFromExport) return;
         const canvasData = this.workspace.getJson();
         Promise.resolve().then(() => {
             this.setState((prev: any) => {
@@ -66,25 +65,18 @@ class History {
         });
     };
     loadFromJSON = (index: number) => {
-        const { canvasData, boothData, activeObjectId } = this.historyList[index] || {};
+        const { canvasData, activeObjectId } = this.historyList[index] || {};
         if (this.loading || !canvasData) return;
         this.loading = true;
         this.canvas.loadFromJSON(canvasData, () => {
             this.canvas.getObjects().forEach((item: any) => {
-                if (item.id === 'maskRect') return;
-                if (item.id === 'workspace') {
-                    // this.workspace.workspace = item;
-                } else if (item.id === 'mainImg') {
-                    // this.workspace.mainImg = item;
-                } else {
-                    // 恢复选中元素
-                    if (activeObjectId && item.id === activeObjectId) {
-                        this.canvas.setActiveObject(item);
-                    }
-                    item.selectable = true;
-                    item.hasControls = true;
-                    item.hoverCursor = 'move';
+                // 恢复选中元素
+                if (activeObjectId && item.id === activeObjectId) {
+                    this.canvas.setActiveObject(item);
                 }
+                item.selectable = true;
+                item.hasControls = true;
+                item.hoverCursor = 'move';
             });
             this.historyIndex = index;
             this.canvas.renderAll();
@@ -94,7 +86,6 @@ class History {
                     ...prev,
                     historyUndoNum: this.historyList.slice(0, this.historyIndex).length,
                     historyRedoNum: this.historyList.slice(this.historyIndex).length - 1,
-                    boothData: { ...boothData },
                 };
             });
         });
