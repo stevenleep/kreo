@@ -28,7 +28,7 @@ interface CanvasContext {
     // selectDrawingOpen: boolean;
     // boothData: any;
     selectShape: fabric.Object | null;
-    drawMode: DrawType | '';
+    drawMode: DrawType | '' | 'select';
     refreshTooList: null | object;
     // mainCodeRelevance: { [key: string]: string };
     // originalObjectIds: { [key: string]: boolean };

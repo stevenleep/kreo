@@ -118,6 +118,12 @@ const ToolBar = () => {
     };
 
     const handlerChangeSelectable = () => {
+        workspace?.drawTool.deactive();
+        if (selectAble) {
+            setState({ drawMode: '' });
+        } else {
+            setState({ drawMode: 'select' });
+        }
         if (canvas) {
             const shapeList = canvas?.getObjects();
             shapeList.forEach(shape => {
@@ -126,8 +132,6 @@ const ToolBar = () => {
             });
             setSelectAble(!selectAble);
         }
-        setState({ drawMode: '' });
-        workspace?.drawTool.deactive();
     };
 
     const handlerFileChange = (e: any) => {
@@ -163,7 +167,7 @@ const ToolBar = () => {
         if (!drawMode) {
             return false;
         }
-        return [DrawType.rect, DrawType.circle, DrawType.ellipse, DrawType.polyLine, DrawType.triangle].includes(drawMode);
+        return [DrawType.rect, DrawType.circle, DrawType.ellipse, DrawType.polyLine, DrawType.triangle].includes(drawMode as DrawType);
     };
 
     return (

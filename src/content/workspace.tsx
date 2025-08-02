@@ -23,6 +23,7 @@ type OffListener = (ev: fabric.IEvent) => void;
 const Workspace = () => {
     const { canvas, workspace, setState, drawMode } = useContext(Context);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     // const lastMainCodeRelevance = useLatest(mainCodeRelevance);
     // const lastOpenCreateSpecialBooth = useLatest(openCreateSpecialBooth);
     // const lastOriginalObjectIds = useLatest(originalObjectIds);
@@ -42,28 +43,37 @@ const Workspace = () => {
     //     },
     // });
 
+    const onScroll = () => {
+        const scrollTop = window.scrollY || document.body.scrollTo;
+        if (containerRef.current) {
+            containerRef.current.scrollTop = scrollTop as number;
+        }
+    };
+
     useEffect(() => {
         initCanvas();
     }, []);
 
     useEffect(() => {
         if (!canvas || !workspace) return;
-        canvas.on('mouse:down', clickCanvas); // 画布点击事件
-        canvas.on('object:added', watchAdded); // 新增元素事件
-        canvas.on('object:moving', watchMoveing); // 拖动元素事件
+        // canvas.on('mouse:down', clickCanvas); // 画布点击事件
+        // canvas.on('object:added', watchAdded); // 新增元素事件
+        // canvas.on('object:moving', watchMoveing); // 拖动元素事件
         canvas.on('mouse:dblclick', dblclick); // 双击事件
         canvas.on('selection:created', watchSelectionCreated); // 选择元素事件
         // events.on(EventsTypes.DeleteObject, deleteObject); // 删除元素事件
         // window.addEventListener('keydown', onKeyDown);
         // hotkeys(KeyNames.delete, deleteObject); // 绑定删除快捷键
+        window.addEventListener('scroll', onScroll);
         return () => {
-            canvas.off('mouse:down', clickCanvas as OffListener);
-            canvas.off('object:added', watchAdded as OffListener);
-            canvas.off('object:moving', watchMoveing as OffListener);
+            // canvas.off('mouse:down', clickCanvas as OffListener);
+            // canvas.off('object:added', watchAdded as OffListener);
+            // canvas.off('object:moving', watchMoveing as OffListener);
             canvas.off('mouse:dblclick', dblclick as OffListener);
             canvas.off('selection:created', watchSelectionCreated as OffListener); // 选择元素事件
             // events.off(EventsTypes.DeleteObject, deleteObject);
-            window.removeEventListener('keydown', onKeyDown);
+            // window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('scroll', onScroll);
             // hotkeys.unbind(KeyNames.delete, deleteObject);
         };
     }, [canvas, workspace]);
@@ -87,23 +97,7 @@ const Workspace = () => {
         //     groupToEditPolygon(canvas, e.target);
         // }
     };
-    /**
-     * 点击画布
-     * @param e
-     * @returns
-     */
-    const clickCanvas = (e: IEvent<MouseEvent>) => {
-        if (!canvas || !workspace) return;
-        // 点击空白画布展示规划信息
-        // if (workspace.dragMode) return;
-        // if (workspace.drawLine.isDrawing) return;
-        const target = e.target;
-        const objects = canvas.getObjects();
-        // if ((target === null || ['mainImg', 'maskRect'].includes(target?.get('id') || '')) && objects.length) {
-        //     setState({ selectBooth: null, openAttr: true });
-        //     onFinishPointsChange(canvas, workspace);
-        // }
-    };
+
     /**
      * 删除元素
      * @returns
@@ -145,35 +139,6 @@ const Workspace = () => {
     //     canvas.renderAll();
     // };
 
-    /**
-     * 监听新增
-     * @param e
-     * @returns
-     */
-    const watchAdded = (e: IEvent<MouseEvent>) => {
-        if (!canvas || !workspace) return;
-        // if (lastLoading.current) return;
-        if (!e.target || !(e.target as any).id) return;
-        if (e.target.excludeFromExport) return;
-        // if (e.target.cType !== 'booth' || e.target.type !== 'group') return;
-        if (canvas.historyPlugin?.loading) return; // 正在撤回画布不处理
-        const id = (e.target as any).id as string;
-        // setState((prev) => {
-        //     prev.boothData[id] = {
-        //         boothPrefix: prev.beforeBoothData.acCodePrefix,
-        //         effectiveDateBegin: prev.projectData.effectiveDateBegin,
-        //         effectiveDateEnd: prev.projectData.effectiveDateEnd,
-        //         boothMapColour: (e.target as fabric.Group).gruopFill,
-        //         isDouble: '0',
-        //         assetsNatureKey: '0',
-        //         boothMark: 0,
-        //         sharing: floorInfo?.sharing,
-        //         boothLevelKey: undefined,
-        //     };
-        //     return prev;
-        // });
-    };
-
     const watchSelectionCreated = (e: IEvent<MouseEvent>) => {
         if (!canvas || !workspace) return;
         const target = e.selected?.[0];
@@ -190,6 +155,8 @@ const Workspace = () => {
      * @returns
      */
     const watchMoveing = (e: IEvent<MouseEvent>) => {
+        debugger
+        console.log('ddddd')
         const target = e.target;
         if (!target || !workspace || !canvas) return;
         if (!workspace.width || !workspace.height) return;
@@ -250,22 +217,6 @@ const Workspace = () => {
         if (workspace?.drawTool.drawMode !== DrawType.pencil) {
             workspace?.drawTool && workspace?.drawTool.draw(ev);
         }
-    
-        // const x = ev.target.pointerPos.x;
-        // const y = ev.target.pointerPos.y;
-        // const box =  {
-        //     width: 6,
-        //     height: 6,
-        //     x: x - 3,
-        //     y: y- 3
-        // };
-        // const shapes = renderLayer.current.getChildren();
-        // const shape = shapes.find(shape => Konva.Util.haveIntersection(box, shape.getClientRect()));
-        // if (shape) {
-        // const id = shape.id();
-        // selectShapIds[0] = id;
-        // setState({ selectShapIds });
-
     };
     
     const handlerMouseMove = (ev: React.MouseEvent) => {
@@ -285,7 +236,7 @@ const Workspace = () => {
     };
 
     return (
-        <div className={ drawMode ? styles.no_events : '' } onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
+        <div ref={containerRef} className={`${styles.container} ${drawMode ? styles.events : ''}`} onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
             <canvas ref={canvasRef} />
         </div>
     );
