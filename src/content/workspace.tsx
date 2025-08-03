@@ -3,7 +3,7 @@ import { fabric } from 'fabric';
 import EditorWorkspace from './draw/EditorWorkspace';
 import { Context } from './draw/Context';
 import { IEvent } from 'fabric/fabric-impl';
-// import { EventsTypes, events } from '@/utils/events';
+import styles from './workspace.module.less';
 // import { useLatest } from 'ahooks';
 import History from './draw/History';
 import { DrawType } from './toolBar/config';
@@ -16,8 +16,9 @@ type OffListener = (ev: fabric.IEvent) => void;
  * @returns
  */
 const Workspace = () => {
-    const { canvas, workspace, setState } = useContext(Context);
+    const { canvas, workspace, setState, drawMode } = useContext(Context);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     // const lastMainCodeRelevance = useLatest(mainCodeRelevance);
     // const lastOpenCreateSpecialBooth = useLatest(openCreateSpecialBooth);
     // const lastOriginalObjectIds = useLatest(originalObjectIds);
@@ -37,6 +38,13 @@ const Workspace = () => {
     //     },
     // });
 
+    const onScroll = () => {
+        const scrollTop = window.scrollY || document.body.scrollTo;
+        if (containerRef.current) {
+            containerRef.current.scrollTop = scrollTop as number;
+        }
+    };
+
     useEffect(() => {
         initCanvas();
     }, []);
@@ -44,14 +52,13 @@ const Workspace = () => {
     useEffect(() => {
         if (!canvas || !workspace) return;
         canvas.on('mouse:down', clickCanvas); // 画布点击事件
-        canvas.on('object:added', watchAdded); // 新增元素事件
-        canvas.on('object:moving', watchMoveing); // 拖动元素事件
+        // canvas.on('object:added', watchAdded); // 新增元素事件
         canvas.on('selection:created', watchSelectionCreated); // 选择元素事件
+        window.addEventListener('scroll', onScroll);
         window.addEventListener('keydown', onKeyDown);
         return () => {
             canvas.off('mouse:down', clickCanvas as OffListener);
-            canvas.off('object:added', watchAdded as OffListener);
-            canvas.off('object:moving', watchMoveing as OffListener);
+            // canvas.off('object:added', watchAdded as OffListener);
             canvas.off('selection:created', watchSelectionCreated as OffListener); // 选择元素事件
             window.removeEventListener('keydown', onKeyDown);
         };
@@ -135,33 +142,6 @@ const Workspace = () => {
     };
 
     /**
-     * 监听拖拽
-     * @param e
-     * @returns
-     */
-    const watchMoveing = (e: IEvent<MouseEvent>) => {
-        const target = e.target;
-        if (!target || !workspace || !canvas) return;
-        if (!workspace.width || !workspace.height) return;
-        if (target.left === undefined || target.top === undefined) return;
-        if (target.width === undefined || target.height === undefined) return;
-
-        if (target.left < 0) {
-            target.left = 0;
-        }
-        if (target.left + target.width > workspace.width) {
-            target.left = workspace.width - target.width;
-        }
-        if (target.top < 0) {
-            target.top = 0;
-        }
-        if (target.top + target.height > workspace.height) {
-            target.top = workspace.height - target.height;
-        }
-        canvas.requestRenderAll();
-    };
-
-    /**
      * 初始化canvas
      */
     const initCanvas = async () => {
@@ -219,7 +199,7 @@ const Workspace = () => {
     };
 
     return (
-        <div onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
+        <div ref={containerRef} className={`${styles.container} ${drawMode ? styles.events : ''}`} onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
             <canvas ref={canvasRef} />
         </div>
     );

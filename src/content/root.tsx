@@ -1,33 +1,34 @@
-import { createRef } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import ToolBar from './toolBar';
 import Workspace from './workspace';
 import { CanvasProvider } from './draw/Context';
-// import Panel from './panel';
-// import btn_img from '../../public/images/app.jpg';
-
-// export interface ShowMessageConfig {
-//   type: 'error' | 'success';
-//   text: string;
-//   link?: {
-//     text: string;
-//     href: string;
-//   };
-// }
+import Draggable from './draggable';
+import PropertyPanel from './propertyPanel';
 
 const App = () => {
+  const [properyLeft, setProperyLeft] = useState(0);
+
+  useEffect(() => {
+    setProperyLeft(window.innerWidth - 250);
+  }, []);
+
   return (
     <div className='extension-root-container'>
       <CanvasProvider>
-          <ToolBar />
+          <Draggable left={20} top={20}>
+            <ToolBar />
+          </Draggable>
           <Workspace />
+          {properyLeft && <Draggable left={properyLeft} top={20}>
+            <PropertyPanel />
+          </Draggable>}
       </CanvasProvider>
     </div>
   );
 };
 
 export function createContentScriptApp(rootDiv: HTMLElement) {
-  // const div = document.createElement('div');
   const contentScriptRef = createRef<any>();
   const root = ReactDOM.createRoot(rootDiv);
   root.render(

@@ -43,6 +43,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 strokeWidth,
                 fill,
                 alpha,
+                lineType: ''
             }
         });
     };
@@ -69,6 +70,23 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         canvas?.renderAll();
     };
 
+    const handlerChangeLineType = (evt: any) => {
+        const dash = evt.target.value === 'dash';
+        setState({
+            penProperty: {
+                ...penProperty,
+                lineType: evt.target.value
+            }
+        });
+        if (dash) {
+            localObject.set({ strokeDashArray: [5, 5] });
+        } else {
+            localObject.set({ strokeDashArray: undefined });
+        }
+        
+        canvas?.renderAll(); 
+    };
+
     const handlerChangeAlpha = (evt: any) => {
         const alpha = Number(evt.target.value);
         setState({
@@ -78,7 +96,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
             }
         });
         if (localObject.type === DrawType.pencil || localObject.type === DrawType.polyLine) {
-            const stroke = getRGBA(penProperty.color, alpha);;
+            const stroke = getRGBA(penProperty.color, alpha);
             localObject.set({ stroke });
         } else {
             const fill = getRGBA(penProperty.fill, alpha);
@@ -133,6 +151,13 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                     <input onChange={handlerChangeAlpha} type="range" className={styles.props_slider} min="1" max="100" step="1" value={penProperty.alpha} />
                     <span className={styles.props_value}>{penProperty.alpha}%</span>
                 </div>
+                {DrawType.polyLine === localObject.type &&  <div className={styles.props_group}>
+                    <div className={styles.props_group_label}>线条类型</div>
+                    <select value={penProperty.lineType} onChange={handlerChangeLineType}>
+                        <option value="">实线</option>
+                        <option value="dash">虚线</option>
+                    </select>
+                </div>}
                 {DrawType.text === localObject.type && <div className={styles.props_group}>
                     <div className={styles.props_group_label}>字体大小</div>
                     <input type="range" className={styles.props_slider} min="8" max="72" value="16" />

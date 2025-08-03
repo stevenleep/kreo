@@ -11,6 +11,7 @@ export type PenPropertyOption = {
     fill: string,
     strokeWidth: number;
     alpha: number;
+    lineType: string;
 };
 
 export const defaultPenProperty: PenPropertyOption = {
@@ -18,6 +19,7 @@ export const defaultPenProperty: PenPropertyOption = {
     fill: 'transparent',
     strokeWidth: 2,
     alpha: 100,
+    lineType: '',
 };
 
 interface CanvasContext {
@@ -28,7 +30,7 @@ interface CanvasContext {
     // selectDrawingOpen: boolean;
     // boothData: any;
     selectShape: fabric.Object | null;
-    drawMode: DrawType | '';
+    drawMode: DrawType | '' | 'select';
     refreshTooList: null | object;
     // mainCodeRelevance: { [key: string]: string };
     // originalObjectIds: { [key: string]: boolean };

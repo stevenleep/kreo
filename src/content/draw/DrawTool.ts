@@ -150,6 +150,7 @@ class DrawTool {
 
     drawStartLine() {
         this.drawShaps[0] = new fabric.Polyline([...this.points], {
+            strokeDashArray: this.penProperty.lineType === 'dash' ? [5, 5] : undefined,
             strokeWidth: this.penProperty.strokeWidth,
             fill: 'transparent',
             stroke: this.penProperty.color,
@@ -249,6 +250,11 @@ class DrawTool {
             if (this.drawMode === DrawType.polyLine) {
                 this.points.pop();
                 this.drawMoveLine();
+            } else {
+                if (this.drawShaps[0].width === 0 && this.drawShaps[0].height === 0) {
+                    this.canvas.remove(this.drawShaps[0]);
+                    this.canvas.renderAll();
+                }
             }
             this.points.length = 0;
             this.drawShaps.length = 0;
