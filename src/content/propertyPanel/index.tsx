@@ -51,6 +51,8 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         if (selectShape) {
             setLocalObject(selectShape);
             initProps(selectShape);
+        } else {
+            setLocalObject(null);
         }
     }, [selectShape]);
 

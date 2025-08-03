@@ -2,12 +2,6 @@ import { fabric } from 'fabric';
 import DrawTool from './DrawTool.ts';
 import { ContextCanvas } from './Context';
 
-// declare type ExtCanvas = ContextCanvas & {
-//     isDragging: boolean;
-//     lastPosX: number;
-//     lastPosY: number;
-// };
-
 class EditorWorkspace {
     canvas: ContextCanvas;
     workspaceEl: HTMLElement;
@@ -21,9 +15,7 @@ class EditorWorkspace {
     constructor(canvas: ContextCanvas) {
         this.canvas = canvas;
         this.workspaceEl = this.canvas.getElement();
-        // this.workspace = null;
         this.drawTool = new DrawTool(canvas);
-        // this.drawShape = new DrawShape(canvas, this);
         // new ControlsPlugin(canvas);
         this.initBackground();
         this.initResizeObserve();

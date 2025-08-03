@@ -2,18 +2,12 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import EditorWorkspace from './draw/EditorWorkspace';
 import { Context } from './draw/Context';
-// import useEvents from '@/pages/basicsInfo/booth/projectVisual/hooks/useEvents';
 import { IEvent } from 'fabric/fabric-impl';
-// import { getQueryString } from '@/utils/tools';
 // import { EventsTypes, events } from '@/utils/events';
 // import { useLatest } from 'ahooks';
-// import { PageType } from '@/pages/basicsInfo/booth/projectVisual/core/config/type';
-// import hotkeys from 'hotkeys-js';
-// import { KeyNames } from '@/pages/basicsInfo/booth/projectVisual/core/config/hotEventKeys';
 import History from './draw/History';
 import { DrawType } from './toolBar/config';
 // import { onFinishPointsChange, groupToEditPolygon } from '@/pages/basicsInfo/booth/projectVisual/utils';
-// import './index.less';
 
 type OffListener = (ev: fabric.IEvent) => void;
 
@@ -52,42 +46,26 @@ const Workspace = () => {
         canvas.on('mouse:down', clickCanvas); // 画布点击事件
         canvas.on('object:added', watchAdded); // 新增元素事件
         canvas.on('object:moving', watchMoveing); // 拖动元素事件
-        canvas.on('mouse:dblclick', dblclick); // 双击事件
         canvas.on('selection:created', watchSelectionCreated); // 选择元素事件
-        // events.on(EventsTypes.DeleteObject, deleteObject); // 删除元素事件
-        // window.addEventListener('keydown', onKeyDown);
-        // hotkeys(KeyNames.delete, deleteObject); // 绑定删除快捷键
+        window.addEventListener('keydown', onKeyDown);
         return () => {
             canvas.off('mouse:down', clickCanvas as OffListener);
             canvas.off('object:added', watchAdded as OffListener);
             canvas.off('object:moving', watchMoveing as OffListener);
-            canvas.off('mouse:dblclick', dblclick as OffListener);
             canvas.off('selection:created', watchSelectionCreated as OffListener); // 选择元素事件
-            // events.off(EventsTypes.DeleteObject, deleteObject);
             window.removeEventListener('keydown', onKeyDown);
-            // hotkeys.unbind(KeyNames.delete, deleteObject);
         };
     }, [canvas, workspace]);
 
     const onKeyDown = (e: KeyboardEvent) => {
-        if (['TEXTAREA', 'INPUT'].includes(document.activeElement?.tagName as 'string')) return;
-        if (!['Escape', 'Enter'].includes(e.code)) return;
-        if (!canvas || !workspace) return;
-        e.preventDefault();
+        if (['Backspace', 'Delete'].includes(e.code)) {
+            deleteObject();
+        }
+        // if (!canvas || !workspace) return;
+        // e.preventDefault();
         // onFinishPointsChange(canvas, workspace);
     };
 
-    // 双击元素
-    const dblclick = (e: IEvent<MouseEvent>) => {
-        if (!e || !e.target || !canvas || !workspace) return;
-        // if (PageType.view === type) return;
-        // const target = e.target;
-        // if (target.id === 'changePointsPoly') {
-        //     onFinishPointsChange(canvas, workspace);
-        // } else {
-        //     groupToEditPolygon(canvas, e.target);
-        // }
-    };
     /**
      * 点击画布
      * @param e
@@ -95,56 +73,27 @@ const Workspace = () => {
      */
     const clickCanvas = (e: IEvent<MouseEvent>) => {
         if (!canvas || !workspace) return;
-        // 点击空白画布展示规划信息
-        // if (workspace.dragMode) return;
-        // if (workspace.drawLine.isDrawing) return;
         const target = e.target;
-        const objects = canvas.getObjects();
-        // if ((target === null || ['mainImg', 'maskRect'].includes(target?.get('id') || '')) && objects.length) {
-        //     setState({ selectBooth: null, openAttr: true });
-        //     onFinishPointsChange(canvas, workspace);
-        // }
+        // const objects = canvas.getObjects();
+        if (target === null) {
+            setState({ selectShape: null });
+        }
     };
     /**
      * 删除元素
      * @returns
      */
-    // const deleteObject = () => {
-    //     if (lastOpenCreateSpecialBooth.current) return;
-    //     if (!canvas || type === PageType.view) return; // 查看模式下不能删除
-    //     const object = canvas.getActiveObject();
-    //     if (!object) return;
-    //     // 处理其它元素
-    //     if (!object.id) {
-    //         canvas.remove(object);
-    //         canvas.discardActiveObject();
-    //         canvas.renderAll();
-    //         return;
-    //     }
-    //     console.log('object:---', object);
-    //     console.log('lastProjectData:---', lastProjectData);
-    //     if (object.cType === 'booth' && lastOriginalObjectIds.current[object.id] && lastProjectData.current.operateType === 3) {
-    //         return message.warning('不可删除摊位哦～');
-    //     }
-    //     // 这个摊位有被关联的子摊位，不让删除
-    //     const values = Object.keys(lastMainCodeRelevance.current).map((key) => lastMainCodeRelevance.current[key]);
-    //     if (values.includes(object.id as string)) {
-    //         return message.warning('当前摊位下有正在关联的子摊位，请解绑后删除');
-    //     }
-    //     setState((prev) => {
-    //         const { boothData } = prev;
-    //         if (object.id && object.id in boothData) {
-    //             canvas.remove(object);
-    //             delete boothData[object.id];
-    //         }
-    //         if (object.id && object.id in prev.mainCodeRelevance) {
-    //             delete prev.mainCodeRelevance[object.id];
-    //         }
-    //         return prev;
-    //     });
-    //     canvas.discardActiveObject();
-    //     canvas.renderAll();
-    // };
+    const deleteObject = () => {
+        if (!canvas) return;
+        const object = canvas.getActiveObject();
+        if (!object) return;
+        setState({
+            selectShape: null
+        });
+        canvas.remove(object);
+        canvas.discardActiveObject();
+        canvas.renderAll();
+    };
 
     /**
      * 监听新增
@@ -251,22 +200,6 @@ const Workspace = () => {
         if (workspace?.drawTool.drawMode !== DrawType.pencil) {
             workspace?.drawTool && workspace?.drawTool.draw(ev);
         }
-    
-        // const x = ev.target.pointerPos.x;
-        // const y = ev.target.pointerPos.y;
-        // const box =  {
-        //     width: 6,
-        //     height: 6,
-        //     x: x - 3,
-        //     y: y- 3
-        // };
-        // const shapes = renderLayer.current.getChildren();
-        // const shape = shapes.find(shape => Konva.Util.haveIntersection(box, shape.getClientRect()));
-        // if (shape) {
-        // const id = shape.id();
-        // selectShapIds[0] = id;
-        // setState({ selectShapIds });
-
     };
     
     const handlerMouseMove = (ev: React.MouseEvent) => {

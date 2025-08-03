@@ -13,7 +13,7 @@ export type panelItem = {
 
 export enum DrawType {
     polyLine = 'polyline',
-    pencil= 'pencil',
+    pencil= 'path',
     rect= 'rect',
     circle= 'circle',
     ellipse= 'ellipse',

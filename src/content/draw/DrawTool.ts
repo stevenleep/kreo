@@ -257,6 +257,7 @@ class DrawTool {
 
     deactive() {
         this.drawMode = '';
+        this.canvas.isDrawingMode = false;
     }
 };
 

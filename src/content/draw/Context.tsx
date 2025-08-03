@@ -17,7 +17,7 @@ export const defaultPenProperty: PenPropertyOption = {
     color: '#ff0000',
     fill: 'transparent',
     strokeWidth: 2,
-    alpha: 1,
+    alpha: 100,
 };
 
 interface CanvasContext {
