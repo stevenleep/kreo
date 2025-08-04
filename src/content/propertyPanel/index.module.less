@@ -1,0 +1,75 @@
+.wrap {
+    position: absolute !important;
+    left: 100% !important;
+    top: 0 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    padding: 12px !important;
+    margin-left: 8px !important;
+    min-width: 200px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.props_section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.props_group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+}
+
+.props_group_label {
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #666 !important;
+}
+
+.props_input {
+    width: 100% !important;
+    height: 24px !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    border-radius: 4px !important;
+    padding: 2px !important;
+}
+
+.props_slider {
+    width: 100% !important;
+    height: 4px !important;
+    border-radius: 2px !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    outline: none !important;
+}
+
+.props_buttons {
+    display: flex !important;
+    gap: 2px !important;
+}
+
+.props_value {
+    font-size: 11px !important;
+    color: #666 !important;
+    text-align: center !important;
+}
+
+.props_btn {
+    flex: 1 !important;
+    height: 24px !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    background: white !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+
+    &.active {
+        background: #18a0fb !important;
+        color: white !important;
+        border-color: #18a0fb !important;
+    }
+}

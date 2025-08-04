@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "网页绘画工具",
+  "version": "1.0.0",
+  "description": "在任何网页上进行绘画和标注，支持多种画笔、手绘风格和背景保存功能",
+  "permissions": [
+      // 用来存储扩展程序的数据
+      "storage",
+      // 用来操作浏览器页面
+      "activeTab",
+      // 使用 `chrome.scripting` API 在不同上下文中执行脚本。
+      "scripting",
+      // 桌面消息通知
+      "notifications"
+  ],
+  "action": {
+    "default_title": "网页绘画工具",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
+  "host_permissions": ["<all_urls>"]
+}

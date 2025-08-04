@@ -1,0 +1,91 @@
+.tool_bar {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 12px 40px, rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    padding: 12px;
+    user-select: none;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: 0.2s;
+    gap: 4px;
+
+    .toolbar_group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        position: relative;
+    }
+
+    .tool_btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        transition: all 0.2s ease;
+        position: relative;
+        font-size: 12px;
+        font-weight: normal;
+        text-decoration: none;
+        outline: none;
+        margin: 2px;
+        &:hover {
+            background: rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &.active {
+            background: linear-gradient(135deg, #18a0fb, #0d8ce6);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(24, 160, 251, 0.3);   
+        }
+    }
+
+    .divider {
+        height: 1px;
+        background: rgba(0, 0, 0, 0.1);
+        margin: 4px 0;
+    }
+
+    .shape_dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        padding: 4px;
+        display: none;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        z-index: 1000;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown_arrow {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        opacity: 0.6;
+    }
+
+    .shape_group {
+        position: relative;
+        &:hover {
+            .shape_dropdown {
+                display: grid !important;
+            }
+        }
+    }
+
+    .import_btn {
+        display: none;
+    }
+}
