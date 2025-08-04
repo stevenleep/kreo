@@ -5,7 +5,7 @@ import { DrawType } from "./config";
 import { getRGBA } from "../propertyPanel/utils";
 
 const ToolBar = () => {
-    const { workspace, canvas, drawMode, setState, penProperty } = useContext(Context);
+    const { workspace, canvas, drawMode, setState, penProperty, historyUndoNum, historyRedoNum } = useContext(Context);
     const [selectAble, setSelectAble] = useState(false);
     const uploadRef = useRef<HTMLInputElement>(null);
 

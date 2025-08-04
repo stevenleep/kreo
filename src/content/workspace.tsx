@@ -23,21 +23,6 @@ const Workspace = () => {
     // const lastOpenCreateSpecialBooth = useLatest(openCreateSpecialBooth);
     // const lastOriginalObjectIds = useLatest(originalObjectIds);
 
-    // useEvents({
-    //     canvas,
-    //     workspace,
-    //     onSelect(actives) {
-    //         if (actives.length === 1 && actives[0].cType === 'booth') {
-    //             setState({
-    //                 openAttr: true,
-    //                 selectBooth: actives[0],
-    //             });
-    //         } else {
-    //             setState({ selectBooth: null, openAttr: true });
-    //         }
-    //     },
-    // });
-
     const onScroll = () => {
         const scrollTop = window.scrollY || document.body.scrollTo;
         if (containerRef.current) {
@@ -52,13 +37,11 @@ const Workspace = () => {
     useEffect(() => {
         if (!canvas || !workspace) return;
         canvas.on('mouse:down', clickCanvas); // 画布点击事件
-        // canvas.on('object:added', watchAdded); // 新增元素事件
         canvas.on('selection:created', watchSelectionCreated); // 选择元素事件
         window.addEventListener('scroll', onScroll);
         window.addEventListener('keydown', onKeyDown);
         return () => {
             canvas.off('mouse:down', clickCanvas as OffListener);
-            // canvas.off('object:added', watchAdded as OffListener);
             canvas.off('selection:created', watchSelectionCreated as OffListener); // 选择元素事件
             window.removeEventListener('keydown', onKeyDown);
         };
@@ -81,7 +64,6 @@ const Workspace = () => {
     const clickCanvas = (e: IEvent<MouseEvent>) => {
         if (!canvas || !workspace) return;
         const target = e.target;
-        // const objects = canvas.getObjects();
         if (target === null) {
             setState({ selectShape: null });
         }
@@ -100,35 +82,6 @@ const Workspace = () => {
         canvas.remove(object);
         canvas.discardActiveObject();
         canvas.renderAll();
-    };
-
-    /**
-     * 监听新增
-     * @param e
-     * @returns
-     */
-    const watchAdded = (e: IEvent<MouseEvent>) => {
-        if (!canvas || !workspace) return;
-        // if (lastLoading.current) return;
-        if (!e.target || !(e.target as any).id) return;
-        if (e.target.excludeFromExport) return;
-        // if (e.target.cType !== 'booth' || e.target.type !== 'group') return;
-        if (canvas.historyPlugin?.loading) return; // 正在撤回画布不处理
-        const id = (e.target as any).id as string;
-        // setState((prev) => {
-        //     prev.boothData[id] = {
-        //         boothPrefix: prev.beforeBoothData.acCodePrefix,
-        //         effectiveDateBegin: prev.projectData.effectiveDateBegin,
-        //         effectiveDateEnd: prev.projectData.effectiveDateEnd,
-        //         boothMapColour: (e.target as fabric.Group).gruopFill,
-        //         isDouble: '0',
-        //         assetsNatureKey: '0',
-        //         boothMark: 0,
-        //         sharing: floorInfo?.sharing,
-        //         boothLevelKey: undefined,
-        //     };
-        //     return prev;
-        // });
     };
 
     const watchSelectionCreated = (e: IEvent<MouseEvent>) => {
