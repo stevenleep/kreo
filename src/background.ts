@@ -1,3 +1,11 @@
+// 截图
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'CAPTURE_TAB') {
+    chrome.tabs.captureVisibleTab({ format: 'png' }).then(sendResponse);
+    return true; // 异步响应
+  }
+});
+
 chrome.action.onClicked.addListener(async (tab) => {
   if (!tab.id) {
     return;

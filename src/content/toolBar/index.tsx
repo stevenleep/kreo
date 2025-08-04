@@ -3,6 +3,7 @@ import styles from './index.module.less';
 import { Context } from "../draw/Context";
 import { DrawType } from "./config";
 import { getRGBA } from "../propertyPanel/utils";
+import { captureFullPage } from "./utils";
 
 const ToolBar = () => {
     const { workspace, canvas, drawMode, setState, penProperty, historyUndoNum, historyRedoNum } = useContext(Context);
@@ -73,18 +74,19 @@ const ToolBar = () => {
 
     // 导出图片
     const handlerExport = () => {
-        const dataURL = canvas?.toDataURL({
-            format: 'png',        // 也可改成 'jpeg'
-            quality: 0.92,        // jpeg 时才生效
-            multiplier: 1         // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
-        });
-        if (dataURL) {
-            // 2. 触发下载
-            const link = document.createElement('a');
-            link.href = dataURL;
-            link.download = 'canvas.png';
-            link.click();
-        }
+        captureFullPage();
+        // const dataURL = canvas?.toDataURL({
+        //     format: 'png',        // 也可改成 'jpeg'
+        //     quality: 0.92,        // jpeg 时才生效
+        //     multiplier: 1         // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
+        // });
+        // if (dataURL) {
+        //     // 2. 触发下载
+        //     const link = document.createElement('a');
+        //     link.href = dataURL;
+        //     link.download = 'canvas.png';
+        //     link.click();
+        // }
     };
 
     const handlerUpload = () => {
