@@ -138,7 +138,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                     <input onChange={handlerChangeColor} type="color" className={styles.props_input} value={penProperty.color} />
                 </div>
                 <div className={styles.props_group}>
-                    <div className={styles.props_group_label}>线条粗细</div>
+                    <div className={styles.props_group_label}>样式</div>
                     <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="100" value={penProperty.strokeWidth} />
                     <span className={styles.props_value}>{penProperty.strokeWidth}</span>
                 </div>
@@ -160,20 +160,13 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 </div>}
                 {DrawType.text === localObject.type && <div className={styles.props_group}>
                     <div className={styles.props_group_label}>字体大小</div>
-                    <input type="range" className={styles.props_slider} min="8" max="72" value="16" />
-                    <span className={styles.props_value}>16</span>
-                    
-                    <div className={styles.props_group_label}>文本对齐</div>
+                    <input type="range" className={styles.props_slider} min="8" max="72" value={penProperty.fontSize} />
+                    <span className={styles.props_value}>{penProperty.fontSize}</span>
+                    <div className={styles.props_group_label}>字体样式</div>
                     <div className={styles.props_buttons}>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-align="left" title="左对齐">L</button>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-align="center" title="居中">C</button>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-align="right" title="右对齐">R</button>
-                    </div>
-                    
-                    <div className={styles.props_group_label}>字体粗细</div>
-                    <div className={styles.props_buttons}>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-weight="normal" title="正常">N</button>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-weight="bold" title="粗体">B</button>
+                        <button className={`${styles.props_btn} ${styles.bold} ${penProperty.bold ? styles.active : ''}`} title="粗体">B</button>
+                        <button className={`${styles.props_btn} ${styles.italic} ${penProperty.italic ? styles.active : ''}`} title="斜体">I</button>
+                        <button className={`${styles.props_btn} ${styles.underline} ${penProperty.underline ? styles.active : ''}`} title="下划线">A</button>
                     </div>
                 </div>}
             </div>

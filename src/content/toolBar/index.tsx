@@ -8,6 +8,7 @@ import { captureFullPage } from "./utils";
 const ToolBar = () => {
     const { workspace, canvas, drawMode, setState, penProperty, historyUndoNum, historyRedoNum } = useContext(Context);
     const [selectAble, setSelectAble] = useState(false);
+    const [hide, setHide] = useState(false);
     const uploadRef = useRef<HTMLInputElement>(null);
 
     const stop = () => {
@@ -73,20 +74,24 @@ const ToolBar = () => {
     };
 
     // 导出图片
-    const handlerExport = () => {
-        captureFullPage();
-        // const dataURL = canvas?.toDataURL({
-        //     format: 'png',        // 也可改成 'jpeg'
-        //     quality: 0.92,        // jpeg 时才生效
-        //     multiplier: 1         // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
-        // });
-        // if (dataURL) {
-        //     // 2. 触发下载
-        //     const link = document.createElement('a');
-        //     link.href = dataURL;
-        //     link.download = 'canvas.png';
-        //     link.click();
-        // }
+    const handlerExport = async () => {
+        if (canvas) {
+            setHide(true);
+             const base64 = canvas?.toDataURL({
+                format: 'png',        // 也可改成 'jpeg'
+                quality: 0.92,        // jpeg 时才生效
+                multiplier: 1         // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
+            });
+            const dataURL = await captureFullPage(base64);
+            if (dataURL) {
+                // 触发下载
+                const link = document.createElement('a');
+                // @ts-ignore
+                link.href = dataURL;
+                link.download = 'canvas.png';
+                link.click();
+            }
+        }
     };
 
     const handlerUpload = () => {
@@ -173,7 +178,7 @@ const ToolBar = () => {
     };
 
     return (
-        <div className={styles.tool_bar}>
+        <div className={`${styles.tool_bar} ${hide ? styles.hide : ''}`}>
             <input onChange={handlerFileChange} type="file" ref={uploadRef} className={styles.import_btn} accept=".json" />
             {/* <!-- 主要工具组 --> */}
             <div className={styles.toolbar_group}>
