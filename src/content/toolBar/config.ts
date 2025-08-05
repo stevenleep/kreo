@@ -1,16 +1,4 @@
-/**
- * 按钮
- */
-export type panelItem = {
-    title: string;
-    subTitle?: string;
-    type: string;
-    icon: string;
-    activeIcon: string;
-    graphMapData?: string;
-    json?: object;
-};
-
+// 类型
 export enum DrawType {
     polyLine = 'polyline',
     pencil= 'path',
@@ -20,7 +8,3 @@ export enum DrawType {
     triangle= 'triangle',
     text= 'textbox'
 };
-
-// export type DrawType = typeof DrawType[keyof typeof DrawType];
-// export const noDraggableList = [DrawType.straightLine];
-// export const noDraggableList = [DrawType.straightLine, DrawType.straightMergeLine, DrawType.arcLine, DrawType.rectLine, DrawType.starBooth];

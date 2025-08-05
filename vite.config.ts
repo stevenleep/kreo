@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   build: {
-    watch: {},
     outDir: "dist",
     emptyOutDir: true,
     rollupOptions: {

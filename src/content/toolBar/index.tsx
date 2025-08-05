@@ -3,10 +3,12 @@ import styles from './index.module.less';
 import { Context } from "../draw/Context";
 import { DrawType } from "./config";
 import { getRGBA } from "../propertyPanel/utils";
+import { captureFullPage } from "./utils";
 
 const ToolBar = () => {
-    const { workspace, canvas, drawMode, setState, penProperty } = useContext(Context);
+    const { workspace, canvas, drawMode, setState, penProperty, historyUndoNum, historyRedoNum } = useContext(Context);
     const [selectAble, setSelectAble] = useState(false);
+    const [hide, setHide] = useState(false);
     const uploadRef = useRef<HTMLInputElement>(null);
 
     const stop = () => {
@@ -72,18 +74,24 @@ const ToolBar = () => {
     };
 
     // 导出图片
-    const handlerExport = () => {
-        const dataURL = canvas?.toDataURL({
-            format: 'png',        // 也可改成 'jpeg'
-            quality: 0.92,        // jpeg 时才生效
-            multiplier: 1         // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
-        });
-        if (dataURL) {
-            // 2. 触发下载
-            const link = document.createElement('a');
-            link.href = dataURL;
-            link.download = 'canvas.png';
-            link.click();
+    const handlerExport = async () => {
+        if (canvas) {
+            setHide(true);
+            const base64 = canvas?.toDataURL({
+                format: 'png',        // 也可改成 'jpeg'
+                quality: 0.92,        // jpeg 时才生效
+                multiplier: 1         // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
+            });
+            const dataURL = await captureFullPage(base64);
+            setHide(false)
+            if (dataURL) {
+                // 触发下载
+                const link = document.createElement('a');
+                // @ts-ignore
+                link.href = dataURL;
+                link.download = 'canvas.png';
+                link.click();
+            }
         }
     };
 
@@ -109,11 +117,17 @@ const ToolBar = () => {
 
     const handlerUndo = () => {
         stop();
+        setState({
+            selectShape: null
+        });
         canvas?.historyPlugin?.undo();
     };
 
     const handlerRedo = () => {
         stop();
+        setState({
+            selectShape: null
+        });
         canvas?.historyPlugin?.redo();
     };
 
@@ -171,7 +185,7 @@ const ToolBar = () => {
     };
 
     return (
-        <div className={styles.tool_bar}>
+        <div className={`${styles.tool_bar} ${hide ? styles.hide : ''}`}>
             <input onChange={handlerFileChange} type="file" ref={uploadRef} className={styles.import_btn} accept=".json" />
             {/* <!-- 主要工具组 --> */}
             <div className={styles.toolbar_group}>
@@ -247,12 +261,12 @@ const ToolBar = () => {
             <div className={styles.divider}></div>
             {/* <!-- 操作工具组 --> */}
             <div className={styles.toolbar_group}>
-                <button className={styles.tool_btn} title="撤销 (Ctrl+Z)" onClick={handlerUndo}>
+                <button className={`${styles.tool_btn} ${historyUndoNum === 0 ? styles.disable : ''}`} title="撤销 (Ctrl+Z)" onClick={handlerUndo}>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                         <path d="M7.5 10.833 4.167 7.5 7.5 4.167M4.167 7.5h9.166a3.333 3.333 0 0 1 0 6.667H12.5" strokeWidth="2"></path>
                     </svg>
                 </button>
-                <button className={styles.tool_btn} title="重做" onClick={handlerRedo}>
+                <button className={`${styles.tool_btn} ${historyRedoNum === 0 ? styles.disable : ''}`} title="重做" onClick={handlerRedo}>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                         <path d="M12.5 10.833 15.833 7.5 12.5 4.167M15.833 7.5H6.667a3.333 3.333 0 1 0 0 6.667H7.5" strokeWidth="2"></path>
                     </svg>

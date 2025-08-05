@@ -60,14 +60,19 @@ class DrawTool {
     // }
 
     drawText(pointer: Point) {
-        const textbox = new fabric.Textbox('123', {
+        const textbox = new fabric.Textbox('', {
             left: pointer.x,
             top: pointer.y,
             originX: "left",
             originY: "top",
             stroke: this.penProperty.color,
+            fill: this.penProperty.color,
             selectable: true,
-            evented: true
+            evented: true,
+            fontSize: this.penProperty.fontSize,
+            fontStyle: this.penProperty.italic ? 'italic' : 'normal',
+            fontWeight: this.penProperty.bold ? 'bold' : 'normal',
+            underline: this.penProperty.underline,
         });
         this.canvas.add(textbox);
         this.canvas.setActiveObject(textbox);

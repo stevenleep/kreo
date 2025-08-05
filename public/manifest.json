@@ -8,6 +8,7 @@
       "storage",
       // 用来操作浏览器页面
       "activeTab",
+      "tabs",
       // 使用 `chrome.scripting` API 在不同上下文中执行脚本。
       "scripting",
       // 桌面消息通知

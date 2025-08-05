@@ -1,19 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 import styles from './index.module.less';
-import { Context, defaultPenProperty } from '../draw/Context';
+import { Context } from '../draw/Context';
 import { DrawType } from '../toolBar/config';
 import { colorToRgba, getRGBA } from './utils';
 
-interface PropertyPanelProps {
-    onDuplicate?: () => void;
-    onPropertyChange?: (property: string, value: any) => void;
-}
-
-const PropertyPanel: React.FC<PropertyPanelProps> = ({
-    onDuplicate,
-    onPropertyChange
-}) => {
+const PropertyPanel = () => {
     const { selectShape, canvas, penProperty, setState } = useContext(Context);
     const [localObject, setLocalObject] = useState<fabric.Object | null>(null);
     const [showFill, setShowFill] = useState(false);
@@ -23,8 +15,16 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         let fill = shape.get('fill') as string;
         let strokeWidth = shape.get('strokeWidth') as number;
         let alpha = 100;
+        let fontSize = 24;
+        let textProps = {};
         if (shape.type === DrawType.text) {
             setShowFill(false);
+            fontSize = (shape as fabric.Textbox).get('fontSize') || 12;
+            textProps = {
+                bold: (shape as fabric.Textbox).get('fontWeight') === 'normal',
+                underline: (shape as fabric.Textbox).get('underline'),
+                italic: (shape as fabric.Textbox).get('fontStyle') === 'italic',
+            }
         } else if (shape.type === DrawType.pencil || shape.type === DrawType.polyLine) {
             const obj = colorToRgba(color);
             color = obj.hex;
@@ -43,7 +43,9 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 strokeWidth,
                 fill,
                 alpha,
-                lineType: ''
+                lineType: '',
+                fontSize,
+                ...textProps
             }
         });
     };
@@ -67,6 +69,9 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
             penProperty: { ...penProperty, color }
         });
         localObject.set({ stroke: color });
+        if (localObject.type === DrawType.text) {
+            localObject.set({ fill: color });
+        }
         canvas?.renderAll();
     };
 
@@ -87,6 +92,48 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         canvas?.renderAll(); 
     };
 
+    const handlerChangeStyle = (type : 'underline' | 'italic' | 'bold') => {
+        if (type === 'bold') {
+            (localObject as fabric.Textbox).set({ fontWeight: penProperty.bold ? 'normal' : 'bold' });
+            setState({
+                penProperty: {
+                    ...penProperty,
+                    bold: !penProperty.bold
+                }
+            });
+        } else if (type === 'italic') {
+            (localObject as fabric.Textbox).set({ fontStyle: penProperty.italic ? 'normal' : 'italic' });
+            setState({
+                penProperty: {
+                    ...penProperty,
+                    italic: !penProperty.italic
+                }
+            });
+        } else if (type === 'underline') {
+            (localObject as fabric.Textbox).set({ underline: !penProperty.underline });
+            setState({
+                penProperty: {
+                    ...penProperty,
+                    underline: !penProperty.underline
+                }
+            });
+        }
+        canvas?.renderAll();
+    };
+
+    const handlerChangeFontSize = (evt: any) => {
+        const fontSize = Number(evt.target.value);
+        setState({
+            penProperty: {
+                ...penProperty,
+                fontSize
+            }
+        });
+        (localObject as fabric.Textbox).set({ fontSize });
+
+        canvas?.renderAll();
+    };
+
     const handlerChangeAlpha = (evt: any) => {
         const alpha = Number(evt.target.value);
         setState({
@@ -95,9 +142,12 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 alpha
             }
         });
-        if (localObject.type === DrawType.pencil || localObject.type === DrawType.polyLine) {
+        if (localObject.type === DrawType.pencil || localObject.type === DrawType.polyLine || localObject.type === DrawType.text) {
             const stroke = getRGBA(penProperty.color, alpha);
             localObject.set({ stroke });
+            if (localObject.type === DrawType.text) {
+                localObject.set({ fill: stroke });
+            }
         } else {
             const fill = getRGBA(penProperty.fill, alpha);
             localObject.set({ fill });
@@ -137,21 +187,21 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                     <div className={styles.props_group_label}>颜色</div>
                     <input onChange={handlerChangeColor} type="color" className={styles.props_input} value={penProperty.color} />
                 </div>
-                <div className={styles.props_group}>
-                    <div className={styles.props_group_label}>线条粗细</div>
+                {DrawType.text !== localObject.type && <div className={styles.props_group}>
+                    <div className={styles.props_group_label}>线宽</div>
                     <input onChange={handlerBorderWidth} type="range" className={styles.props_slider} min="1" max="100" value={penProperty.strokeWidth} />
                     <span className={styles.props_value}>{penProperty.strokeWidth}</span>
-                </div>
+                </div>}
                 {showFill && <div className={styles.props_group}>
                     <div className={styles.props_group_label}>填充</div>
                     <input onChange={handlerChangeBgColor} type="color" className={styles.props_input} value={penProperty.fill} />
                 </div>}
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>透明度</div>
-                    <input onChange={handlerChangeAlpha} type="range" className={styles.props_slider} min="1" max="100" step="1" value={penProperty.alpha} />
+                    <input onChange={handlerChangeAlpha} type="range" className={styles.props_slider} min="0" max="100" step="1" value={penProperty.alpha} />
                     <span className={styles.props_value}>{penProperty.alpha}%</span>
                 </div>
-                {DrawType.polyLine === localObject.type &&  <div className={styles.props_group}>
+                {DrawType.polyLine === localObject.type && <div className={styles.props_group}>
                     <div className={styles.props_group_label}>线条类型</div>
                     <select value={penProperty.lineType} onChange={handlerChangeLineType}>
                         <option value="">实线</option>
@@ -160,20 +210,13 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 </div>}
                 {DrawType.text === localObject.type && <div className={styles.props_group}>
                     <div className={styles.props_group_label}>字体大小</div>
-                    <input type="range" className={styles.props_slider} min="8" max="72" value="16" />
-                    <span className={styles.props_value}>16</span>
-                    
-                    <div className={styles.props_group_label}>文本对齐</div>
+                    <input onChange={handlerChangeFontSize} type="range" className={styles.props_slider} min="12" max="72" value={penProperty.fontSize} />
+                    <span className={styles.props_value}>{penProperty.fontSize}</span>
+                    <div className={styles.props_group_label}>字体样式</div>
                     <div className={styles.props_buttons}>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-align="left" title="左对齐">L</button>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-align="center" title="居中">C</button>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-align="right" title="右对齐">R</button>
-                    </div>
-                    
-                    <div className={styles.props_group_label}>字体粗细</div>
-                    <div className={styles.props_buttons}>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-weight="normal" title="正常">N</button>
-                    <button className={`${styles.props_btn} ${styles.active}`} data-weight="bold" title="粗体">B</button>
+                        <button onClick={() => handlerChangeStyle('bold')} className={`${styles.props_btn} ${styles.bold} ${penProperty.bold ? styles.active : ''}`} title="粗体">B</button>
+                        <button onClick={() => handlerChangeStyle('italic')} className={`${styles.props_btn} ${styles.italic} ${penProperty.italic ? styles.active : ''}`} title="斜体">I</button>
+                        <button onClick={() => handlerChangeStyle('underline')} className={`${styles.props_btn} ${styles.underline} ${penProperty.underline ? styles.active : ''}`} title="下划线">A</button>
                     </div>
                 </div>}
             </div>
