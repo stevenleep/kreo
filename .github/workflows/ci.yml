@@ -78,6 +78,12 @@ jobs:
             - name: Build extension
               run: npm run build:extension
 
+            - name: Create extension package for artifacts
+              run: |
+                  cd dist
+                  zip -r ../kreo-chrome-extension-build-${{ github.sha }}.zip .
+                  echo "Extension package created for build artifacts"
+
             - name: Upload build artifacts
               uses: actions/upload-artifact@v4
               with:
@@ -85,11 +91,20 @@ jobs:
                   path: dist/
                   retention-days: 30
 
+            - name: Upload extension package
+              uses: actions/upload-artifact@v4
+              with:
+                  name: kreo-chrome-extension-package
+                  path: kreo-chrome-extension-build-${{ github.sha }}.zip
+                  retention-days: 30
+
             - name: Check build size
               run: |
                   echo "Build size information:"
                   du -sh dist/
                   find dist/ -name "*.js" -exec wc -c {} + | sort -n
+                  echo "Extension package size:"
+                  ls -lh kreo-chrome-extension-build-${{ github.sha }}.zip
 
     # 部署到开发环境（可选）
     deploy-dev:
@@ -127,6 +142,7 @@ jobs:
             - name: Create GitHub Release
               if: startsWith(github.ref, 'refs/tags/')
               uses: actions/create-release@v1
+              id: create_release
               env:
                   GITHUB_TOKEN: ${{ secrets.DEMPLOYMENT_GITHUB_TOKEN }}
               with:
@@ -135,9 +151,20 @@ jobs:
                   draft: false
                   prerelease: false
 
-            - name: Upload Release Asset
+            - name: Create Extension Package
               if: startsWith(github.ref, 'refs/tags/')
               run: |
                   cd dist
                   zip -r ../chrome-extension-${{ github.ref_name }}.zip .
                   echo "Chrome extension package created: chrome-extension-${{ github.ref_name }}.zip"
+
+            - name: Upload Release Asset
+              if: startsWith(github.ref, 'refs/tags/')
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.DEMPLOYMENT_GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: chrome-extension-${{ github.ref_name }}.zip
+                  asset_name: kreo-chrome-extension-${{ github.ref_name }}.zip
+                  asset_content_type: application/zip
