@@ -1,138 +1,138 @@
 name: Security Scan
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  schedule:
-    # 每周运行一次安全扫描
-    - cron: '0 2 * * 1'
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+    schedule:
+        # 每周运行一次安全扫描
+        - cron: "0 2 * * 1"
 
 jobs:
-  security-scan:
-    name: Security Analysis
-    runs-on: ubuntu-latest
-    
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-      
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    # NPM安全审计
-    - name: NPM Security Audit
-      run: |
-        echo "## NPM安全审计报告" > security-report.md
-        npm audit --audit-level=moderate --json > npm-audit.json || true
-        VULNERABILITIES=$(cat npm-audit.json | jq '.metadata.total' || echo '0')
-        echo "发现 $VULNERABILITIES 个漏洞" >> security-report.md
-        if [ "$VULNERABILITIES" -gt "0" ]; then
-          echo "### 漏洞详情:" >> security-report.md
-          npm audit --audit-level=moderate >> security-report.md || true
-        fi
-        
-    - name: Run Semgrep
-      uses: semgrep/semgrep-action@v1
-      with:
-        config: >-
-          p/security-audit
-          p/secrets
-          p/javascript
-          p/typescript
-        generateSarif: "1"
-        
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: semgrep.sarif
-      if: always()
-        
-    - name: Secret scanning
-      uses: trufflesecurity/trufflehog@main
-      with:
-        path: ./
-        base: main
-        head: HEAD
-        extra_args: --debug --only-verified
-        
-    - name: License compliance check
-      run: |
-        npx license-checker --summary > license-summary.txt
-        echo "## License合规性检查" >> security-report.md
-        echo "### 依赖项License摘要:" >> security-report.md
-        cat license-summary.txt >> security-report.md
-        
-    - name: Check for malicious packages
-      run: |
-        npx audit-ci --config audit-ci.json || true
-        
-    - name: Upload security reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: security-reports
-        path: |
-          security-report.md
-          npm-audit.json
-          license-summary.txt
-        retention-days: 30
-        
-  security-baseline:
-    name: Security Baseline Check
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Check for security configuration files
-      run: |
-        echo "## 安全配置检查" > baseline-report.md
-        
-        # 检查是否有安全相关配置
-        if [ -f ".nvmrc" ]; then
-          echo "Node版本锁定: $(cat .nvmrc)" >> baseline-report.md
-        else
-          echo "建议添加.nvmrc文件锁定Node版本" >> baseline-report.md
-        fi
-        
-        if [ -f "package-lock.json" ]; then
-          echo "依赖项锁定: package-lock.json存在" >> baseline-report.md
-        else
-          echo "缺少package-lock.json文件" >> baseline-report.md
-        fi
-        
-        if grep -q "engines" package.json; then
-          echo "Node引擎版本已指定" >> baseline-report.md
-        else
-          echo "建议在package.json中指定engines字段" >> baseline-report.md
-        fi
-        
-        # 检查是否有危险的脚本
-        if grep -q "curl.*|.*sh\|wget.*|.*sh" package.json; then
-          echo "发现潜在危险的shell脚本" >> baseline-report.md
-        else
-          echo "未发现危险的shell脚本" >> baseline-report.md
-        fi
-        
-        echo "安全基线检查完成"
-        cat baseline-report.md
-        
-    - name: Upload baseline report
-      uses: actions/upload-artifact@v4
-      with:
-        name: security-baseline-report
-        path: baseline-report.md
-        retention-days: 7
+    security-scan:
+        name: Security Analysis
+        runs-on: ubuntu-latest
+
+        permissions:
+            actions: read
+            contents: read
+            security-events: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm ci
+
+            # NPM安全审计
+            - name: NPM Security Audit
+              run: |
+                  echo "## NPM安全审计报告" > security-report.md
+                  npm audit --audit-level=moderate --json > npm-audit.json || true
+                  VULNERABILITIES=$(cat npm-audit.json | jq '.metadata.total' || echo '0')
+                  echo "发现 $VULNERABILITIES 个漏洞" >> security-report.md
+                  if [ "$VULNERABILITIES" -gt "0" ]; then
+                    echo "### 漏洞详情:" >> security-report.md
+                    npm audit --audit-level=moderate >> security-report.md || true
+                  fi
+
+            - name: Run Semgrep
+              uses: semgrep/semgrep-action@v1
+              with:
+                  config: >-
+                      p/security-audit
+                      p/secrets
+                      p/javascript
+                      p/typescript
+                  generateSarif: "1"
+
+            - name: Upload SARIF file
+              uses: github/codeql-action/upload-sarif@v3
+              with:
+                  sarif_file: semgrep.sarif
+              if: always()
+
+            - name: Secret scanning
+              uses: trufflesecurity/trufflehog@main
+              with:
+                  path: ./
+                  base: main
+                  head: HEAD
+                  extra_args: --debug --only-verified
+
+            - name: License compliance check
+              run: |
+                  npx license-checker --summary > license-summary.txt
+                  echo "## License合规性检查" >> security-report.md
+                  echo "### 依赖项License摘要:" >> security-report.md
+                  cat license-summary.txt >> security-report.md
+
+            - name: Check for malicious packages
+              run: |
+                  npx audit-ci --config audit-ci.json || true
+
+            - name: Upload security reports
+              uses: actions/upload-artifact@v4
+              with:
+                  name: security-reports
+                  path: |
+                      security-report.md
+                      npm-audit.json
+                      license-summary.txt
+                  retention-days: 30
+
+    security-baseline:
+        name: Security Baseline Check
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Check for security configuration files
+              run: |
+                  echo "## 安全配置检查" > baseline-report.md
+
+                  # 检查是否有安全相关配置
+                  if [ -f ".nvmrc" ]; then
+                    echo "Node版本锁定: $(cat .nvmrc)" >> baseline-report.md
+                  else
+                    echo "建议添加.nvmrc文件锁定Node版本" >> baseline-report.md
+                  fi
+
+                  if [ -f "package-lock.json" ]; then
+                    echo "依赖项锁定: package-lock.json存在" >> baseline-report.md
+                  else
+                    echo "缺少package-lock.json文件" >> baseline-report.md
+                  fi
+
+                  if grep -q "engines" package.json; then
+                    echo "Node引擎版本已指定" >> baseline-report.md
+                  else
+                    echo "建议在package.json中指定engines字段" >> baseline-report.md
+                  fi
+
+                  # 检查是否有危险的脚本
+                  if grep -q "curl.*|.*sh\|wget.*|.*sh" package.json; then
+                    echo "发现潜在危险的shell脚本" >> baseline-report.md
+                  else
+                    echo "未发现危险的shell脚本" >> baseline-report.md
+                  fi
+
+                  echo "安全基线检查完成"
+                  cat baseline-report.md
+
+            - name: Upload baseline report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: security-baseline-report
+                  path: baseline-report.md
+                  retention-days: 7

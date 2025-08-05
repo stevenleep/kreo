@@ -1,77 +1,77 @@
 name: Code Quality Gate
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  quality-gate:
-    name: Quality Gate
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
+    quality-gate:
+        name: Quality Gate
+        runs-on: ubuntu-latest
 
-    - name: Code complexity analysis
-      run: |
-        npx complexity-report src/ --format json --output complexity-report.json || true
-        echo "代码复杂度分析完成"
-        
-    - name: Code duplication detection
-      run: |
-        npx jscpd src/ --reporter html --output ./reports/jscpd/ || true
-        echo "代码重复检测完成"
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-    - name: Code coverage
-      run: |
-        if [ -f "jest.config.js" ] || [ -f "vitest.config.ts" ]; then
-          npm run test:coverage || echo "No test coverage available"
-        else
-          echo "No test configuration found, skipping coverage"
-        fi
-        
-    - name: Check bundle size
-      run: |
-        npm run build
-        echo "## Bundle Size Analysis" >> $GITHUB_STEP_SUMMARY
-        echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
-        echo "|------|------|" >> $GITHUB_STEP_SUMMARY
-        find dist/ -name "*.js" -exec ls -lh {} \; | awk '{print "| " $9 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY
-        
-    - name: Dependency analysis
-      run: |
-        npx depcheck --json > depcheck-report.json || true
-        echo "依赖项分析完成"
-        
-    - name: Generate quality report
-      run: |
-        echo "## 代码质量报告" > quality-report.md
-        echo "### 构建状态: ✅ 成功" >> quality-report.md
-        echo "### ESLint检查: $(npx eslint . --ext .ts,.tsx --format=unix | wc -l)个问题" >> quality-report.md
-        echo "### TypeScript编译: 通过" >> quality-report.md
-        echo "### 依赖项安全: $(npm audit --audit-level=moderate --json | jq '.metadata.total' || echo '0')个问题" >> quality-report.md
-        
-    - name: Upload quality reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: quality-reports
-        path: |
-          quality-report.md
-          complexity-report.json
-          depcheck-report.json
-          reports/
-        retention-days: 7
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Code complexity analysis
+              run: |
+                  npx complexity-report src/ --format json --output complexity-report.json || true
+                  echo "代码复杂度分析完成"
+
+            - name: Code duplication detection
+              run: |
+                  npx jscpd src/ --reporter html --output ./reports/jscpd/ || true
+                  echo "代码重复检测完成"
+
+            - name: Code coverage
+              run: |
+                  if [ -f "jest.config.js" ] || [ -f "vitest.config.ts" ]; then
+                    npm run test:coverage || echo "No test coverage available"
+                  else
+                    echo "No test configuration found, skipping coverage"
+                  fi
+
+            - name: Check bundle size
+              run: |
+                  npm run build
+                  echo "## Bundle Size Analysis" >> $GITHUB_STEP_SUMMARY
+                  echo "| File | Size |" >> $GITHUB_STEP_SUMMARY
+                  echo "|------|------|" >> $GITHUB_STEP_SUMMARY
+                  find dist/ -name "*.js" -exec ls -lh {} \; | awk '{print "| " $9 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY
+
+            - name: Dependency analysis
+              run: |
+                  npx depcheck --json > depcheck-report.json || true
+                  echo "依赖项分析完成"
+
+            - name: Generate quality report
+              run: |
+                  echo "## 代码质量报告" > quality-report.md
+                  echo "### 构建状态: ✅ 成功" >> quality-report.md
+                  echo "### ESLint检查: $(npx eslint . --ext .ts,.tsx --format=unix | wc -l)个问题" >> quality-report.md
+                  echo "### TypeScript编译: 通过" >> quality-report.md
+                  echo "### 依赖项安全: $(npm audit --audit-level=moderate --json | jq '.metadata.total' || echo '0')个问题" >> quality-report.md
+
+            - name: Upload quality reports
+              uses: actions/upload-artifact@v4
+              with:
+                  name: quality-reports
+                  path: |
+                      quality-report.md
+                      complexity-report.json
+                      depcheck-report.json
+                      reports/
+                  retention-days: 7

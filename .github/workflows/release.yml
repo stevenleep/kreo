@@ -1,64 +1,64 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+    push:
+        tags:
+            - "v*"
 
 jobs:
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    
-    permissions:
-      contents: write
-      
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Run tests and checks
-      run: |
-        npm run lint
-        npm run type-check
-        npm run security:audit
-        
-    - name: Build extension
-      run: npm run build:extension
-      
-    - name: Create extension package
-      run: |
-        cd dist
-        zip -r ../kreo-extension-${{ github.ref_name }}.zip .
-        cd ..
-        
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Kreo Extension ${{ github.ref_name }}
-        body_path: RELEASE_NOTES.md
-        draft: false
-        prerelease: false
-        
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: kreo-extension-${{ github.ref_name }}.zip
-        asset_name: kreo-extension-${{ github.ref_name }}.zip
-        asset_content_type: application/zip
+    release:
+        name: Create Release
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run tests and checks
+              run: |
+                  npm run lint
+                  npm run type-check
+                  npm run security:audit
+
+            - name: Build extension
+              run: npm run build:extension
+
+            - name: Create extension package
+              run: |
+                  cd dist
+                  zip -r ../kreo-extension-${{ github.ref_name }}.zip .
+                  cd ..
+
+            - name: Create GitHub Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Kreo Extension ${{ github.ref_name }}
+                  body_path: RELEASE_NOTES.md
+                  draft: false
+                  prerelease: false
+
+            - name: Upload Release Asset
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: kreo-extension-${{ github.ref_name }}.zip
+                  asset_name: kreo-extension-${{ github.ref_name }}.zip
+                  asset_content_type: application/zip

@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useRef } from 'react';
-import { fabric } from 'fabric';
-import EditorWorkspace from './draw/EditorWorkspace';
-import { Context } from './draw/Context';
-import { IEvent } from 'fabric/fabric-impl';
-import styles from './workspace.module.less';
+import React, { useContext, useEffect, useRef } from "react";
+import { fabric } from "fabric";
+import EditorWorkspace from "./draw/EditorWorkspace";
+import { Context } from "./draw/Context";
+import { IEvent } from "fabric/fabric-impl";
+import styles from "./workspace.module.less";
 // import { useLatest } from 'ahooks';
-import History from './draw/History';
-import { DrawType } from './toolBar/config';
+import History from "./draw/History";
+import { DrawType } from "./toolBar/config";
 // import { onFinishPointsChange, groupToEditPolygon } from '@/pages/basicsInfo/booth/projectVisual/utils';
 
 type OffListener = (ev: fabric.IEvent) => void;
@@ -36,19 +36,19 @@ const Workspace = () => {
 
     useEffect(() => {
         if (!canvas || !workspace) return;
-        canvas.on('mouse:down', clickCanvas); // 画布点击事件
-        canvas.on('selection:created', watchSelectionCreated); // 选择元素事件
-        window.addEventListener('scroll', onScroll);
-        window.addEventListener('keydown', onKeyDown);
+        canvas.on("mouse:down", clickCanvas); // 画布点击事件
+        canvas.on("selection:created", watchSelectionCreated); // 选择元素事件
+        window.addEventListener("scroll", onScroll);
+        window.addEventListener("keydown", onKeyDown);
         return () => {
-            canvas.off('mouse:down', clickCanvas as OffListener);
-            canvas.off('selection:created', watchSelectionCreated as OffListener); // 选择元素事件
-            window.removeEventListener('keydown', onKeyDown);
+            canvas.off("mouse:down", clickCanvas as OffListener);
+            canvas.off("selection:created", watchSelectionCreated as OffListener); // 选择元素事件
+            window.removeEventListener("keydown", onKeyDown);
         };
     }, [canvas, workspace]);
 
     const onKeyDown = (e: KeyboardEvent) => {
-        if (['Backspace', 'Delete'].includes(e.code)) {
+        if (["Backspace", "Delete"].includes(e.code)) {
             deleteObject();
         }
         // if (!canvas || !workspace) return;
@@ -77,7 +77,7 @@ const Workspace = () => {
         const object = canvas.getActiveObject();
         if (!object) return;
         setState({
-            selectShape: null
+            selectShape: null,
         });
         canvas.remove(object);
         canvas.discardActiveObject();
@@ -90,7 +90,7 @@ const Workspace = () => {
         if (!target || !workspace || !canvas) return;
         if (!workspace.width || !workspace.height) return;
         if (target.left === undefined || target.top === undefined) return;
-    
+
         setState({ selectShape: target });
     };
 
@@ -104,7 +104,7 @@ const Workspace = () => {
             document.body.offsetHeight,
             document.documentElement.offsetHeight,
             document.body.clientHeight,
-            document.documentElement.clientHeight
+            document.documentElement.clientHeight,
         );
 
         const domWidth = Math.max(
@@ -113,7 +113,7 @@ const Workspace = () => {
             document.body.offsetWidth,
             document.documentElement.offsetWidth,
             document.body.clientWidth,
-            document.documentElement.clientWidth
+            document.documentElement.clientWidth,
         );
 
         const canvas = new fabric.Canvas(canvasRef.current, {
@@ -134,7 +134,7 @@ const Workspace = () => {
             workspace?.drawTool && workspace?.drawTool.draw(ev);
         }
     };
-    
+
     const handlerMouseMove = (ev: React.MouseEvent) => {
         workspace?.drawTool && workspace?.drawTool.drawMove(ev);
     };
@@ -152,7 +152,14 @@ const Workspace = () => {
     };
 
     return (
-        <div ref={containerRef} className={`${styles.container} ${drawMode ? styles.events : ''}`} onMouseDown={handlerDraw} onMouseMove={handlerMouseMove} onMouseUp={handlerMouseUp} onDoubleClick={handlerDbClick}>
+        <div
+            ref={containerRef}
+            className={`${styles.container} ${drawMode ? styles.events : ""}`}
+            onMouseDown={handlerDraw}
+            onMouseMove={handlerMouseMove}
+            onMouseUp={handlerMouseUp}
+            onDoubleClick={handlerDbClick}
+        >
             <canvas ref={canvasRef} />
         </div>
     );

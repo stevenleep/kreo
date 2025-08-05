@@ -1,8 +1,8 @@
 {
-  "moderate": true,
-  "high": true,
-  "critical": true,
-  "report-type": "summary",
-  "allowlist": [],
-  "skip-dev": false
+    "moderate": true,
+    "high": true,
+    "critical": true,
+    "report-type": "summary",
+    "allowlist": [],
+    "skip-dev": false
 }

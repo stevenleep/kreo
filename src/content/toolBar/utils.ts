@@ -1,53 +1,52 @@
-
 const imgPromise = (imgBase64: string) => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      resolve(img);
-    };
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            resolve(img);
+        };
 
-    img.onerror = reject;
-    img.src = imgBase64;
-  });
+        img.onerror = reject;
+        img.src = imgBase64;
+    });
 };
 
-export const captureFullPage = async (drawBase64: string) =>  {
-  return new Promise(async (resolve, reject) => {
-    const totalHeight = document.body.scrollHeight;
-    const viewportHeight = window.innerHeight;
-    let currentY = 0;
-    let images: any[] = [];
+export const captureFullPage = async (drawBase64: string) => {
+    return new Promise(async (resolve, reject) => {
+        const totalHeight = document.body.scrollHeight;
+        const viewportHeight = window.innerHeight;
+        let currentY = 0;
+        let images: any[] = [];
 
-    while (currentY < totalHeight) {
-      window.scrollTo(0, currentY);
-      await sleep(300); // 等待渲染完成
+        while (currentY < totalHeight) {
+            window.scrollTo(0, currentY);
+            await sleep(300); // 等待渲染完成
 
-      const dataUrl = await chrome.runtime.sendMessage({ type: 'CAPTURE_TAB' });
-      images.push(imgPromise(dataUrl));
-      currentY += viewportHeight;
-    }
+            const dataUrl = await chrome.runtime.sendMessage({ type: "CAPTURE_TAB" });
+            images.push(imgPromise(dataUrl));
+            currentY += viewportHeight;
+        }
 
-    // 拼接图片
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+        // 拼接图片
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
-    canvas.width = window.innerWidth;
-    canvas.height = totalHeight;
+        canvas.width = window.innerWidth;
+        canvas.height = totalHeight;
 
-    const list = await Promise.all(images);
-    if (ctx) {
-      // @ts-ignore
-      const bgImg = await imgPromise(drawBase64) as Image;
-      ctx.drawImage(bgImg, 0, 0, window.innerWidth, window.innerHeight);
+        const list = await Promise.all(images);
+        if (ctx) {
+            // @ts-ignore
+            const bgImg = (await imgPromise(drawBase64)) as Image;
+            ctx.drawImage(bgImg, 0, 0, window.innerWidth, window.innerHeight);
 
-      list.forEach((img, index) => {
-        ctx.drawImage(img, 0, index * viewportHeight, window.innerWidth, viewportHeight);
-      });
-    }
-    resolve( canvas.toDataURL());
-  });
-}
+            list.forEach((img, index) => {
+                ctx.drawImage(img, 0, index * viewportHeight, window.innerWidth, viewportHeight);
+            });
+        }
+        resolve(canvas.toDataURL());
+    });
+};
 
 const sleep = async (ms: number) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+    return new Promise((resolve) => setTimeout(resolve, ms));
+};

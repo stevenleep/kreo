@@ -1,5 +1,5 @@
-import { ContextCanvas } from './Context';
-import EditorWorkspace from './EditorWorkspace';
+import { ContextCanvas } from "./Context";
+import EditorWorkspace from "./EditorWorkspace";
 
 /**
  * 画布历史管理
@@ -24,13 +24,13 @@ class History {
     watchHistory = () => {
         if (this.bindEvent) {
             // this.canvas.off('object:added', this.pushHistory);
-            this.canvas.off('object:removed', this.pushHistory);
-            this.canvas.off('object:modified', this.pushHistory);
+            this.canvas.off("object:removed", this.pushHistory);
+            this.canvas.off("object:modified", this.pushHistory);
         }
         this.bindEvent = true;
         // this.canvas.on('object:added', this.pushHistory);
-        this.canvas.on('object:removed', this.pushHistory);
-        this.canvas.on('object:modified', this.pushHistory);
+        this.canvas.on("object:removed", this.pushHistory);
+        this.canvas.on("object:modified", this.pushHistory);
     };
     pushHistory = (e?: any) => {
         if (this.loading) return;
@@ -45,7 +45,7 @@ class History {
                     this.historyList.push({
                         canvasData,
                         boothData: { ...prev.boothData },
-                        activeObjectId: activeObject ? activeObject.id : '',
+                        activeObjectId: activeObject ? activeObject.id : "",
                     });
                 };
                 if (this.historyIndex === this.historyList.length - 1) {
@@ -76,7 +76,7 @@ class History {
                 }
                 item.selectable = true;
                 item.hasControls = true;
-                item.hoverCursor = 'move';
+                item.hoverCursor = "move";
             });
             this.historyIndex = index;
             this.canvas.renderAll();
@@ -103,7 +103,7 @@ class History {
             this.historyIndex = -1;
             this.historyList = [];
             this.pushHistory();
-            this.watchHistory(); 
+            this.watchHistory();
         });
     };
 }
