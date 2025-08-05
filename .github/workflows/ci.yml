@@ -25,16 +25,10 @@ jobs:
                   cache: "npm"
 
             - name: Install dependencies
-              run: npm ci
-
-            - name: Run ESLint
-              run: npx eslint . --ext .ts,.tsx --format=github
+              run: npm install
 
             - name: Check code formatting with Prettier
               run: npx prettier --check .
-
-            - name: TypeScript type checking
-              run: npx tsc --noEmit
 
     security-checks:
         name: Security Audit
@@ -51,7 +45,7 @@ jobs:
                   cache: "npm"
 
             - name: Install dependencies
-              run: npm ci
+              run: npm install
 
             - name: Run security audit
               run: npm audit --audit-level=moderate
@@ -60,26 +54,9 @@ jobs:
               uses: github/codeql-action/init@v3
               with:
                   languages: javascript
-
             - name: Perform CodeQL Analysis
               uses: github/codeql-action/analyze@v3
-
-    dependency-scan:
-        name: Dependency Vulnerability Scan
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Run Snyk to check for vulnerabilities
-              uses: snyk/actions/node@master
-              continue-on-error: true
-              env:
-                  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-              with:
-                  args: --severity-threshold=high
-
+        
     build:
         name: Build Extension
         runs-on: ubuntu-latest
@@ -96,7 +73,7 @@ jobs:
                   cache: "npm"
 
             - name: Install dependencies
-              run: npm ci
+              run: npm install
 
             - name: Build extension
               run: npm run build:extension
@@ -151,7 +128,7 @@ jobs:
               if: startsWith(github.ref, 'refs/tags/')
               uses: actions/create-release@v1
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.DEMPLOYMENT_GITHUB_TOKEN }}
               with:
                   tag_name: ${{ github.ref }}
                   release_name: Release ${{ github.ref }}

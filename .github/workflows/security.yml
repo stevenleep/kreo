@@ -52,7 +52,6 @@ jobs:
                       p/secrets
                       p/javascript
                       p/typescript
-                  generateSarif: "1"
 
             - name: Upload SARIF file
               uses: github/codeql-action/upload-sarif@v3
