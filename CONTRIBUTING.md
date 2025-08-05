@@ -1,114 +1,114 @@
-# 贡献指南
+# Contributing Guide
 
-感谢您对 Kreo 项目的关注！我们欢迎所有形式的贡献。
+Thank you for your interest in the Kreo project! We welcome all forms of contributions.
 
-## 🚀 开发环境设置
+## 🚀 Development Environment Setup
 
 ```bash
-# 克隆仓库
+# Clone the repository
 git clone https://github.com/stevenleep/kreo.git
 cd kreo
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 启动开发服务器
+# Start development server
 npm run dev
 
-# 构建扩展
+# Build extension
 npm run build:extension
 ```
 
-## 📋 开发流程
+## 📋 Development Workflow
 
-1. **Fork** 本仓库
-2. 创建您的功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交您的更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启一个 **Pull Request**
+1. **Fork** this repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a **Pull Request**
 
-## ✅ 代码质量要求
+## ✅ Code Quality Requirements
 
-在提交代码之前，请确保：
+Before submitting code, please ensure:
 
-### 代码规范检查
+### Code Style Checks
 
 ```bash
-# 运行代码检查
+# Run code linting
 npm run lint
 
-# 自动修复可修复的问题
+# Auto-fix fixable issues
 npm run lint:fix
 
-# 检查代码格式
+# Check code formatting
 npm run prettier --check
 
-# 自动格式化代码
+# Auto-format code
 npm run prettier
 ```
 
-### 类型检查
+### Type Checking
 
 ```bash
-# TypeScript类型检查
+# TypeScript type checking
 npm run type-check
 ```
 
-### 安全检查
+### Security Checks
 
 ```bash
-# 依赖项安全审计
+# Dependency security audit
 npm run security:audit
 
-# 自动修复安全问题
+# Auto-fix security issues
 npm run security:fix
 ```
 
-### 完整质量检查
+### Complete Quality Check
 
 ```bash
-# 运行所有质量检查
+# Run all quality checks
 npm run quality:check
 ```
 
-## 🔒 安全要求
+## 🔒 Security Requirements
 
-- 所有依赖项都必须通过安全审计
-- 不允许包含敏感信息（API密钥、密码等）
-- 遵循最小权限原则
+- All dependencies must pass security audit
+- No sensitive information allowed (API keys, passwords, etc.)
+- Follow the principle of least privilege
 
-## 🧪 测试
+## 🧪 Testing
 
-当前项目正在建设测试框架，未来将要求：
+The project is currently building a testing framework. Future requirements will include:
 
-- 新功能必须包含相应的测试
-- 确保测试覆盖率达到要求
-- 所有测试必须通过
+- New features must include corresponding tests
+- Ensure test coverage meets requirements
+- All tests must pass
 
-## 📝 提交信息规范
+## 📝 Commit Message Convention
 
-使用约定式提交信息格式：
+Use conventional commit message format:
 
 ```
-<类型>[可选的作用域]: <描述>
+<type>[optional scope]: <description>
 
-[可选的正文]
+[optional body]
 
-[可选的脚注]
+[optional footer(s)]
 ```
 
-类型包括：
+Types include:
 
-- `feat`: 新功能
-- `fix`: 错误修复
-- `docs`: 文档更改
-- `style`: 代码格式（不影响代码运行的变动）
-- `refactor`: 重构
-- `perf`: 性能优化
-- `test`: 添加测试
-- `chore`: 构建过程或辅助工具的变动
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code formatting (changes that do not affect code execution)
+- `refactor`: Refactoring
+- `perf`: Performance optimization
+- `test`: Adding tests
+- `chore`: Build process or auxiliary tool changes
 
-示例：
+Examples:
 
 ```bash
 git commit -m "feat(drawing): add circle drawing tool"
@@ -116,41 +116,41 @@ git commit -m "fix(canvas): resolve canvas scaling issue"
 git commit -m "docs: update installation instructions"
 ```
 
-## 🎯 Pull Request 指南
+## 🎯 Pull Request Guidelines
 
-### PR标题
+### PR Title
 
-使用清晰、描述性的标题，例如：
+Use clear, descriptive titles, for example:
 
-- `feat: 添加圆形绘制工具`
-- `fix: 修复画布缩放问题`
-- `docs: 更新安装说明`
+- `feat: add circle drawing tool`
+- `fix: resolve canvas scaling issue`
+- `docs: update installation instructions`
 
-### PR描述
+### PR Description
 
-请包含：
+Please include:
 
-- 变更内容的简要描述
-- 相关issue的链接（如果有）
-- 测试步骤
-- 截图或GIF（对于UI变更）
+- Brief description of changes
+- Link to related issues (if any)
+- Testing steps
+- Screenshots or GIFs (for UI changes)
 
-### 检查清单
+### Checklist
 
-在提交PR之前，请确认：
+Before submitting a PR, please confirm:
 
-- [ ] 代码通过所有质量检查
-- [ ] 已更新相关文档
-- [ ] 已测试所有变更
-- [ ] 提交信息符合规范
-- [ ] PR描述清晰完整
+- [ ] Code passes all quality checks
+- [ ] Updated relevant documentation
+- [ ] Tested all changes
+- [ ] Commit messages follow convention
+- [ ] PR description is clear and complete
 
-## 🤝 获取帮助
+## 🤝 Getting Help
 
-如果您有任何问题，可以：
+If you have any questions, you can:
 
-- 创建一个 Issue
-- 参与 Discussions
-- 查看现有的文档和代码注释
+- Create an Issue
+- Participate in Discussions
+- Check existing documentation and code comments
 
-再次感谢您的贡献！🎉
+Thank you again for your contribution! 🎉

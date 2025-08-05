@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI Pipeline
 
 on:
     push:
@@ -8,96 +8,56 @@ on:
 
 env:
     NODE_VERSION: "18"
-
+    
 jobs:
     lint-and-format:
         name: Code Quality Checks
         runs-on: ubuntu-latest
-
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
-
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ env.NODE_VERSION }}
                   cache: "npm"
-
             - name: Install dependencies
               run: npm install
-
             - name: Check code formatting with Prettier
               run: npm run prettier
-
-    security-checks:
-        name: Security Audit
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ env.NODE_VERSION }}
-                  cache: "npm"
-
-            - name: Install dependencies
-              run: npm install
-
-            # - name: Run security audit
-            #   run: npm audit --audit-level=moderate
-
-            # - name: Run CodeQL Analysis
-            #   uses: github/codeql-action/init@v3
-            #   with:
-            #       languages: javascript
-            # - name: Perform CodeQL Analysis
-            #   uses: github/codeql-action/analyze@v3
-
     build:
         name: Build Extension
         runs-on: ubuntu-latest
-        needs: [lint-and-format, security-checks]
-
+        needs: [lint-and-format]
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
-
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ env.NODE_VERSION }}
                   cache: "npm"
-
             - name: Install dependencies
               run: npm install
-
             - name: Build extension
               run: npm run build:extension
-
             - name: Create extension package for artifacts
               run: |
                   cd dist
                   zip -r ../kreo-chrome-extension-build-${{ github.sha }}.zip .
                   echo "Extension package created for build artifacts"
-
             - name: Upload build artifacts
               uses: actions/upload-artifact@v4
               with:
                   name: chrome-extension-build
                   path: dist/
                   retention-days: 30
-
             - name: Upload extension package
               uses: actions/upload-artifact@v4
               with:
                   name: kreo-chrome-extension-package
                   path: kreo-chrome-extension-build-${{ github.sha }}.zip
                   retention-days: 30
-
             - name: Check build size
               run: |
                   echo "Build size information:"
@@ -105,21 +65,18 @@ jobs:
                   find dist/ -name "*.js" -exec wc -c {} + | sort -n
                   echo "Extension package size:"
                   ls -lh kreo-chrome-extension-build-${{ github.sha }}.zip
-
     # 部署到开发环境（可选）
     deploy-dev:
         name: Deploy to Development
         runs-on: ubuntu-latest
         needs: [build]
         if: github.ref == 'refs/heads/develop'
-
         steps:
             - name: Download build artifacts
               uses: actions/download-artifact@v4
               with:
                   name: chrome-extension-build
                   path: dist/
-
             - name: Deploy to development environment
               run: |
                   echo "部署到开发环境的逻辑"
@@ -131,14 +88,12 @@ jobs:
         runs-on: ubuntu-latest
         needs: [build]
         if: github.ref == 'refs/heads/main'
-
         steps:
             - name: Download build artifacts
               uses: actions/download-artifact@v4
               with:
                   name: chrome-extension-build
                   path: dist/
-
             - name: Create GitHub Release
               if: startsWith(github.ref, 'refs/tags/')
               uses: actions/create-release@v1
@@ -149,15 +104,22 @@ jobs:
                   tag_name: ${{ github.ref }}
                   release_name: Release ${{ github.ref }}
                   draft: false
-                  prerelease: false
-
+                  prerelease: true
+            - name: Upload Release Notes
+              if: startsWith(github.ref, 'refs/tags/')
+              run: |
+                  if [ -f RELEASE_NOTES.md ]; then
+                      echo "Uploading release notes..."
+                      gh release upload ${{ github.ref_name }} RELEASE_NOTES.md --clobber
+                  else
+                      echo "No release notes found, skipping upload."
+                  fi
             - name: Create Extension Package
               if: startsWith(github.ref, 'refs/tags/')
               run: |
                   cd dist
                   zip -r ../chrome-extension-${{ github.ref_name }}.zip .
                   echo "Chrome extension package created: chrome-extension-${{ github.ref_name }}.zip"
-
             - name: Upload Release Asset
               if: startsWith(github.ref, 'refs/tags/')
               uses: actions/upload-release-asset@v1
