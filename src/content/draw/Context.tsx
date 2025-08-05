@@ -23,7 +23,7 @@ export const defaultPenProperty: PenPropertyOption = {
     fill: 'transparent',
     strokeWidth: 2,
     alpha: 100,
-    fontSize: 12,
+    fontSize: 24,
     lineType: '',
 };
 

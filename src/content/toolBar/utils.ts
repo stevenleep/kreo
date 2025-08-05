@@ -27,7 +27,6 @@ export const captureFullPage = async (drawBase64: string) =>  {
       currentY += viewportHeight;
     }
 
-
     // 拼接图片
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -37,11 +36,13 @@ export const captureFullPage = async (drawBase64: string) =>  {
 
     const list = await Promise.all(images);
     if (ctx) {
+      // @ts-ignore
+      const bgImg = await imgPromise(drawBase64) as Image;
+      ctx.drawImage(bgImg, 0, 0, window.innerWidth, window.innerHeight);
+
       list.forEach((img, index) => {
         ctx.drawImage(img, 0, index * viewportHeight, window.innerWidth, viewportHeight);
       });
-      // @ts-ignore
-      ctx.drawImage(drawBase64, 0, 0, window.innerWidth, totalHeight);
     }
     resolve( canvas.toDataURL());
   });
