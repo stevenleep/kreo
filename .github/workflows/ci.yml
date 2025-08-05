@@ -28,7 +28,7 @@ jobs:
               run: npm install
 
             - name: Check code formatting with Prettier
-              run: npx prettier --check .
+              run: npm run prettier
 
     security-checks:
         name: Security Audit

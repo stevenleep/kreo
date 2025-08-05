@@ -26,12 +26,6 @@ jobs:
             - name: Install dependencies
               run: npm install
 
-            - name: Run tests and checks
-              run: |
-                  npm run lint
-                  npm run type-check
-                  npm run security:audit
-
             - name: Build extension
               run: npm run build:extension
 
