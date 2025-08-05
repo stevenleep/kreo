@@ -43,6 +43,10 @@ jobs:
               with:
                   tag_name: ${{ github.ref }}
                   release_name: Kreo Extension ${{ github.ref_name }}
+                  body: |
+                      ## Release Notes
+                      - Initial release of Kreo Extension.
+                      - This release includes all the features and fixes up to version ${{ github.ref_name }}.
                   body_path: RELEASE_NOTES.md
                   draft: false
                   prerelease: false
