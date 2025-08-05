@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Chrome drawing and annotation extension",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -10,7 +14,13 @@
     "copy:manifest": "cp public/manifest.json dist/",
     "organize:files": "rm -rf dist/src && cp -r public/icons dist/",
     "preview": "vite preview",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "type-check": "tsc --noEmit",
+    "security:audit": "npm audit --audit-level=moderate",
+    "security:fix": "npm audit fix",
+    "quality:check": "npm run lint && npm run type-check && npm run prettier --check"
   },
   "devDependencies": {
     "@eslint/js": "9.31.0",
