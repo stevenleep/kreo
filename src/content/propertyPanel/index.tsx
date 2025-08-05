@@ -198,7 +198,7 @@ const PropertyPanel = () => {
                 </div>}
                 <div className={styles.props_group}>
                     <div className={styles.props_group_label}>透明度</div>
-                    <input onChange={handlerChangeAlpha} type="range" className={styles.props_slider} min="1" max="100" step="1" value={penProperty.alpha} />
+                    <input onChange={handlerChangeAlpha} type="range" className={styles.props_slider} min="0" max="100" step="1" value={penProperty.alpha} />
                     <span className={styles.props_value}>{penProperty.alpha}%</span>
                 </div>
                 {DrawType.polyLine === localObject.type && <div className={styles.props_group}>
