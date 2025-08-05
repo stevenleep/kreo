@@ -56,7 +56,7 @@ jobs:
                   languages: javascript
             - name: Perform CodeQL Analysis
               uses: github/codeql-action/analyze@v3
-        
+
     build:
         name: Build Extension
         runs-on: ubuntu-latest

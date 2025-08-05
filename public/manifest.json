@@ -3,13 +3,7 @@
     "name": "网页绘画工具",
     "version": "1.0.0",
     "description": "在任何网页上进行绘画和标注，支持多种画笔、手绘风格和背景保存功能",
-    "permissions": [
-        "storage",
-        "activeTab",
-        "tabs",
-        "scripting",
-        "notifications"
-    ],
+    "permissions": ["storage", "activeTab", "tabs", "scripting", "notifications"],
     "action": {
         "default_title": "网页绘画工具",
         "default_icon": {
