@@ -36,25 +36,21 @@ jobs:
                   cd ..
 
             - name: Create GitHub Release
-              id: create_release
-              uses: actions/create-release@v1
+              uses: softprops/action-gh-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.DEMPLOYMENT_GITHUB_TOKEN }}
               with:
-                  tag_name: ${{ github.ref }}-${{github.sha}}
-                  release_name: Kreo Extension ${{ github.ref_name }}
+                  tag_name: ${{ github.ref_name }}
+                  name: Kreo Extension ${{ github.ref_name }}
                   body: |
-                      Release for version ${{ github.ref }}.
-                      ${{github.graphql_url}}
+                      Release for version ${{ github.ref_name }}.
+                      
+                      ## What's Changed
+                      - Bug fixes and improvements
+                      - Performance optimizations
+                      
+                      **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
+                  files: kreo-extension-${{ github.ref_name }}.zip
                   draft: false
                   prerelease: false
-
-            - name: Upload Release Asset
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.DEMPLOYMENT_GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: kreo-extension-${{ github.ref_name }}.zip
-                  asset_name: kreo-extension-${{ github.ref_name }}.zip
-                  asset_content_type: application/zip
+                  fail_on_unmatched_files: true
