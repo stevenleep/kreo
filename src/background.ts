@@ -4,6 +4,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         chrome.tabs.captureVisibleTab({ format: "png" }).then(sendResponse);
         return true; // 异步响应
     }
+    return false;
 });
 
 chrome.action.onClicked.addListener(async (tab) => {

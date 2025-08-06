@@ -7,10 +7,10 @@ import PropertyPanel from "./content/propertyPanel";
 import { useEffect, useState } from "react";
 
 const App = () => {
-    const [properyLeft, setProperyLeft] = useState(0);
+    const [propertyLeft, setPropertyLeft] = useState(0);
 
     useEffect(() => {
-        setProperyLeft(window.innerWidth - 250);
+        setPropertyLeft(window.innerWidth - 250);
     }, []);
 
     return (
@@ -20,8 +20,8 @@ const App = () => {
                     <ToolBar />
                 </Draggable>
                 <Workspace />
-                {properyLeft && (
-                    <Draggable left={properyLeft} top={20}>
+                {propertyLeft && (
+                    <Draggable left={propertyLeft} top={20}>
                         <PropertyPanel />
                     </Draggable>
                 )}
@@ -30,4 +30,7 @@ const App = () => {
     );
 };
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
+const rootElement = document.getElementById("root");
+if (rootElement) {
+    ReactDOM.createRoot(rootElement).render(<App />);
+}

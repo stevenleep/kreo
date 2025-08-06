@@ -60,7 +60,9 @@ const ToolBar = () => {
 
     const handlerDraw = (type: DrawType) => {
         setSelectAble(false);
-        if (!workspace || !canvas) return;
+        if (!workspace || !canvas) {
+            return;
+        }
         workspace.drawTool.setPen(penProperty);
         if (type === DrawType.pencil) {
             drawPenceil();
@@ -87,10 +89,9 @@ const ToolBar = () => {
             });
             const dataURL = await captureFullPage(base64);
             setHide(false);
-            if (dataURL) {
+            if (typeof dataURL === "string" && dataURL) {
                 // 触发下载
                 const link = document.createElement("a");
-                // @ts-ignore
                 link.href = dataURL;
                 link.download = "canvas.png";
                 link.click();
@@ -153,7 +154,9 @@ const ToolBar = () => {
 
     const handlerFileChange = (e: any) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) {
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = (evt) => {
@@ -161,8 +164,7 @@ const ToolBar = () => {
                 return;
             }
             try {
-                // @ts-ignore
-                const json = JSON.parse(evt.target.result);
+                const json = JSON.parse(typeof evt.target.result === "string" ? evt.target.result : "");
                 // 3. 清空当前画布
                 canvas?.clear();
                 // 4. 载入 JSON
@@ -174,7 +176,7 @@ const ToolBar = () => {
                     // canvas.viewportCenterObjects(canvas.getObjects());
                 });
             } catch (err: any) {
-                console.log("JSON 解析失败：" + err.message);
+                console.log(`JSON 解析失败：${err.message}`);
             }
         };
         reader.readAsText(file);
