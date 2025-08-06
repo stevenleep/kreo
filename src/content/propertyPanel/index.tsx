@@ -73,6 +73,7 @@ const PropertyPanel = () => {
             localObject.set({ fill: color });
         }
         canvas?.renderAll();
+        saveHistory();
     };
 
     const handlerChangeLineType = (evt: any) => {
@@ -89,7 +90,8 @@ const PropertyPanel = () => {
             localObject.set({ strokeDashArray: undefined });
         }
         
-        canvas?.renderAll(); 
+        canvas?.renderAll();
+        saveHistory();
     };
 
     const handlerChangeStyle = (type : 'underline' | 'italic' | 'bold') => {
@@ -119,6 +121,7 @@ const PropertyPanel = () => {
             });
         }
         canvas?.renderAll();
+        saveHistory();
     };
 
     const handlerChangeFontSize = (evt: any) => {
@@ -132,6 +135,7 @@ const PropertyPanel = () => {
         (localObject as fabric.Textbox).set({ fontSize });
 
         canvas?.renderAll();
+        saveHistory();
     };
 
     const handlerChangeAlpha = (evt: any) => {
@@ -154,6 +158,7 @@ const PropertyPanel = () => {
         }
         
         canvas?.renderAll();
+        saveHistory();
     };
 
     const handlerBorderWidth = (evt: any) => {
@@ -166,6 +171,7 @@ const PropertyPanel = () => {
         });
         localObject.set({ strokeWidth });
         canvas?.renderAll();
+        saveHistory();
     };
 
     const handlerChangeBgColor = (evt: any) => {
@@ -178,6 +184,13 @@ const PropertyPanel = () => {
         });
         localObject.set({ fill });
         canvas?.renderAll();
+        saveHistory();
+    };
+
+    const saveHistory = () => {
+        if (canvas?.historyPlugin) {
+            // canvas.historyPlugin.pushHistory();
+        }
     };
 
     return (

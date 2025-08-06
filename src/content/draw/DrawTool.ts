@@ -263,6 +263,9 @@ class DrawTool {
             }
             this.points.length = 0;
             this.drawShaps.length = 0;
+            if (this.canvas.historyPlugin) {
+                this.canvas.historyPlugin.pushHistory();
+            }
         }
     }
 

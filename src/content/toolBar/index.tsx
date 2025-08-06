@@ -56,7 +56,16 @@ const ToolBar = () => {
     }, [ workspace, drawMode ]);
 
     const handlerDraw = (type: DrawType) => {
-        if (selectAble) handlerChangeSelectable();
+        if (selectAble) {
+            handlerChangeSelectable();
+        } else {
+            const shapeList = canvas?.getObjects() || [];
+            shapeList.forEach(shape => {
+                shape.selectable = false;
+                shape.evented = false;
+            });
+        }
+            
         if (!workspace || !canvas) return;
         workspace.drawTool.setPen(defaultPenProperty);
         canvas.discardActiveObject();
