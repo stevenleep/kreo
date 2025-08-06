@@ -1,0 +1,82 @@
+name: 🐛 Bug Report
+description: 报告一个bug来帮助我们改进
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - stevenleep
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您花时间填写这个bug报告！
+
+  - type: input
+    id: contact
+    attributes:
+      label: 联系方式
+      description: 我们如何联系您以获得更多信息？
+      placeholder: 例如：email@example.com
+    validations:
+      required: false
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么？
+      description: 描述一下遇到的问题
+      placeholder: 告诉我们您遇到了什么问题！
+      value: "发生了一个bug！"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: 期望的行为
+      description: 描述您期望发生什么
+      placeholder: 告诉我们您期望的结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 重现步骤
+      description: 如何重现这个问题？
+      placeholder: |
+        1. 打开扩展
+        2. 点击绘制工具
+        3. 尝试绘制一个圆形
+        4. 看到错误
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: 浏览器
+      description: 您在哪个浏览器中遇到了这个问题？
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Microsoft Edge
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志输出
+      description: 请复制并粘贴任何相关的日志输出。这将自动格式化为代码，所以不需要反引号。
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 行为准则
+      description: 通过提交此issue，您同意遵循我们的 [行为准则](https://example.com)
+      options:
+        - label: 我同意遵循此项目的行为准则
+          required: true
