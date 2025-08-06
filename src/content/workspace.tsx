@@ -49,7 +49,9 @@ const Workspace = () => {
 
     const onKeyDown = (e: KeyboardEvent) => {
         if (['Backspace', 'Delete'].includes(e.code)) {
-            deleteObject();
+            if (e.target && (e.target as any).tagName.toLocaleLowerCase() !== 'textarea') {
+                deleteObject();
+            }
         }
         // if (!canvas || !workspace) return;
         // e.preventDefault();

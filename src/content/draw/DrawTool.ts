@@ -77,7 +77,7 @@ class DrawTool {
         this.canvas.add(textbox);
         this.canvas.setActiveObject(textbox);
         textbox.enterEditing();
-        this.deactive();
+        // this.deactive();
     }
 
     drawStartEllipse(pointer: Point) {
@@ -255,7 +255,7 @@ class DrawTool {
             if (this.drawMode === DrawType.polyLine) {
                 this.points.pop();
                 this.drawMoveLine();
-            } else {
+            } else if (this.drawMode !== DrawType.text) {
                 if (this.drawShaps[0].width === 0 && this.drawShaps[0].height === 0) {
                     this.canvas.remove(this.drawShaps[0]);
                     this.canvas.renderAll();
