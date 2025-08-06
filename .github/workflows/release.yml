@@ -41,13 +41,11 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.DEMPLOYMENT_GITHUB_TOKEN }}
               with:
-                  tag_name: ${{ github.ref }}
+                  tag_name: ${{ github.ref }}-${{github.sha}}
                   release_name: Kreo Extension ${{ github.ref_name }}
                   body: |
-                      ## Release Notes
-                      - Initial release of Kreo Extension.
-                      - This release includes all the features and fixes up to version ${{ github.ref_name }}.
-                  body_path: RELEASE_NOTES.md
+                      Release for version ${{ github.ref }}.
+                      ${{github.graphql_url}}
                   draft: false
                   prerelease: false
 
