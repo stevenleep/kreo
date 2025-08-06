@@ -32,7 +32,7 @@ class History {
         this.canvas.on("object:removed", this.pushHistory);
         this.canvas.on("object:modified", this.pushHistory);
     };
-    pushHistory = (e?: any) => {
+    pushHistory = () => {
         if (this.loading) return;
         const canvasData = this.workspace.getJson();
         Promise.resolve().then(() => {
