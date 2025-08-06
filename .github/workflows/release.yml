@@ -45,10 +45,7 @@ jobs:
                   body: |
                       Release for version ${{ github.ref_name }}.
                       
-                      ## What's Changed
-                      - Bug fixes and improvements
-                      - Performance optimizations
-                      
+                      ## What's Changed        
                       **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
                   files: kreo-extension-${{ github.ref_name }}.zip
                   draft: false
