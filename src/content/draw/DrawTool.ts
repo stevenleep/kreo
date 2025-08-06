@@ -1,16 +1,16 @@
 import { DrawType } from "./../toolBar/config";
 import Point from "./Point";
-import { ContextCanvas, defaultPenProperty, PenPropertyOption } from './Context';
-import { fabric } from 'fabric';
+import { ContextCanvas, defaultPenProperty, PenPropertyOption } from "./Context";
+import { fabric } from "fabric";
 
-const linearDistance = (point1: { x: any; y: any; }, point2: { x: any; y: any; }) => {
-  let xs = point2.x - point1.x;
-  let ys = point2.y - point1.y;
-  return Math.sqrt(xs * xs + ys * ys);
+const linearDistance = (point1: { x: any; y: any }, point2: { x: any; y: any }) => {
+    let xs = point2.x - point1.x;
+    let ys = point2.y - point1.y;
+    return Math.sqrt(xs * xs + ys * ys);
 };
 
 class DrawTool {
-    drawMode: DrawType | '' = '';
+    drawMode: DrawType | "" = "";
     drawShaps: any[] = [];
     tempLine: Point[] = []; // 当前正在绘制的线
     points: Point[] = [];
@@ -60,7 +60,7 @@ class DrawTool {
     // }
 
     drawText(pointer: Point) {
-        const textbox = new fabric.Textbox('', {
+        const textbox = new fabric.Textbox("", {
             left: pointer.x,
             top: pointer.y,
             originX: "left",
@@ -70,8 +70,8 @@ class DrawTool {
             selectable: true,
             evented: true,
             fontSize: this.penProperty.fontSize,
-            fontStyle: this.penProperty.italic ? 'italic' : 'normal',
-            fontWeight: this.penProperty.bold ? 'bold' : 'normal',
+            fontStyle: this.penProperty.italic ? "italic" : "normal",
+            fontWeight: this.penProperty.bold ? "bold" : "normal",
             underline: this.penProperty.underline,
         });
         this.canvas.add(textbox);
@@ -99,7 +99,7 @@ class DrawTool {
 
     drawMoveEllipse(pointer: Point) {
         if (this.points[0].x > pointer.x) {
-           this.drawShaps[0].set({ left: Math.abs(pointer.x) });
+            this.drawShaps[0].set({ left: Math.abs(pointer.x) });
         }
         if (this.points[0].y > pointer.y) {
             this.drawShaps[0].set({ top: Math.abs(pointer.y) });
@@ -127,7 +127,7 @@ class DrawTool {
 
     drawMoveCircle(pointer: Point) {
         this.drawShaps[0].set({
-            radius: linearDistance( this.points[0], pointer ),
+            radius: linearDistance(this.points[0], pointer),
         });
         this.drawShaps[0].setCoords();
     }
@@ -155,9 +155,9 @@ class DrawTool {
 
     drawStartLine() {
         this.drawShaps[0] = new fabric.Polyline([...this.points], {
-            strokeDashArray: this.penProperty.lineType === 'dash' ? [5, 5] : undefined,
+            strokeDashArray: this.penProperty.lineType === "dash" ? [5, 5] : undefined,
             strokeWidth: this.penProperty.strokeWidth,
-            fill: 'transparent',
+            fill: "transparent",
             stroke: this.penProperty.color,
             // originX: "left",
             // originY: "top",
@@ -169,18 +169,18 @@ class DrawTool {
         this.canvas.add(this.drawShaps[0]);
     }
 
-    drawMoveLine(pointer?: Point) {        
+    drawMoveLine(pointer?: Point) {
         const newPoints = pointer ? [...this.points, pointer] : [...this.points];
         this.drawShaps[0].set({ points: newPoints });
         this.drawShaps[0].initialize(newPoints);
-        
+
         this.drawShaps[0].setCoords();
         this.canvas.renderAll();
     }
 
     drawMoveRect(pointer: Point) {
         if (this.points[0].x > pointer.x) {
-           this.drawShaps[0].set({ left: Math.abs(pointer.x) });
+            this.drawShaps[0].set({ left: Math.abs(pointer.x) });
         }
         if (this.points[0].y > pointer.y) {
             this.drawShaps[0].set({ top: Math.abs(pointer.y) });
@@ -219,7 +219,7 @@ class DrawTool {
                     }
                     break;
                 default:
-                    console.error('type not complate');
+                    console.error("type not complate");
             }
         }
     }
@@ -244,7 +244,7 @@ class DrawTool {
                     this.drawMoveLine(pointer);
                     break;
                 default:
-                    console.error('type not complate');
+                    console.error("type not complate");
             }
             this.canvas.renderAll();
         }
@@ -267,9 +267,9 @@ class DrawTool {
     }
 
     deactive() {
-        this.drawMode = '';
+        this.drawMode = "";
         this.canvas.isDrawingMode = false;
     }
-};
+}
 
 export default DrawTool;

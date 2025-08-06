@@ -1,6 +1,6 @@
-import { fabric } from 'fabric';
-import DrawTool from './DrawTool.ts';
-import { ContextCanvas } from './Context';
+import { fabric } from "fabric";
+import DrawTool from "./DrawTool.ts";
+import { ContextCanvas } from "./Context";
 
 class EditorWorkspace {
     canvas: ContextCanvas;
@@ -55,7 +55,7 @@ class EditorWorkspace {
     }
 
     isNumber = (value: string | number) => {
-        return typeof value === 'number';
+        return typeof value === "number";
     };
 
     getJson() {
