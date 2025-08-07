@@ -91,12 +91,12 @@ const ToolBar = () => {
     const handlerExport = async () => {
         if (canvas) {
             setHide(true);
-            const base64 = canvas?.toDataURL({
-                format: "png", // 也可改成 'jpeg'
-                quality: 0.92, // jpeg 时才生效
-                multiplier: 1, // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
-            });
-            const dataURL = await captureFullPage(base64);
+            // const base64 = canvas?.toDataURL({
+            //     format: "png", // 也可改成 'jpeg'
+            //     quality: 0.92, // jpeg 时才生效
+            //     multiplier: 1, // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
+            // });
+            const dataURL = await captureFullPage();
             setHide(false);
             if (typeof dataURL === "string" && dataURL) {
                 // 触发下载
