@@ -25,8 +25,9 @@ const Workspace = () => {
 
     const onScroll = () => {
         const scrollTop = window.scrollY || document.body.scrollTo;
-        if (containerRef.current) {
-            containerRef.current.scrollTop = scrollTop as number;
+        if (canvas && canvas.viewportTransform && typeof scrollTop === 'number') {
+            canvas.viewportTransform[5] = 0 - (scrollTop as number);
+            canvas.renderAll();
         }
     };
 
@@ -100,14 +101,14 @@ const Workspace = () => {
      * 初始化canvas
      */
     const initCanvas = async () => {
-        const domHeight = Math.max(
-            document.body.scrollHeight,
-            document.documentElement.scrollHeight,
-            document.body.offsetHeight,
-            document.documentElement.offsetHeight,
-            document.body.clientHeight,
-            document.documentElement.clientHeight,
-        );
+        // const domHeight = Math.max(
+        //     document.body.scrollHeight,
+        //     document.documentElement.scrollHeight,
+        //     document.body.offsetHeight,
+        //     document.documentElement.offsetHeight,
+        //     document.body.clientHeight,
+        //     document.documentElement.clientHeight,
+        // );
 
         const domWidth = Math.max(
             document.body.scrollWidth,
@@ -123,9 +124,15 @@ const Workspace = () => {
             stopContextMenu: true,
             controlsAboveOverlay: true,
             width: domWidth,
-            height: domHeight,
+            height: window.innerHeight,
             selection: false,
         });
+        // 设置位移
+        const scrollTop = window.scrollY || document.body.scrollTo;
+        if (canvas && canvas.viewportTransform && typeof scrollTop === 'number') {
+            canvas.viewportTransform[5] = 0 - (scrollTop as number);
+        }
+
         const workspace = new EditorWorkspace(canvas);
         new History(canvas, workspace, setState);
         setState({ canvas, workspace });

@@ -10,7 +10,7 @@ const imgPromise = (imgBase64: string) => {
     });
 };
 
-export const captureFullPage = async (drawBase64: string) => {
+export const captureFullPage = async () => {
     return new Promise((resolve, reject) => {
         (async () => {
             const totalHeight = document.body.scrollHeight;
@@ -20,7 +20,7 @@ export const captureFullPage = async (drawBase64: string) => {
 
             while (currentY < totalHeight) {
                 window.scrollTo(0, currentY);
-                await sleep(300); // 等待渲染完成
+                await sleep(500); // 等待渲染完成
 
                 const dataUrl = await chrome.runtime.sendMessage({ type: "CAPTURE_TAB" });
                 images.push(imgPromise(dataUrl));
@@ -36,8 +36,8 @@ export const captureFullPage = async (drawBase64: string) => {
 
             const list = await Promise.all(images);
             if (ctx) {
-                const bgImg = (await imgPromise(drawBase64)) as HTMLImageElement;
-                ctx.drawImage(bgImg, 0, 0, window.innerWidth, window.innerHeight);
+                // const bgImg = (await imgPromise(drawBase64)) as HTMLImageElement;
+                // ctx.drawImage(bgImg, 0, 0, window.innerWidth, window.innerHeight);
 
                 list.forEach((img, index) => {
                     ctx.drawImage(img, 0, index * viewportHeight, window.innerWidth, viewportHeight);
