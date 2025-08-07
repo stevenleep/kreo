@@ -7,6 +7,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return false;
 });
 
+// 点击
 chrome.action.onClicked.addListener(async (tab) => {
     if (!tab.id) {
         return;

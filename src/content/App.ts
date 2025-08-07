@@ -14,30 +14,8 @@ class App {
 
     private contentScriptAppRef: React.RefObject<any> | null = null;
 
-    /**
-     * 是否在操作选取，如 ocr 截屏、dom 选取
-     */
-    // public isOperateSelecting = false;
-
-    // public removeWordMark: any = () => {
-    //   //
-    // };
-
     constructor() {
         this.initRoot();
-        // 注入 inject-content-script.js
-        // const script = document.createElement('script');
-        // // script.src = chrome.runtime.getURL('content-script.js');
-        // // document.body.append(script);
-        // // script.onload = () => {
-        // //   script.parentNode?.removeChild(script);
-        // // };
-        // 保存原始的insertBefore方法
-        // const originalInsertBeforeChild = document.head.insertBefore;
-        // const originalRemoveChild = document.head.removeChild;
-        // const originalInsertBeforeChild = document.head.add;
-
-        // 覆盖insertBefore方法
         // @ts-ignore
         const that = this;
         // @ts-ignore
@@ -93,8 +71,17 @@ class App {
             });
     }
 
-    async toggleSidePanel(visible?: boolean) {
-        this.contentScriptAppRef?.current?.toggleSidePanel(visible);
+    destroy() {
+        // 移除注入的根容器
+        const rootContainer = document.getElementById("draw-extension-root-container");
+        if (rootContainer && rootContainer.parentElement) {
+            rootContainer.parentElement.removeChild(rootContainer);
+        }
+
+        // 清空引用
+        this._rootContainer = null;
+        this._shadowRoot = null;
+        this.contentScriptAppRef = null;
     }
 }
 
