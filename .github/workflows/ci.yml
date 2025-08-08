@@ -8,7 +8,7 @@ on:
 
 env:
     NODE_VERSION: "18"
-    
+
 jobs:
     lint-and-format:
         name: Code Quality Checks

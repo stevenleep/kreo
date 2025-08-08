@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useRef, useState } from "react";
-import styles from './index.module.less';
+import styles from "./index.module.less";
 import { Context, defaultPenProperty } from "../draw/Context";
 import { DrawType } from "./config";
 import { getRGBA } from "../propertyPanel/utils";
@@ -62,17 +62,17 @@ const ToolBar = () => {
             handlerChangeSelectable();
         } else {
             const shapeList = canvas?.getObjects() || [];
-            shapeList.forEach(shape => {
+            shapeList.forEach((shape) => {
                 shape.selectable = false;
                 shape.evented = false;
             });
         }
-            
+
         if (!workspace || !canvas) return;
         workspace.drawTool.setPen(defaultPenProperty);
         canvas.discardActiveObject();
         canvas.renderAll();
-        setState({ selectShape: null })
+        setState({ selectShape: null });
         if (type === DrawType.pencil) {
             drawPenceil();
         } else {
@@ -147,7 +147,7 @@ const ToolBar = () => {
     const handlerChangeSelectable = () => {
         workspace?.drawTool.deactive();
         if (selectAble) {
-            setState({ drawMode: '', selectShape: null });
+            setState({ drawMode: "", selectShape: null });
             canvas?.discardActiveObject();
             canvas?.renderAll();
         } else {

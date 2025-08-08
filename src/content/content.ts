@@ -23,9 +23,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             initSandbox();
         }
         sendResponse({
-              success: true,
-              active: isActive,
-              message: `Drawing mode ${isActive ? "activated" : "deactivated"}`,
+            success: true,
+            active: isActive,
+            message: `Drawing mode ${isActive ? "activated" : "deactivated"}`,
         });
 
         return true;

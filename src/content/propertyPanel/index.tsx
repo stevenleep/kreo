@@ -89,7 +89,7 @@ const PropertyPanel = () => {
         } else {
             localObject.set({ strokeDashArray: undefined });
         }
-        
+
         canvas?.renderAll();
         saveHistory();
     };

@@ -38,7 +38,7 @@
         "organize:files": "rm -rf dist/src && cp -r public/icons dist/",
         "preview": "vite preview",
         "start": "vite",
-        "format": "prettier --write .",
+        "prettier": "prettier --write .",
         "format:check": "prettier --check .",
         "lint": "eslint . --ext .ts,.tsx",
         "lint:fix": "eslint . --ext .ts,.tsx --fix",

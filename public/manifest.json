@@ -5,7 +5,7 @@
     "description": "Draw, highlight and annotate on any webpage. Great for feedback, teaching and quick visual notes.",
     "permissions": ["storage", "activeTab", "tabs", "scripting", "notifications"],
     "action": {
-    "default_title": "Kreo Annotation",
+        "default_title": "Kreo Annotation",
         "default_icon": {
             "16": "icons/icon-16.png",
             "32": "icons/icon-32.png",

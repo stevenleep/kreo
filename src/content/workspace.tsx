@@ -25,7 +25,7 @@ const Workspace = () => {
 
     const onScroll = () => {
         const scrollTop = window.scrollY || document.body.scrollTo;
-        if (canvas && canvas.viewportTransform && typeof scrollTop === 'number') {
+        if (canvas && canvas.viewportTransform && typeof scrollTop === "number") {
             canvas.viewportTransform[5] = 0 - (scrollTop as number);
             canvas.renderAll();
         }
@@ -49,8 +49,8 @@ const Workspace = () => {
     }, [canvas, workspace]);
 
     const onKeyDown = (e: KeyboardEvent) => {
-        if (['Backspace', 'Delete'].includes(e.code)) {
-            if (e.target && (e.target as any).tagName.toLocaleLowerCase() !== 'textarea') {
+        if (["Backspace", "Delete"].includes(e.code)) {
+            if (e.target && (e.target as any).tagName.toLocaleLowerCase() !== "textarea") {
                 deleteObject();
             }
         }
@@ -129,7 +129,7 @@ const Workspace = () => {
         });
         // 设置位移
         const scrollTop = window.scrollY || document.body.scrollTo;
-        if (canvas && canvas.viewportTransform && typeof scrollTop === 'number') {
+        if (canvas && canvas.viewportTransform && typeof scrollTop === "number") {
             canvas.viewportTransform[5] = 0 - (scrollTop as number);
         }
 

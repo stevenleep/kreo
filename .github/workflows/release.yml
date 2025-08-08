@@ -44,7 +44,7 @@ jobs:
                   name: Kreo Extension ${{ github.ref_name }}
                   body: |
                       Release for version ${{ github.ref_name }}.
-                      
+
                       ## What's Changed        
                       **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}
                   files: kreo-extension-${{ github.ref_name }}.zip
