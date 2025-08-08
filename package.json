@@ -1,8 +1,30 @@
 {
-    "name": "chrome-drawing-extension",
-    "version": "1.0.0",
-    "description": "Chrome drawing and annotation extension",
+    "name": "kreo-annotation",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Draw, highlight, and annotate directly on any webpage. Capture quick ideas, explain concepts, and share visual feedback instantly.",
     "type": "module",
+    "license": "MIT",
+    "author": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/stevenleep/kreo.git"
+    },
+    "homepage": "https://github.com/stevenleep/kreo#readme",
+    "bugs": {
+        "url": "https://github.com/stevenleep/kreo/issues"
+    },
+    "keywords": [
+        "chrome-extension",
+        "manifest-v3",
+        "drawing",
+        "annotation",
+        "fabricjs",
+        "react",
+        "vite",
+        "canvas",
+        "web-extension"
+    ],
     "engines": {
         "node": ">=18.0.0",
         "npm": ">=8.0.0"
@@ -11,16 +33,22 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "build:extension": "tsc && vite build && npm run copy:manifest && npm run organize:files",
+        "build:clean": "rm -rf dist && npm run build:extension",
         "copy:manifest": "cp public/manifest.json dist/",
         "organize:files": "rm -rf dist/src && cp -r public/icons dist/",
         "preview": "vite preview",
-        "prettier": "prettier --write .",
+        "start": "vite",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
         "lint": "eslint . --ext .ts,.tsx",
         "lint:fix": "eslint . --ext .ts,.tsx --fix",
         "type-check": "tsc --noEmit",
+        "check": "npm run lint && npm run type-check && npm run format:check",
         "security:audit": "npm audit --audit-level=moderate",
         "security:fix": "npm audit fix",
-        "quality:check": "npm run lint && npm run type-check && npm run prettier --check"
+        "clean": "rm -rf dist .chromium-profile-debug",
+        "debug:ext": "npm run build:extension && node scripts/debug-extension.mjs",
+        "debug:ext:fast": "node scripts/debug-extension.mjs --no-pin"
     },
     "devDependencies": {
         "@eslint/js": "9.31.0",
@@ -38,7 +66,8 @@
         "typescript": "5.8.3",
         "typescript-eslint": "8.37.0",
         "vite": "5.0.0",
-        "vite-plugin-web-extension": "4.1.0"
+        "vite-plugin-web-extension": "4.1.0",
+        "puppeteer": "22.10.0"
     },
     "dependencies": {
         "@vitejs/plugin-react": "4.7.0",

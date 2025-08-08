@@ -1,11 +1,11 @@
 {
     "manifest_version": 3,
-    "name": "网页绘画工具",
+    "name": "Kreo Annotation",
     "version": "1.0.0",
-    "description": "在任何网页上进行绘画和标注，支持多种画笔、手绘风格和背景保存功能",
+    "description": "Draw, highlight and annotate on any webpage. Great for feedback, teaching and quick visual notes.",
     "permissions": ["storage", "activeTab", "tabs", "scripting", "notifications"],
     "action": {
-        "default_title": "网页绘画工具",
+    "default_title": "Kreo Annotation",
         "default_icon": {
             "16": "icons/icon-16.png",
             "32": "icons/icon-32.png",

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>本地扩展调试页面</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 0; padding: 2rem; line-height: 1.5; }
+    h1 { margin-top: 0; }
+    .info { background:#f5f7fa; border:1px solid #dbe2ea; padding:1rem; border-radius:8px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-top:2rem; }
+    .card { background:#fff; border:1px solid #e3e8ef; border-radius:6px; padding:12px; box-shadow:0 1px 2px rgba(0,0,0,0.06); }
+    .card span { display:block; font-size:12px; color:#667085; margin-bottom:4px; }
+    textarea { width:100%; height:120px; }
+  </style>
+</head>
+<body>
+  <h1>扩展本地调试页面</h1>
+  <div class="info">
+    <p>此页面用于本地调试内容脚本与绘图功能。打开 <strong>DevTools</strong> 查看 console / network。</p>
+    <ul>
+      <li>验证 content script 是否注入。</li>
+      <li>测试在不同 DOM 结构下的绘制行为。</li>
+      <li>可添加更多元素模拟真实网页。</li>
+    </ul>
+  </div>
+  <section class="grid" id="grid"></section>
+  <h2>交互区</h2>
+  <textarea id="text" placeholder="在这里输入一些文字..."></textarea>
+  <script>
+    const grid = document.getElementById('grid');
+    for (let i = 1; i <= 24; i++) {
+      const d = document.createElement('div');
+      d.className = 'card';
+      d.innerHTML = '<span>模块 #' + i + '</span>Lorem ipsum dolor sit amet.';
+      grid.appendChild(d);
+    }
+    console.log('[test-page] 本地测试页面已加载');
+  </script>
+</body>
+</html>
