@@ -6,19 +6,28 @@ import Draggable from "./content/draggable";
 import PropertyPanel from "./content/propertyPanel";
 import { useEffect, useState } from "react";
 
+const PROPERTY_PANEL_WIDTH = 250;
+
 const App = () => {
     const [propertyLeft, setPropertyLeft] = useState(0);
 
     useEffect(() => {
-        setPropertyLeft(window.innerWidth - 250);
+        // 属性面板位置
+        setPropertyLeft(window.innerWidth - PROPERTY_PANEL_WIDTH);
+
+        // 监听窗口大小变化
+        const handleResize = () => {
+            setPropertyLeft(window.innerWidth - PROPERTY_PANEL_WIDTH);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     return (
         <div className="extension-root-container">
             <CanvasProvider>
-                <Draggable left={20} top={20}>
-                    <ToolBar />
-                </Draggable>
+                <ToolBar />
                 <Workspace />
                 {propertyLeft && (
                     <Draggable left={propertyLeft} top={20}>

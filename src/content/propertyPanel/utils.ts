@@ -13,20 +13,20 @@ export const getRGBA = (hex: string, alpha: number) => {
 // }
 
 export const colorToRgba = (color: string) => {
-    color = (color || "").trim();
-    if (color === "transparent") {
+    const colorStr = (color || "").trim();
+    if (colorStr === "transparent") {
         return {
             hex: "#000000",
             alpha: 0,
         };
     }
     // 1) 如果是 rgba / rgb --------------------------
-    const rgbaMatch = color.match(/^rgba?\(\s*([^(]+)\)$/i);
+    const rgbaMatch = colorStr.match(/^rgba?\(\s*([^(]+)\)$/i);
     if (rgbaMatch) {
         const parts = rgbaMatch[1].split(",").map((s) => s.trim());
         const [r, g, b] = parts.slice(0, 3).map(Number);
         const a = parts[3] === undefined ? 1 : parseFloat(parts[3]);
-        const toHex = (c: number) => ("0" + Math.round(c).toString(16)).slice(-2);
+        const toHex = (c: number) => `0${Math.round(c).toString(16)}`.slice(-2);
         return {
             hex: `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase(),
             alpha: Math.max(0, Math.min(1, a)) * 100,
@@ -34,7 +34,7 @@ export const colorToRgba = (color: string) => {
     }
 
     return {
-        hex: `#${color.slice(0, 6).toUpperCase()}`,
+        hex: `#${colorStr.slice(0, 6).toUpperCase()}`,
         alpha: 100,
     };
 };
