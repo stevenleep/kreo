@@ -1,11 +1,11 @@
 {
     "manifest_version": 3,
-    "name": "Kreo Annotation",
+    "name": "Kreo Canvas",
     "version": "1.0.0",
-    "description": "Draw, highlight and annotate on any webpage. Great for feedback, teaching and quick visual notes.",
+    "description": "Canvas overlay: freehand brush & shapes on any page. Fast sketch, annotate, export.",
     "permissions": ["storage", "activeTab", "tabs", "scripting", "notifications"],
     "action": {
-        "default_title": "Kreo Annotation",
+        "default_title": "Kreo Canvas",
         "default_icon": {
             "16": "icons/icon-16.png",
             "32": "icons/icon-32.png",

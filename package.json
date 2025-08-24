@@ -1,8 +1,8 @@
 {
-    "name": "kreo-annotation",
+    "name": "kreo-canvas",
     "version": "0.1.0",
     "private": true,
-    "description": "Draw, highlight, and annotate directly on any webpage. Capture quick ideas, explain concepts, and share visual feedback instantly.",
+    "description": "Canvas layer for any webpage: freehand brush, shapes, quick annotations, export PNG/JSON. Chrome extension for fast visual feedback.",
     "type": "module",
     "license": "MIT",
     "author": "",

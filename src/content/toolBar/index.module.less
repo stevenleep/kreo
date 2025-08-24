@@ -1,41 +1,65 @@
 .tool_bar {
-    // 参考设计的水平布局
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 4px;
-    
-    // 现代化背景
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     border-radius: 12px;
-    
-    // 精致阴影
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.08),
         0 1px 2px rgba(0, 0, 0, 0.02),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    
-    // 细边框
     border: 1px solid rgba(0, 0, 0, 0.06);
-    
-    // 紧凑内边距
     padding: 8px;
     user-select: none;
-    
-    // 平滑过渡
     transition: all 0.25s ease-out;
-    
-    // 固定在底部居中
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
     z-index: 2147483647;
-    
-    // 确保不超出屏幕边界
     max-width: calc(100vw - 40px);
     width: auto;
+    cursor: default;
+
+    .drag_handle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    width: 32px;
+        height: 36px;
+        color: #94a3b8;
+        cursor: grab;
+        border-radius: 6px;
+        transition: all 0.2s ease-out;
+        position: relative;
+        &::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            bottom: -4px;
+            left: -4px;
+            right: -4px;
+            background: transparent;
+        }
+        
+        &:hover {
+            background: rgba(0, 0, 0, 0.04);
+            color: #64748b;
+        }
+        
+        &:active {
+            cursor: grabbing;
+            background: rgba(0, 0, 0, 0.08);
+            transform: scale(0.95);
+        }
+        
+        svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+        }
+    }
 
     .toolbar_group {
         display: flex;
@@ -46,38 +70,25 @@
     }
 
     .tool_btn {
-        // 参考设计的尺寸
         width: 36px;
         height: 36px;
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        
-        // 布局
         display: flex;
         align-items: center;
         justify-content: center;
-        
-        // 默认透明背景
         background: transparent;
         color: #64748b;
-        
-        // 平滑过渡
         transition: all 0.2s ease-out;
-        
-        // 重置样式
         outline: none;
         margin: 0;
         padding: 0;
         position: relative;
-
-        // 悬停效果
         &:hover {
             background: rgba(0, 0, 0, 0.04);
             color: #334155;
         }
-
-        // 激活状态 - 参考图片中的紫色高亮
         &.active {
             background: #8b5cf6;
             color: white;
@@ -86,8 +97,6 @@
                 background: #7c3aed;
             }
         }
-
-        // 禁用状态
         &.disable {
             color: #cbd5e1;
             cursor: not-allowed;
@@ -97,8 +106,6 @@
                 color: #cbd5e1;
             }
         }
-
-        // 图标尺寸 - 支持Lucide React图标
         svg {
             width: 16px;
             height: 16px;
@@ -107,8 +114,6 @@
             stroke-width: 1.5;
             fill: none;
         }
-
-        // 按压效果
         &:active:not(.disable) {
             transform: scale(0.95);
         }
@@ -126,40 +131,27 @@
         position: absolute;
         top: calc(100% + 8px);
         left: 0;
-        
-        // 现代简洁背景
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px) saturate(180%);
         border-radius: 12px;
-        
-        // 精致阴影
         box-shadow: 
             0 12px 48px rgba(0, 0, 0, 0.12),
             0 4px 16px rgba(0, 0, 0, 0.08),
             0 1px 2px rgba(0, 0, 0, 0.04),
             inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        
-        // 细边框
         border: 1px solid rgba(0, 0, 0, 0.06);
-        
-        // 更宽的布局
-        padding: 12px;
+        padding: 8px;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        gap: 6px;
-        
-        z-index: 9999;
-        width: 112px; // 增加宽度
-        
-        // 默认隐藏状态
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 4px;
+        z-index: 999999;
+        width: 132px;
         opacity: 0;
         visibility: hidden;
         transform: translateY(-8px) scale(0.96);
         transition: all 0.25s ease-out;
         pointer-events: none;
-
-        // 显示状态
         &.show {
             opacity: 1;
             visibility: visible;
@@ -168,18 +160,10 @@
         }
 
         .tool_btn {
-            width: 40px;  // 增加按钮尺寸
-            height: 36px;
-            border-radius: 8px;
-            
-            // 三角形按钮横跨两列
-            &:last-child {
-                grid-column: 1 / -1;
-                justify-self: center;
-            }
+            width: 36px;
+            height: 32px;
+            border-radius: 6px;
         }
-
-        // 简化的箭头指示器
         &::before {
             content: '';
             position: absolute;
@@ -193,6 +177,21 @@
             border-right: none;
             transform: rotate(45deg);
             backdrop-filter: blur(20px);
+        }
+        &.up {
+            top: auto;
+            bottom: calc(100% + 8px);
+            transform: translateY(8px) scale(0.96);
+            
+            &.show {
+                transform: translateY(0) scale(1);
+            }
+            
+            &::before {
+                top: auto;
+                bottom: -5px;
+                transform: rotate(225deg);
+            }
         }
     }
 
@@ -211,8 +210,6 @@
 
     .shape_group {
         position: relative;
-        
-        // 当鼠标悬停时，箭头旋转效果
         &:hover .dropdown_arrow {
             opacity: 0.8;
             transform: rotate(180deg);
@@ -225,16 +222,15 @@
 
     &.hide {
         opacity: 0;
-        transform: translateX(-50%) translateY(8px) scale(0.98);
+        transform: translateY(8px) scale(0.98);
         visibility: hidden;
         pointer-events: none;
     }
 
-    // 响应式适配 - 移动端
     @media (max-width: 768px) {
         padding: 6px;
         gap: 2px;
-        bottom: 10px; // 移动端稍微靠近底部
+    bottom: 10px;
         
         .toolbar_group {
             gap: 2px;
@@ -252,13 +248,14 @@
         }
         
         .shape_dropdown {
-            width: 76px;
-            padding: 6px;
+            width: 108px;
+            padding: 4px;
             gap: 2px;
+            grid-template-columns: repeat(3, 1fr);
             
             .tool_btn {
-                width: 32px;
-                height: 28px;
+                width: 28px;
+                height: 26px;
             }
         }
         
@@ -268,7 +265,6 @@
         }
     }
     
-    // 暗色主题支持
     @media (prefers-color-scheme: dark) {
         background: rgba(0, 0, 0, 0.85);
         border-color: rgba(255, 255, 255, 0.1);
@@ -295,6 +291,20 @@
             background: rgba(255, 255, 255, 0.1);
         }
         
+        .drag_handle {
+            color: #64748b;
+            
+            &:hover {
+                background: rgba(255, 255, 255, 0.08);
+                color: #94a3b8;
+            }
+            
+            &:active {
+                background: rgba(255, 255, 255, 0.12);
+                transform: scale(0.95);
+            }
+        }
+        
         .shape_dropdown {
             background: rgba(0, 0, 0, 0.9);
             border-color: rgba(255, 255, 255, 0.1);
@@ -303,11 +313,15 @@
                 background: rgba(0, 0, 0, 0.9);
                 border-color: rgba(255, 255, 255, 0.1);
             }
+            
+            &.up::before {
+                background: rgba(0, 0, 0, 0.9);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
         }
     }
 }
 
-// 极简按钮动画
 @keyframes button-tap {
     0% { transform: scale(1); }
     50% { transform: scale(0.95); }

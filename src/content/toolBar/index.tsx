@@ -19,15 +19,27 @@ import {
     Download,
     Image,
     ChevronDown,
+    GripVertical,
 } from "lucide-react";
 
-const DROPDOWN_HIDE_DELAY = 200; // 下拉菜单隐藏延迟时间(ms)
+const DROPDOWN_HIDE_DELAY = 200; // dropdown hide delay (ms)
 
 const ToolBar = () => {
     const { workspace, canvas, drawMode, setState, penProperty, historyUndoNum, historyRedoNum } = useContext(Context);
     const [selectAble, setSelectAble] = useState(false);
     const [hide, setHide] = useState(false);
     const [showShapeDropdown, setShowShapeDropdown] = useState(false);
+    const [dropdownDirection, setDropdownDirection] = useState<"down" | "up">("down");
+
+    const checkDropdownDirection = () => {
+        if (!shapeGroupRef.current) {
+            return;
+        }
+        const rect = shapeGroupRef.current.getBoundingClientRect();
+        const dropdownHeight = 150; // approximate dropdown height
+        const bottomSpace = window.innerHeight - rect.bottom;
+        setDropdownDirection(bottomSpace < dropdownHeight ? "up" : "down");
+    };
     const uploadRef = useRef<HTMLInputElement>(null);
     const shapeGroupRef = useRef<HTMLDivElement>(null);
     const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -103,12 +115,12 @@ const ToolBar = () => {
         }
     };
 
-    // 下拉菜单控制函数
     const handleShapeGroupEnter = () => {
         if (hoverTimeoutRef.current) {
             clearTimeout(hoverTimeoutRef.current);
             hoverTimeoutRef.current = null;
         }
+        checkDropdownDirection();
         setShowShapeDropdown(true);
     };
 
@@ -131,26 +143,18 @@ const ToolBar = () => {
         }, DROPDOWN_HIDE_DELAY);
     };
 
-    // 清空
     const handlerClear = () => {
         if (workspace) {
             workspace.clearAllObject();
         }
     };
 
-    // 导出图片
     const handlerExport = async () => {
         if (canvas) {
             setHide(true);
-            // const base64 = canvas?.toDataURL({
-            //     format: "png", // 也可改成 'jpeg'
-            //     quality: 0.92, // jpeg 时才生效
-            //     multiplier: 1, // 1 = 原尺寸；>1 = 放大（解决高屏模糊）
-            // });
             const dataURL = await captureFullPage();
             setHide(false);
             if (typeof dataURL === "string" && dataURL) {
-                // 触发下载
                 const link = document.createElement("a");
                 link.href = dataURL;
                 link.download = "canvas.png";
@@ -166,17 +170,15 @@ const ToolBar = () => {
     };
 
     const handlerExportJson = () => {
-        // 1. 序列化画布（默认即可）
-        if (canvas) {
-            const json = JSON.stringify(canvas.toJSON()); // 第二个参数可选：要额外保留的自定义属性
-            // 2. 生成 Blob
-            const blob = new Blob([json], { type: "application/json" });
-            // 3. 触发下载
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "canvas.json";
-            link.click();
+        if (!canvas) {
+            return;
         }
+        const json = JSON.stringify(canvas.toJSON());
+        const blob = new Blob([json], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "canvas.json";
+        link.click();
     };
 
     const handlerUndo = () => {
@@ -227,18 +229,13 @@ const ToolBar = () => {
             }
             try {
                 const json = JSON.parse(typeof evt.target.result === "string" ? evt.target.result : "");
-                // 3. 清空当前画布
                 canvas?.clear();
-                // 4. 载入 JSON
                 canvas?.loadFromJSON(json, () => {
-                    // 5. 渲染并可选居中
                     canvas.renderAll();
-                    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // 重置缩放
-                    // 如需自动居中：
-                    // canvas.viewportCenterObjects(canvas.getObjects());
+                    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
                 });
             } catch {
-                // 解析失败时忽略
+                // ignore parse error
             }
         };
         reader.readAsText(file);
@@ -254,7 +251,10 @@ const ToolBar = () => {
     return (
         <div className={`${styles.tool_bar} ${hide ? styles.hide : ""}`}>
             <input onChange={handlerFileChange} type="file" ref={uploadRef} className={styles.import_btn} accept=".json" />
-            {/* <!-- 主要工具组 --> */}
+
+            <div className={styles.drag_handle}>
+                <GripVertical size={16} />
+            </div>
             <div className={styles.toolbar_group}>
                 <button className={`${styles.tool_btn} ${selectAble ? styles.active : ""}`} title="选择工具 (V)" onClick={handlerChangeSelectable}>
                     <MousePointer2 size={16} />
@@ -274,8 +274,9 @@ const ToolBar = () => {
                     <Type size={16} />
                 </button>
             </div>
+
             <div className={styles.divider}></div>
-            {/* <!-- 形状工具组 --> */}
+
             <div
                 className={`${styles.toolbar_group} ${styles.shape_group}`}
                 ref={shapeGroupRef}
@@ -287,7 +288,7 @@ const ToolBar = () => {
                     <ChevronDown className={styles.dropdown_arrow} size={8} />
                 </button>
                 <div
-                    className={`${styles.shape_dropdown} ${showShapeDropdown ? styles.show : ""}`}
+                    className={`${styles.shape_dropdown} ${showShapeDropdown ? styles.show : ""} ${dropdownDirection === "up" ? styles.up : ""}`}
                     onMouseEnter={handleDropdownEnter}
                     onMouseLeave={handleDropdownLeave}
                 >
@@ -330,35 +331,28 @@ const ToolBar = () => {
                     </button>
                 </div>
             </div>
-            {/* <div className={styles.divider}></div> */}
-            {/* <!-- 辅助工具组 --> */}
-            {/* <div className={styles.toolbar_group}>
-                <button className={styles.tool_btn} title="橡皮擦工具 (E)">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <g strokeWidth="2"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M19 20h-10.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41l-9.2 9.3"></path><path d="M18 13.3l-6.3 -6.3"></path></g>
-                    </svg>
-                </button>
-            </div> */}
+
             <div className={styles.divider}></div>
-            {/* <!-- 操作工具组 --> */}
+
             <div className={styles.toolbar_group}>
                 <button className={`${styles.tool_btn} ${historyUndoNum === 0 ? styles.disable : ""}`} title="撤销 (Ctrl+Z)" onClick={handlerUndo}>
                     <Undo2 size={16} />
                 </button>
-                <button className={`${styles.tool_btn} ${historyRedoNum === 0 ? styles.disable : ""}`} title="重做" onClick={handlerRedo}>
+                <button className={`${styles.tool_btn} ${historyRedoNum === 0 ? styles.disable : ""}`} title="重做 (Ctrl+Y)" onClick={handlerRedo}>
                     <Redo2 size={16} />
                 </button>
                 <button className={styles.tool_btn} title="清空画布" onClick={handlerClear}>
                     <Trash2 size={16} />
                 </button>
             </div>
+
             <div className={styles.divider}></div>
-            {/* <!-- 功能工具组 --> */}
+
             <div className={styles.toolbar_group}>
-                <button className={styles.tool_btn} title="打开" onClick={handlerUpload}>
+                <button className={styles.tool_btn} title="导入文件" onClick={handlerUpload}>
                     <FolderOpen size={16} />
                 </button>
-                <button className={styles.tool_btn} title="导出json" onClick={handlerExportJson}>
+                <button className={styles.tool_btn} title="导出JSON" onClick={handlerExportJson}>
                     <Download size={16} />
                 </button>
                 <button className={styles.tool_btn} title="导出图片" onClick={handlerExport}>

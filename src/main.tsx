@@ -7,17 +7,21 @@ import PropertyPanel from "./content/propertyPanel";
 import { useEffect, useState } from "react";
 
 const PROPERTY_PANEL_WIDTH = 250;
+const TOOLBAR_DEFAULT_BOTTOM_MARGIN = 80;
+const TOOLBAR_POSITION_KEY = "toolbar-position";
 
 const App = () => {
     const [propertyLeft, setPropertyLeft] = useState(0);
+    const [toolbarLeft, setToolbarLeft] = useState(0);
 
     useEffect(() => {
-        // 属性面板位置
         setPropertyLeft(window.innerWidth - PROPERTY_PANEL_WIDTH);
-
-        // 监听窗口大小变化
+        const toolbarWidth = 600;
+        setToolbarLeft(Math.max(0, (window.innerWidth - toolbarWidth) / 2));
         const handleResize = () => {
             setPropertyLeft(window.innerWidth - PROPERTY_PANEL_WIDTH);
+            const toolbarWidth = 600;
+            setToolbarLeft(Math.max(0, (window.innerWidth - toolbarWidth) / 2));
         };
 
         window.addEventListener("resize", handleResize);
@@ -27,7 +31,9 @@ const App = () => {
     return (
         <div className="extension-root-container">
             <CanvasProvider>
-                <ToolBar />
+                <Draggable left={toolbarLeft} top={window.innerHeight - TOOLBAR_DEFAULT_BOTTOM_MARGIN} persistKey={TOOLBAR_POSITION_KEY}>
+                    <ToolBar />
+                </Draggable>
                 <Workspace />
                 {propertyLeft && (
                     <Draggable left={propertyLeft} top={20}>
