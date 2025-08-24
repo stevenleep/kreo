@@ -27,3 +27,4 @@ pnpm-debug.log*
 
 # TypeScript build info (if enabled later)
 tsconfig.tsbuildinfo
+packages/
